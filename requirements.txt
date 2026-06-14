@@ -1,0 +1,11 @@
+accelerate
+datasets
+huggingface-hub
+onnx
+onnx-ir
+onnxruntime
+onnxruntime-genai==0.14.1
+peft
+safetensors
+torch
+transformers>=5.6.0

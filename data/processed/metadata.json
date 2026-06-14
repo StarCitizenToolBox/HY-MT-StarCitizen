@@ -1,0 +1,47 @@
+{
+  "sources": {
+    "en": "https://raw.githubusercontent.com/Dymerz/StarCitizen-Localization/main/data/Localization/english/global.ini",
+    "zh": "https://raw.githubusercontent.com/StarCitizenToolBox/LocalizationData/main/chinese_(simplified)/global.ini",
+    "scweb": "https://github.com/CxJuice/ScWeb_Chinese_Translate"
+  },
+  "stats": {
+    "category.other": 37354,
+    "other": 37354,
+    "category.mission": 3038,
+    "priority": 40914,
+    "filtered": 10740,
+    "category.location": 3186,
+    "category.subtitle": 24736,
+    "category.item": 9306,
+    "category.vehicle": 648,
+    "en_keys": 89008,
+    "zh_keys": 89008,
+    "common_keys": 89008,
+    "samples": 78268,
+    "scweb.filtered": 318,
+    "scweb.duplicates": 2480,
+    "scweb.samples": 10994
+  },
+  "category_counts": {
+    "item": 9306,
+    "location": 3186,
+    "mission": 3038,
+    "other": 37354,
+    "scweb": 10994,
+    "subtitle": 24736,
+    "vehicle": 648
+  },
+  "source_counts": {
+    "global_ini": 78268,
+    "scweb": 10994
+  },
+  "output_counts": {
+    "eval.en-zh": 1785,
+    "eval.mixed": 3570,
+    "eval.zh-en": 1785,
+    "pairs.tsv": 89262,
+    "train.en-zh": 87477,
+    "train.mixed": 174954,
+    "train.zh-en": 87477
+  }
+}
