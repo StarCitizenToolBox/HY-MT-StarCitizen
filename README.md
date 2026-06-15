@@ -6,8 +6,8 @@ This project is intentionally self-contained for later Rust `ort` integration:
 
 - Dataset update does not require `genai`.
 - Training uses Hugging Face Transformers + PEFT LoRA.
-- ONNX export produces a q4f16 graph.
-- Runtime inference uses plain `onnxruntime` only, not `onnxruntime-genai`.
+- ONNX export defaults to the fastest local CPU graph tested: q4 `MatMulNBits` with `accuracy_level=4`, `block_size=128`, and standard ONNX `Attention`.
+- Runtime inference uses plain `onnxruntime` only, not `onnxruntime-genai` or PyTorch.
 
 ## Sources
 
@@ -44,10 +44,10 @@ HY-MT-StarCitizen/
 
 ## Setup
 
-From `P:\AI_WorkSpace`:
+From the repository root:
 
 ```powershell
-.\.venv_hymt2\Scripts\python.exe -m pip install -r HY-MT-StarCitizen\requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 The scripts resolve project-relative paths, so they can be called from either the workspace root or the project directory.
@@ -55,15 +55,15 @@ The scripts resolve project-relative paths, so they can be called from either th
 Download or refresh the base model inside the project:
 
 ```powershell
-.\.venv_hymt2\Scripts\python.exe HY-MT-StarCitizen\scripts\download_model.py
+python scripts\download_model.py
 ```
 
-The default model directory is `HY-MT-StarCitizen\models\hy-mt2-model`. It is ignored by git, so the 4GB model weights stay local and are not committed.
+The default model directory is `models\hy-mt2-model`. It is ignored by git, so the 4GB model weights stay local and are not committed.
 
 ## Update Dataset
 
 ```powershell
-.\.venv_hymt2\Scripts\python.exe HY-MT-StarCitizen\scripts\update_dataset.py
+python scripts\update_dataset.py
 ```
 
 Current generated dataset:
@@ -94,11 +94,11 @@ Each JSONL row contains Hy-MT2 chat-style `messages`, plus `key`, `direction`, `
 Tiny smoke test:
 
 ```powershell
-.\.venv_hymt2\Scripts\python.exe HY-MT-StarCitizen\scripts\train_lora.py `
+python scripts\train_lora.py `
   --model-name-or-path models\hy-mt2-model `
-  --train-file HY-MT-StarCitizen\data\processed\train.zh-en.jsonl `
-  --eval-file HY-MT-StarCitizen\data\processed\eval.zh-en.jsonl `
-  --output-dir HY-MT-StarCitizen\outputs\tiny-lora-smoke `
+  --train-file data\processed\train.zh-en.jsonl `
+  --eval-file data\processed\eval.zh-en.jsonl `
+  --output-dir outputs\tiny-lora-smoke `
   --tiny-random-smoke `
   --max-steps 1 `
   --max-seq-length 128 `
@@ -111,11 +111,11 @@ Tiny smoke test:
 Real Hy-MT2 1-step smoke:
 
 ```powershell
-.\.venv_hymt2\Scripts\python.exe HY-MT-StarCitizen\scripts\train_lora.py `
+python scripts\train_lora.py `
   --model-name-or-path models\hy-mt2-model `
-  --train-file HY-MT-StarCitizen\data\processed\train.zh-en.jsonl `
-  --eval-file HY-MT-StarCitizen\data\processed\eval.zh-en.jsonl `
-  --output-dir HY-MT-StarCitizen\outputs\hymt-starcitizen-lora-smoke `
+  --train-file data\processed\train.zh-en.jsonl `
+  --eval-file data\processed\eval.zh-en.jsonl `
+  --output-dir outputs\hymt-starcitizen-lora-smoke `
   --max-steps 1 `
   --max-seq-length 128 `
   --batch-size 1 `
@@ -138,7 +138,7 @@ For normal fine-tuning, use `config/default.json` or override `--max-steps`, `--
 The checked default run uses mixed bidirectional data:
 
 ```powershell
-.\.venv_hymt2\Scripts\python.exe HY-MT-StarCitizen\scripts\train_lora.py
+python scripts\train_lora.py
 ```
 
 Verified 6000-step run on RTX 4090:
@@ -150,14 +150,14 @@ Verified 6000-step run on RTX 4090:
 - final eval loss: 0.8874
 - final checkpoint: `outputs/hymt-starcitizen-lora/checkpoint-6000`
 
-The default config now targets a higher-quality q4f16 ONNX export: LoRA rank 32, effective batch size 16, cosine learning-rate schedule, and checkpoint/eval every 500 steps.
+The default training config uses LoRA rank 32, effective batch size 16, cosine learning-rate schedule, and checkpoint/eval every 500 steps.
 
 ## Test LoRA
 
 ```powershell
-.\.venv_hymt2\Scripts\python.exe HY-MT-StarCitizen\scripts\test_lora.py `
+python scripts\test_lora.py `
   --model-name-or-path models\hy-mt2-model `
-  --adapter-path HY-MT-StarCitizen\outputs\hymt-starcitizen-lora `
+  --adapter-path outputs\hymt-starcitizen-lora `
   --direction en-zh `
   --text "Where can I buy ship weapons in Lorville?" `
   --max-new-tokens 64
@@ -170,127 +170,82 @@ Verified adapter outputs:
 - zh-en long: `If your ship was destroyed near Orison, check your insurance status and then head to the nearest terminal to reapply for a vehicle.`
 - en-zh long: `在接单之前，请确保你的飞船有足够的空间，并且目标前哨站目前没有敌对势力。`
 
-## Export ONNX q4f16
+## Export ONNX
 
 Smoke export, using only one hidden layer:
 
 ```powershell
-.\.venv_hymt2\Scripts\python.exe HY-MT-StarCitizen\scripts\export_onnx_q4f16.py `
+python scripts\export_onnx_q4f16.py `
   --model-dir models\hy-mt2-model `
-  --output-dir outputs\onnx-q4f16-smoke `
+  --output-dir outputs\onnx-q4acc4-b128-smoke `
   --num-hidden-layers 1
 ```
 
-Full export with LoRA adapter:
+Full export with LoRA adapter. The default int4 export is `accuracy_level=4`, `block_size=128`, standard ONNX `Attention`, and writes `model_q4acc4_b128.onnx`:
 
 ```powershell
-.\.venv_hymt2\Scripts\python.exe HY-MT-StarCitizen\scripts\export_onnx_q4f16.py `
+python scripts\export_onnx_q4f16.py `
   --model-dir models\hy-mt2-model `
-  --adapter-path HY-MT-StarCitizen\outputs\hymt-starcitizen-lora `
-  --output-dir outputs\onnx-q4f16 `
+  --adapter-path outputs\hymt-starcitizen-lora `
   --execution-provider cpu
 ```
 
 The exporter uses `onnxruntime-genai` only as a conversion tool. The produced model is a standard ONNX graph that can be loaded with plain ONNX Runtime.
 
-The same exporter can produce unquantized models by changing `--precision`:
-
-```powershell
-.\.venv_hymt2\Scripts\python.exe HY-MT-StarCitizen\scripts\export_onnx_q4f16.py `
-  --model-dir models\hy-mt2-model `
-  --adapter-path HY-MT-StarCitizen\outputs\hymt-starcitizen-lora `
-  --output-dir outputs\onnx-fp16-attention-direct `
-  --precision fp16 `
-  --execution-provider cpu `
-  --attention-op standard
-```
-
-For non-int4 exports, the default filename changes to `model_<precision>.onnx`, for example `model_fp16.onnx`.
-
 Inspect quantization:
 
 ```powershell
-.\.venv_hymt2\Scripts\python.exe HY-MT-StarCitizen\scripts\inspect_onnx.py HY-MT-StarCitizen\outputs\onnx-q4f16\model_q4f16.onnx
+python scripts\inspect_onnx.py outputs\onnx-q4acc4-b128\model_q4acc4_b128.onnx
 ```
 
-Expected q4f16 indicators include `MatMulNBits` nodes with `bits=4`.
+Expected default indicators include `MatMulNBits` nodes with `bits=4`, `block_size=128`, and `accuracy_level=4`.
 
 Verified full adapter export:
 
-- `model_q4f16.onnx`: 671,425 bytes
-- `model_q4f16.onnx.data`: 1,262,667,776 bytes
+- `model_q4acc4_b128.onnx`: 671,824 bytes
+- `model_q4acc4_b128.onnx.data`: 1,101,842,432 bytes
 - nodes: 1,075
-- `MatMulNBits`: 481, with `bits=4`, `block_size=32`, `accuracy_level=2`
-- `com.microsoft:GroupQueryAttention`: 32
-
-## Standard ONNX Attention
-
-ORT 1.26 can run standard-domain ONNX `Attention` on CPU for this graph shape. The exporter can directly generate standard `Attention` nodes instead of ORT `GroupQueryAttention` nodes:
-
-```powershell
-.\.venv_hymt2\Scripts\python.exe HY-MT-StarCitizen\scripts\export_onnx_q4f16.py `
-  --model-dir models\hy-mt2-model `
-  --adapter-path HY-MT-StarCitizen\outputs\hymt-starcitizen-lora `
-  --output-dir outputs\onnx-q4f16-attention-direct `
-  --execution-provider cpu `
-  --attention-op standard
-```
-
-This path monkey-patches the current ORT GenAI Hunyuan builder at export time:
-
-- the actual attention node is emitted as standard-domain `Attention`
-- default ONNX opset is raised to 23
-- q4f16 weight-only quantization still uses ORT contrib `MatMulNBits`
-
-Inspect the direct standard Attention export:
-
-```powershell
-.\.venv_hymt2\Scripts\python.exe HY-MT-StarCitizen\scripts\inspect_onnx.py HY-MT-StarCitizen\outputs\onnx-q4f16-attention-direct\model_q4f16.onnx
-```
-
-Verified direct standard Attention graph:
-
-- opset: `ai.onnx:23`, `com.microsoft:1`
+- `MatMulNBits`: 481, with `bits=4`, `block_size=128`, `accuracy_level=4`
 - `Attention`: 32
 - `GroupQueryAttention`: 0
-- `MatMulNBits`: 481
-- pure ORT CPU inference works with the existing `ort_infer.py`
 
-Verified direct unquantized FP16 standard Attention graph:
+## Recommended ONNX Targets
 
-- file: `outputs/onnx-fp16-attention-direct/model_fp16.onnx`
-- external data: 3,662,946,304 bytes
-- opset: `ai.onnx:23`, `com.microsoft:1`
-- `Attention`: 32
-- `GroupQueryAttention`: 0
-- `MatMulNBits`: 0
-- `MatMul`: 481
+Local benchmark hardware:
 
-There is also a post-export converter for comparing an existing GQA export against the standard Attention graph:
+- CPU: AMD Ryzen 7 7800X3D, 8 cores / 16 threads
+- GPU: NVIDIA GeForce RTX 4090, 24 GB VRAM, driver 596.49
+- Runtime: ONNX Runtime 1.26.0 for CPU/CUDA tests; ONNX Runtime DirectML 1.24.4 for DirectML tests
 
-```powershell
-.\.venv_hymt2\Scripts\python.exe HY-MT-StarCitizen\scripts\convert_gqa_to_attention.py `
-  --input-dir HY-MT-StarCitizen\outputs\onnx-q4f16 `
-  --output-dir outputs\onnx-q4f16-attention `
-  --opset 23
-```
+CPU default:
 
-Verified converted graph:
+- export args: `--execution-provider cpu --attention-op standard --int4-accuracy-level 4 --int4-block-size 128`
+- output dir: `outputs/onnx-q4acc4-b128`
+- filename: `model_q4acc4_b128.onnx`
+- size: about 1.10 GB external data
+- local CPU speed: about 27-33 tok/s on the tested translation prompts
+- CUDA status: loads, but generates invalid repeated text, so use this target for CPU only
 
-- opset: `ai.onnx:23`, `com.microsoft:1`
-- `Attention`: 32
-- `GroupQueryAttention`: 0
-- `MatMulNBits`: 481
-- pure ORT CPU inference works with the existing `ort_infer.py`
+CUDA fastest correct quantized target:
 
-Important limitation: both standard Attention paths map `Q,K,V,past_key,past_value` directly and set `is_causal=1`. They are validated for the single-sample, unpadded generation path used by `ort_infer.py`. Keep the original `GroupQueryAttention` export as the conservative default if you need padded batched prompts or want to exactly match ORT GenAI's export semantics.
+- export args: `--execution-provider cuda --attention-op standard --int4-accuracy-level 2 --int4-block-size 32 --unquantized-lm-head`
+- default filename: `model_q4f16_hybrid.onnx`
+- graph shape: q4f16 `MatMulNBits` body, standard `Attention`, unquantized fp16 `lm_head`, and shared embeddings disabled
+- local CUDA speed: about 61-69 tok/s on the tested translation prompts
+- tradeoff: larger than the CPU default artifact, about 1.93 GB external data in the local test
+
+DirectML:
+
+- best correct q4 variants reached only about 2-3 tok/s locally
+- `GroupQueryAttention` DML q4 variants generated invalid text in testing
+- treat DML as a compatibility fallback, not the performance target
 
 ## Pure ORT CPU Inference
 
 ```powershell
-.\.venv_hymt2\Scripts\python.exe HY-MT-StarCitizen\scripts\ort_infer.py `
-  --onnx-dir HY-MT-StarCitizen\outputs\onnx-q4f16 `
-  --filename model_q4f16.onnx `
+python scripts\ort_infer.py `
+  --onnx-dir outputs\onnx-q4acc4-b128 `
+  --filename model_q4acc4_b128.onnx `
   --tokenizer-dir models\hy-mt2-model `
   --provider cpu `
   --direction zh-en `
@@ -301,46 +256,24 @@ Important limitation: both standard Attention paths map `Q,K,V,past_key,past_val
 The inference script:
 
 - imports `onnxruntime`, not `onnxruntime-genai`
+- does not require PyTorch
 - manually manages KV cache inputs and outputs
 - uses greedy decoding
 - prints token count and elapsed seconds for TPS calculation
 
-Verified CPU outputs with the exported adapter model:
+Verified CPU outputs with the default q4acc4/b128 model:
 
-- zh-en short: `Where can I get ship weapons in Lorville?`, 11 tokens / 0.672s, about 16.4 tok/s
-- en-zh short: `我在罗威尔哪里能买到舰船武器？`, 11 tokens / 0.708s, about 15.5 tok/s
-- zh-en long: `If your ship was destroyed near Orison, please check your insurance status and then head to the nearest terminal to reapply for a vehicle.`, 29 tokens / 1.483s, about 19.6 tok/s
-- en-zh long: `在接单之前，请确认你的飞船有足够的空间，并且目的地的前哨站目前没有敌对势力。`, 23 tokens / 1.300s, about 17.7 tok/s
-- zh-en mixed terms: `I need to get the quantum fuel to Crusader's showroom and then get back to New Babbage.`, 23 tokens / 1.187s, about 19.4 tok/s
-
-Verified CPU outputs with the standard `Attention` converted model:
-
-- en-zh short: `我在洛维尔哪里能买到舰船武器？`, 11 tokens / 0.607s, about 18.1 tok/s
-- zh-en long: 45 tokens / 2.933s, about 15.3 tok/s
-- en-zh long: 36 tokens / 2.576s, about 14.0 tok/s
-
-Verified CPU output with the directly exported standard `Attention` model:
-
-- en-zh short: `我在洛维尔哪里能买到舰船武器？`, 11 tokens / 0.735s, about 15.0 tok/s
-
-Verified CPU outputs with the unquantized FP16 standard `Attention` model:
-
-- en-zh short: `我在洛维尔哪里可以买到舰船武器？`, 11 tokens / 1.656s, about 6.6 tok/s
-- zh-en long: 44 tokens / 13.530s, about 3.3 tok/s
-- en-zh long: 36 tokens / 12.388s, about 2.9 tok/s
+- zh-en short: `Where can I get ship weapons in Lorville?`, 11 tokens / 0.403s, about 27.3 tok/s
+- en-zh short: `我在罗威尔哪里可以买到舰船武器？`, 11 tokens / 0.406s, about 27.1 tok/s
+- zh-en long: `If your ship was destroyed near Orison, please check your insurance status and head to the nearest terminal to reapply for the vehicle.`, 28 tokens / 0.844s, about 33.2 tok/s
+- en-zh long: `接受合约前，请确保你的飞船有足够的货舱空间，并且目标前哨站目前未被敌对势力控制。`, 24 tokens / 0.774s, about 31.0 tok/s
 
 ## Attention Op Notes
 
-As of ONNX 1.22, the standard `Attention` op exists in the main domain and supports MHA, GQA, MQA, and KV-cache update cases. The current ORT GenAI builder export for Hy-MT2 already emits `com.microsoft:GroupQueryAttention`, which is an ORT contrib operator specifically for GQA with KV cache support and optional KV cache quantization.
+As of ONNX 1.22, the standard `Attention` op exists in the main domain and supports MHA, GQA, MQA, and KV-cache update cases. The default export monkey-patches the current ORT GenAI Hunyuan builder to emit standard-domain `Attention` instead of ORT contrib `GroupQueryAttention`.
 
-For this model, keeping `GroupQueryAttention` is still the lower-risk default path:
-
-- Hy-MT2 uses grouped-query attention.
-- The generated graph already has one `GroupQueryAttention` per layer.
-- The pure `onnxruntime` CPU session loads and runs the graph.
-- The optional `convert_gqa_to_attention.py` path is available when you want to test the standard ONNX `Attention` op directly.
-- For the highest ORT compatibility, use `--precision fp16 --attention-op standard`; it removes `MatMulNBits`, but CPU speed is much slower and model size is about 3.66 GB.
+For this model, standard `Attention` is the checked default because it is the only path that worked across the CPU q4acc4/b128 and CUDA hybrid experiments. `GroupQueryAttention` DML q4 testing generated invalid text.
 
 ## Quantization Notes
 
-The ONNX export here targets ORT's weight-only int4 path (`MatMulNBits`, q4f16). Stock ONNX Runtime has direct support for this style of 4-bit LLM weight quantization. Lower-than-q4 formats such as q2 or GGUF-style 1.25-bit are not a drop-in ORT ONNX export target; they would require a custom operator/runtime path or a different backend. For Rust `ort`, q4f16 is the practical CPU-compatible target.
+The ONNX export here targets ORT's weight-only int4 path (`MatMulNBits`). Stock ONNX Runtime has direct support for this style of 4-bit LLM weight quantization. Lower-than-q4 formats such as q2 or GGUF-style 1.25-bit are not a drop-in ORT ONNX export target; they would require a custom operator/runtime path or a different backend. For Rust `ort`, q4 `MatMulNBits` is the practical CPU-compatible target.

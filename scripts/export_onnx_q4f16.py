@@ -100,14 +100,33 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Export Hy-MT-StarCitizen to ONNX Runtime.")
     parser.add_argument("--model-dir", default="models/hy-mt2-model")
     parser.add_argument("--adapter-path", default=None, help="Optional LoRA adapter directory.")
-    parser.add_argument("--output-dir", default="outputs/onnx-q4f16")
+    parser.add_argument("--output-dir", default="outputs/onnx-q4acc4-b128")
     parser.add_argument("--cache-dir", default="outputs/ort-cache")
     parser.add_argument("--precision", default="int4", choices=["int4", "fp16", "bf16", "fp32"])
     parser.add_argument("--execution-provider", default="cpu", choices=["cpu", "cuda", "dml", "webgpu"])
     parser.add_argument("--filename", default=None)
     parser.add_argument("--num-hidden-layers", type=int, default=None, help="For tiny smoke exports only.")
-    parser.add_argument("--attention-op", default="gqa", choices=["gqa", "standard"])
+    parser.add_argument("--attention-op", default="standard", choices=["gqa", "standard"])
     parser.add_argument("--attention-opset", type=int, default=23, choices=[23, 24, 25])
+    parser.add_argument("--use-qdq", action="store_true", help="Use QDQ format for int4 quantization when supported.")
+    parser.add_argument(
+        "--unquantized-lm-head",
+        action="store_true",
+        help="Keep lm_head unquantized. This also disables shared quantized embeddings.",
+    )
+    parser.add_argument("--no-shared-embeddings", action="store_true", help="Do not share token embeddings with lm_head.")
+    parser.add_argument(
+        "--int4-accuracy-level",
+        default="4",
+        choices=["0", "1", "2", "3", "4"],
+        help="MatMulNBits accuracy_level. Default 4 is the fastest local CPU target tested.",
+    )
+    parser.add_argument(
+        "--int4-block-size",
+        default="128",
+        choices=["16", "32", "64", "128", "256"],
+        help="MatMulNBits block size. Larger values can be faster on some GPU EPs, but may reduce accuracy.",
+    )
     parser.add_argument("--no-prune-lm-head", action="store_true")
     return parser.parse_args()
 
@@ -123,22 +142,38 @@ def main() -> None:
     adapter_path = resolve_existing_or_project_path(args.adapter_path)
     filename = args.filename
     if filename is None:
-        filename = "model_q4f16.onnx" if args.precision == "int4" else f"model_{args.precision}.onnx"
+        if args.precision == "int4":
+            int4_name = {"1": "q4fp32", "2": "q4f16", "3": "q4bf16"}.get(
+                args.int4_accuracy_level, f"q4acc{args.int4_accuracy_level}"
+            )
+            block_suffix = "" if args.int4_block_size == "32" else f"_b{args.int4_block_size}"
+            suffix = "_hybrid" if args.unquantized_lm_head else ""
+            filename = f"model_{int4_name}{block_suffix}{suffix}.onnx"
+        else:
+            filename = f"model_{args.precision}.onnx"
+
+    shared_embeddings = not args.no_shared_embeddings
+    if args.unquantized_lm_head:
+        shared_embeddings = False
 
     extra_options = {
-        "shared_embeddings": "true",
+        "shared_embeddings": "true" if shared_embeddings else False,
         "filename": filename,
         "hf_remote": "false",
     }
     if args.precision == "int4":
         extra_options.update(
             {
-                "int4_accuracy_level": "2",
-                "int4_block_size": "32",
+                "int4_accuracy_level": args.int4_accuracy_level,
+                "int4_block_size": args.int4_block_size,
                 "int4_is_symmetric": "true",
                 "int4_algo_config": "rtn",
             }
         )
+        if args.use_qdq:
+            extra_options["use_qdq"] = True
+        if args.unquantized_lm_head:
+            extra_options["int4_nodes_to_exclude"] = ["/lm_head/MatMul"]
     if adapter_path:
         extra_options["adapter_path"] = adapter_path
     if args.num_hidden_layers is not None:

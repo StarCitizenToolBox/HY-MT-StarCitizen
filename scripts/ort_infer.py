@@ -20,12 +20,17 @@ def resolve_existing_or_project_path(value: str) -> Path:
 
 
 def make_session(model_path: str, provider: str) -> ort.InferenceSession:
-    provider_name = {"cpu": "CPUExecutionProvider", "cuda": "CUDAExecutionProvider"}[provider]
+    provider_name = {"cpu": "CPUExecutionProvider", "cuda": "CUDAExecutionProvider", "dml": "DmlExecutionProvider"}[
+        provider
+    ]
     available = ort.get_available_providers()
     if provider_name not in available:
         raise RuntimeError(f"{provider_name} not available. Available: {available}")
     options = ort.SessionOptions()
-    options.log_severity_level = 2
+    options.log_severity_level = 3
+    if provider == "dml":
+        options.enable_mem_pattern = False
+        options.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
     return ort.InferenceSession(model_path, sess_options=options, providers=[provider_name])
 
 
@@ -83,10 +88,10 @@ def greedy_generate(session: ort.InferenceSession, input_ids: list[int], max_new
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Pure ONNX Runtime inference for Hy-MT-StarCitizen.")
-    parser.add_argument("--onnx-dir", default="outputs/onnx-q4f16")
-    parser.add_argument("--filename", default="model_q4f16.onnx")
+    parser.add_argument("--onnx-dir", default="outputs/onnx-q4acc4-b128")
+    parser.add_argument("--filename", default="model_q4acc4_b128.onnx")
     parser.add_argument("--tokenizer-dir", default="models/hy-mt2-model")
-    parser.add_argument("--provider", choices=["cpu", "cuda"], default="cpu")
+    parser.add_argument("--provider", choices=["cpu", "cuda", "dml"], default="cpu")
     parser.add_argument("--direction", choices=["zh-en", "en-zh"], default="zh-en")
     parser.add_argument("--text", default="在洛维尔哪里可以买到飞船武器？")
     parser.add_argument("--max-new-tokens", type=int, default=64)
@@ -104,13 +109,13 @@ def main() -> None:
         prompt = f"Translate the following Star Citizen localization text into English. Only output the translation:\n\n{args.text}"
     else:
         prompt = f"将以下《星际公民》本地化文本翻译为简体中文。只输出翻译结果：\n\n{args.text}"
-    inputs = tokenizer.apply_chat_template(
+    prompt_text = tokenizer.apply_chat_template(
         [{"role": "user", "content": prompt}],
         add_generation_prompt=True,
-        return_tensors="pt",
-        return_dict=True,
+        tokenize=False,
     )
-    input_ids = [int(token_id) for token_id in inputs["input_ids"][0].tolist()]
+    inputs = tokenizer(prompt_text, add_special_tokens=False)
+    input_ids = [int(token_id) for token_id in inputs["input_ids"]]
     new_ids, seconds = greedy_generate(session, input_ids, args.max_new_tokens)
     print(tokenizer.decode(new_ids, skip_special_tokens=True))
     print(f"provider={session.get_providers()[0]} input_tokens={len(input_ids)} new_tokens={len(new_ids)} seconds={seconds:.3f}")
