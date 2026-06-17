@@ -13,6 +13,7 @@ from hymt_sc.data import (  # noqa: E402
     build_dialogue_context_samples,
     build_pairs,
     build_scweb_pairs,
+    build_ship_alias_samples,
     build_term_contrast_samples,
     build_term_context_samples,
     build_term_samples,
@@ -56,7 +57,31 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-term-contrast-pairs-per-category", type=int, default=400)
     parser.add_argument("--examples-file", default="data/term_examples.zh-en.tsv")
     parser.add_argument("--example-repeat", type=int, default=12)
+    parser.add_argument("--ship-aliases-file", default="data/ship_aliases.zh-en.tsv")
+    parser.add_argument("--ship-alias-repeat", type=int, default=12)
     return parser.parse_args()
+
+
+def sample_directions(sample) -> tuple[str, ...]:
+    if sample.source == "ship_alias":
+        return ("zh-en",)
+    return ("zh-en", "en-zh")
+
+
+def iter_records(samples, direction: str):
+    for sample in samples:
+        if direction in sample_directions(sample):
+            yield sample_to_record(sample, direction)
+
+
+def iter_mixed_records(samples):
+    for sample in samples:
+        for direction in sample_directions(sample):
+            yield sample_to_record(sample, direction)
+
+
+def existing_direct_pairs(samples) -> set[tuple[str, str]]:
+    return {(sample.zh, sample.en) for sample in samples}
 
 
 def main() -> None:
@@ -68,6 +93,7 @@ def main() -> None:
     scweb_dir = ROOT / args.scweb_dir
     terms_path = ROOT / args.terms_file
     examples_path = ROOT / args.examples_file
+    ship_aliases_path = ROOT / args.ship_aliases_file
     term_entries = load_term_entries(terms_path)
 
     if not args.skip_download:
@@ -132,37 +158,36 @@ def main() -> None:
     example_samples, example_stats = build_example_samples(examples_path, repeat=args.example_repeat)
     samples.extend(example_samples)
     stats.update(example_stats)
+    ship_alias_samples, ship_alias_stats = build_ship_alias_samples(
+        ship_aliases_path,
+        repeat=args.ship_alias_repeat,
+        existing_pairs=existing_direct_pairs(samples),
+    )
+    samples.extend(ship_alias_samples)
+    stats.update(ship_alias_stats)
 
     train_samples, eval_samples = split_samples(samples, args.eval_ratio, args.seed)
 
     counts = {}
     counts["train.zh-en"] = write_jsonl(
-        processed_dir / "train.zh-en.jsonl", (sample_to_record(s, "zh-en") for s in train_samples)
+        processed_dir / "train.zh-en.jsonl", iter_records(train_samples, "zh-en")
     )
     counts["eval.zh-en"] = write_jsonl(
-        processed_dir / "eval.zh-en.jsonl", (sample_to_record(s, "zh-en") for s in eval_samples)
+        processed_dir / "eval.zh-en.jsonl", iter_records(eval_samples, "zh-en")
     )
     counts["train.en-zh"] = write_jsonl(
-        processed_dir / "train.en-zh.jsonl", (sample_to_record(s, "en-zh") for s in train_samples)
+        processed_dir / "train.en-zh.jsonl", iter_records(train_samples, "en-zh")
     )
     counts["eval.en-zh"] = write_jsonl(
-        processed_dir / "eval.en-zh.jsonl", (sample_to_record(s, "en-zh") for s in eval_samples)
+        processed_dir / "eval.en-zh.jsonl", iter_records(eval_samples, "en-zh")
     )
     counts["train.mixed"] = write_jsonl(
         processed_dir / "train.mixed.jsonl",
-        (
-            record
-            for s in train_samples
-            for record in (sample_to_record(s, "zh-en"), sample_to_record(s, "en-zh"))
-        ),
+        iter_mixed_records(train_samples),
     )
     counts["eval.mixed"] = write_jsonl(
         processed_dir / "eval.mixed.jsonl",
-        (
-            record
-            for s in eval_samples
-            for record in (sample_to_record(s, "zh-en"), sample_to_record(s, "en-zh"))
-        ),
+        iter_mixed_records(eval_samples),
     )
     counts["pairs.tsv"] = write_tsv(processed_dir / "pairs.tsv", samples)
     counts["terms.merged"] = write_terms_tsv(processed_dir / "terms.merged.zh-en.tsv", term_entries)

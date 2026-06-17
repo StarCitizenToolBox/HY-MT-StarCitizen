@@ -1,0 +1,411 @@
+key	category	en	zh	source
+ship_alias.404.404	vehicle	404	起源404	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.600i_explorer.600i	vehicle	600i Explorer	600i探索	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.600i_touring.600i	vehicle	600i Touring	600i旅游	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.600i_xingzheng.600i	vehicle	600I Xingzheng	600i行政	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.a1_spirit.a1	vehicle	A1 Spirit	星灵A1	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.a2_hercules_starlifter.a2	vehicle	A2 Hercules Starlifter	大力神A2	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.apollo_medivac.c6cf92668f	vehicle	Apollo Medivac	白阿波罗	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.apollo_medivac.c0efc9856e	vehicle	Apollo Medivac	阿波罗医疗	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.apollo_triage.564f40b9a9	vehicle	Apollo Triage	红阿波罗	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.apollo_triage.1970b310f9	vehicle	Apollo Triage	阿波罗	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.apollo_triage.5d62b20f23	vehicle	Apollo Triage	阿波罗分诊	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ares_star_fighter_inferno.ead66583e1	vehicle	Ares Star Fighter Inferno	地狱	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ares_star_fighter_inferno.70a43dc7b2	vehicle	Ares Star Fighter Inferno	战神	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ares_star_fighter_inferno.eb35b13b7c	vehicle	Ares Star Fighter Inferno	战神地狱	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ares_star_fighter_inferno.49e3b49898	vehicle	Ares Star Fighter Inferno	黑战	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ares_star_fighter_ion.ccdc686dc2	vehicle	Ares Star Fighter Ion	战神离子	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ares_star_fighter_ion.b6c6baaa21	vehicle	Ares Star Fighter Ion	白战	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ares_star_fighter_ion.d146438c14	vehicle	Ares Star Fighter Ion	离子	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.arrastra.3966285693	vehicle	Arrastra	研磨机	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.arrastra.5013d7a0e9	vehicle	Arrastra	碎金机	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.arrastra.48afce4255	vehicle	Arrastra	阿拉斯塔	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.arrastra.a1c807bb87	vehicle	Arrastra	阿拉斯特拉	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.arrow.5d481673de	vehicle	Arrow	箭	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.arrow.890a6158d5	vehicle	Arrow	箭头	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.arrow.a4c797a038	vehicle	Arrow	箭矢	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.aurora_cl.cl	vehicle	Aurora CL	极光CL	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.aurora_es.es	vehicle	Aurora ES	极光ES	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.aurora_ln.ln	vehicle	Aurora LN	极光LN	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.aurora_lx.lx	vehicle	Aurora LX	极光LX	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.aurora_mr.ef4ed95b84	vehicle	Aurora MR	极光	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.aurora_mr.mr	vehicle	Aurora MR	极光MR	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.avenger_stalker.4ebdc34d6d	vehicle	Avenger Stalker	复仇者追猎	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.avenger_stalker.9460d68765	vehicle	Avenger Stalker	复仇追猎	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.avenger_stalker.54a97c43ff	vehicle	Avenger Stalker	追猎	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.avenger_titan.35ff991be8	vehicle	Avenger Titan	复仇	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.avenger_titan.1c3abfd345	vehicle	Avenger Titan	复仇泰坦	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.avenger_titan.e6c85f9560	vehicle	Avenger Titan	复仇者	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.avenger_titan.879689446d	vehicle	Avenger Titan	复仇者泰坦	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.avenger_titan.eaa96687ad	vehicle	Avenger Titan	泰坦	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.avenger_titan_renegade.8d2a8f083a	vehicle	Avenger Titan Renegade	变节者	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.avenger_titan_renegade.d9e26e1402	vehicle	Avenger Titan Renegade	复仇泰坦变节者	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.avenger_titan_renegade.15c28ace39	vehicle	Avenger Titan Renegade	泰坦变节者	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.avenger_warlock.1b4b5a5892	vehicle	Avenger Warlock	复仇术士	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.avenger_warlock.05247d4279	vehicle	Avenger Warlock	复仇者术士	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.avenger_warlock.0f3a6ad8aa	vehicle	Avenger Warlock	术士	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ballista.afb447226d	vehicle	Ballista	弩炮	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.bengal.53247d43ed	vehicle	Bengal	孟加拉	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.blade.fc84cc4c61	vehicle	Blade	刀锋	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.buccaneer.97e0d33bfb	vehicle	Buccaneer	掠夺	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.buccaneer.ea9c4783b1	vehicle	Buccaneer	掠夺者	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.c1_spirit.92eede7940	vehicle	C1 Spirit	星灵	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.c1_spirit.c1	vehicle	C1 Spirit	星灵C1	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.c2_hercules_starlifter.bf38a08a4b	vehicle	C2 Hercules Starlifter	大力神	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.c2_hercules_starlifter.c2	vehicle	C2 Hercules Starlifter	大力神C2	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.c8_pisces.c8	vehicle	C8 Pisces	C8基础	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.c8_pisces.d480a2e88e	vehicle	C8 Pisces	双鱼座	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.c8_pisces.b8910a5ec5	vehicle	C8 Pisces	双鱼座基础	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.c8r_pisces_rescue.c8r	vehicle	C8R Pisces Rescue	双鱼座C8R	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.c8x_pisces_expedition.c8x	vehicle	C8X Pisces Expedition	双鱼座C8X	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.carrack.cb26a434b8	vehicle	Carrack	克拉克	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.carrack.6e04e2ce4a	vehicle	Carrack	卡拉克	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.carrack_expedition.44353e5903	vehicle	Carrack Expedition	克拉克探索	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.carrack_expedition.6780b81220	vehicle	Carrack Expedition	克拉克远征	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.carrack_expedition.642ae6d98c	vehicle	Carrack Expedition	远征克拉克	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.caterpillar.488d646241	vehicle	Caterpillar	毛虫	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.caterpillar_pirate.644cf80d7c	vehicle	Caterpillar Pirate	毛虫海盗	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.caterpillar_pirate.db8fc4ea6a	vehicle	Caterpillar Pirate	海盗毛虫	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.centurion.0e021f1a3f	vehicle	Centurion	百夫长	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.constellation_aquila.d65f821597	vehicle	Constellation Aquila	天鹰	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.constellation_aquila.fad8e854c2	vehicle	Constellation Aquila	天鹰座	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.constellation_phoenix.3d0d02ec28	vehicle	Constellation Phoenix	凤凰	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.constellation_phoenix.f263753ac4	vehicle	Constellation Phoenix	凤凰座	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.constellation_phoenix_emerald.0f322649e8	vehicle	Constellation Phoenix Emerald	凤凰翡翠	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.constellation_phoenix_emerald.528c0e8d4d	vehicle	Constellation Phoenix Emerald	绿凤凰	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.constellation_phoenix_emerald.a5e4c277c0	vehicle	Constellation Phoenix Emerald	翡翠凤凰	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.constellation_taurus.4c04428a40	vehicle	Constellation Taurus	金牛	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.constellation_taurus.e83d06089a	vehicle	Constellation Taurus	金牛座	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.corsair.7dc4f3990b	vehicle	Corsair	海盗	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.corsair.27e0efbdb0	vehicle	Corsair	海盗船	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.crucible.73d57910bf	vehicle	Crucible	坩埚	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cutlass_black.d819d5aaff	vehicle	Cutlass Black	弯刀	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cutlass_black.fe74cb126e	vehicle	Cutlass Black	黑弯刀	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cutlass_blue.69068e2305	vehicle	Cutlass Blue	蓝弯刀	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cutlass_red.2bf7e9dfc8	vehicle	Cutlass Red	红弯刀	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cutlass_steel.ed1e33d724	vehicle	Cutlass Steel	钢弯刀	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cutter.7e78f3b921	vehicle	Cutter	小刀	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cutter.1e89d81873	vehicle	Cutter	小刀基础	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cutter_rambler.d1e748e2f0	vehicle	Cutter Rambler	小刀探索	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cutter_rambler.e6c23763f8	vehicle	Cutter Rambler	小刀漫步	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cutter_rambler.463351a229	vehicle	Cutter Rambler	小刀漫游	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cutter_rambler.71b746b74c	vehicle	Cutter Rambler	探索小刀	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cutter_scout.727ad0dff7	vehicle	Cutter Scout	小刀侦察	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cutter_scout.fb340ea509	vehicle	Cutter Scout	小刀侦察兵	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cutter_scout.85ebd9645b	vehicle	Cutter Scout	小刀侦查	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cutter_scout.78f0604a2d	vehicle	Cutter Scout	雷达小刀	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cyclone.51cf7eda07	vehicle	Cyclone	旋风	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cyclone.9592dcc08f	vehicle	Cyclone	旋风基础	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cyclone_aa.aa	vehicle	Cyclone AA	旋风AA	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cyclone_mt.mt	vehicle	Cyclone MT	旋风MT	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cyclone_rc.rc	vehicle	Cyclone RC	旋风RC	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cyclone_rn.rn	vehicle	Cyclone RN	旋风RN	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.cyclone_tr.tr	vehicle	Cyclone TR	旋风TR	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.defender.9ad85444b9	vehicle	Defender	巴卫	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.defender.a577c54e66	vehicle	Defender	巴奴卫士	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.defender.7e970e652e	vehicle	Defender	巴奴防卫者	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.defender.529e168db6	vehicle	Defender	防卫者	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.dragonfly.6e8fb03c46	vehicle	Dragonfly	蜻蜓	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.e1_spirit.e1	vehicle	E1 Spirit	星灵E1	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.eclipse.217eb2f3d9	vehicle	Eclipse	日蚀	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.eclipse.245dc46911	vehicle	Eclipse	日食	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.endeavor.af29be5ffd	vehicle	Endeavor	奋进	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.expanse.ae6c707794	vehicle	Expanse	无垠	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7a_mk1.mk1	vehicle	F7A MK1	军用大黄蜂MK1	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7a_mk1.mki	vehicle	F7A MK1	军用大黄蜂MKI	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7a_mk1.mk1	vehicle	F7A MK1	军黄MK1	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7a_mk1.mki	vehicle	F7A MK1	军黄MKI	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7a_mk2_hornet.d5ccc784b6	vehicle	F7A MK2 Hornet	军用大黄蜂	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7a_mk2_hornet.mk2	vehicle	F7A MK2 Hornet	军用大黄蜂MK2	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7a_mk2_hornet.mkii	vehicle	F7A MK2 Hornet	军用大黄蜂MKII	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7a_mk2_hornet.d48f0bab9d	vehicle	F7A MK2 Hornet	军黄	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7a_mk2_hornet.mk2	vehicle	F7A MK2 Hornet	军黄MK2	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7a_mk2_hornet.mkii	vehicle	F7A MK2 Hornet	军黄MKII	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_hornet.cdec3158ee	vehicle	F7C Hornet	大黄蜂	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_hornet.0fd1cc0a30	vehicle	F7C Hornet	大黄蜂基础	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_hornet.593eb57976	vehicle	F7C Hornet	普黄	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_hornet.0dcaabf3dd	vehicle	F7C Hornet	黄蜂	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_hornet.5b1d6dcbcd	vehicle	F7C Hornet	黄蜂基础	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_hornet_wildfire.32006957ce	vehicle	F7C Hornet Wildfire	大黄蜂野火	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_hornet_wildfire.7e022e83de	vehicle	F7C Hornet Wildfire	野火	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_hornet_wildfire.0838c56f56	vehicle	F7C Hornet Wildfire	黄蜂野火	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_mk2_hornet.mk2	vehicle	F7C MK2 Hornet	大黄蜂MK2	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_mk2_hornet.mkii	vehicle	F7C MK2 Hornet	大黄蜂MKII	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_mk2_hornet.mk2	vehicle	F7C MK2 Hornet	黄蜂MK2	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_mk2_hornet.mkii	vehicle	F7C MK2 Hornet	黄蜂MKII	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_m_hornet_heartseeker.86eeb1c7d9	vehicle	F7C-M Hornet Heartseeker	寻心	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_m_hornet_heartseeker.4874685cbc	vehicle	F7C-M Hornet Heartseeker	情人黄	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_m_hornet_heartseeker.ef8b756f0d	vehicle	F7C-M Hornet Heartseeker	情黄	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_m_super_hornet.m	vehicle	F7C-M Super Hornet	大黄蜂M	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_m_super_hornet.423453a1aa	vehicle	F7C-M Super Hornet	超级大黄蜂	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_m_super_hornet.36c227e007	vehicle	F7C-M Super Hornet	超黄	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_mmk2.mmk2	vehicle	F7C-MMK2	大黄蜂MMK2	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_mmk2.mk2	vehicle	F7C-MMK2	超级大黄蜂MK2	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_mmk2.mk2	vehicle	F7C-MMK2	超黄MK2	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_r_hornet_tracker.r	vehicle	F7C-R Hornet Tracker	大黄蜂R	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_r_hornet_tracker.c938193f54	vehicle	F7C-R Hornet Tracker	大黄蜂追踪	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_r_hornet_tracker.2350477797	vehicle	F7C-R Hornet Tracker	追踪大黄蜂	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_r_hornet_tracker.a95895b12b	vehicle	F7C-R Hornet Tracker	追踪黄	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_r_hornet_tracker.47ac17cafd	vehicle	F7C-R Hornet Tracker	追黄	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_r_hornet_tracker.bed8bf48c7	vehicle	F7C-R Hornet Tracker	雷达黄	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_r_hornet_tracker_mk_ii.mk2	vehicle	F7C-R Hornet Tracker Mk II	大黄蜂追踪MK2	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_r_hornet_tracker_mk_ii.mkii	vehicle	F7C-R Hornet Tracker Mk II	大黄蜂追踪MKII	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_r_hornet_tracker_mk_ii.mk2	vehicle	F7C-R Hornet Tracker Mk II	追黄MK2	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_r_hornet_tracker_mk_ii.mkii	vehicle	F7C-R Hornet Tracker Mk II	追黄MKII	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_s_hornet_ghost.s	vehicle	F7C-S Hornet Ghost	大黄蜂S	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_s_hornet_ghost.54244fb6f6	vehicle	F7C-S Hornet Ghost	大黄蜂幽灵	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_s_hornet_ghost.c5e37c637a	vehicle	F7C-S Hornet Ghost	幽灵大黄蜂	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_s_hornet_ghost.dcf19d73b3	vehicle	F7C-S Hornet Ghost	幽灵蜂	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_s_hornet_ghost.002c302ea8	vehicle	F7C-S Hornet Ghost	幽灵黄	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_s_hornet_ghost.c8c9183778	vehicle	F7C-S Hornet Ghost	隐黄	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_s_hornet_ghost.8006221ec2	vehicle	F7C-S Hornet Ghost	鬼蜂	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_s_hornet_ghost.825570b9ed	vehicle	F7C-S Hornet Ghost	鬼黄	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_s_hornet_ghost_mk_ii.mk2	vehicle	F7C-S Hornet Ghost Mk II	大黄蜂幽灵MK2	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_s_hornet_ghost_mk_ii.mkii	vehicle	F7C-S Hornet Ghost Mk II	大黄蜂幽灵MKII	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_s_hornet_ghost_mk_ii.mk2	vehicle	F7C-S Hornet Ghost Mk II	幽灵黄MK2	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_s_hornet_ghost_mk_ii.mk2	vehicle	F7C-S Hornet Ghost Mk II	隐黄MK2	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_s_hornet_ghost_mk_ii.mkii	vehicle	F7C-S Hornet Ghost Mk II	隐黄MKII	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.f7c_s_hornet_ghost_mk_ii.mk2	vehicle	F7C-S Hornet Ghost Mk II	鬼黄MK2	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.fortune.9203aa0eab	vehicle	Fortune	小捞	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.fortune.8709a6cd43	vehicle	Fortune	机遇	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.fortune.24eebed4cc	vehicle	Fortune	财富	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.freelancer.4c974ea89d	vehicle	Freelancer	自由	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.freelancer.9eed3e5599	vehicle	Freelancer	自由基础	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.freelancer.5d12d0582b	vehicle	Freelancer	自由枪骑兵	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.freelancer.a0a7230178	vehicle	Freelancer	自由枪骑兵基础	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.freelancer.c8f3170d05	vehicle	Freelancer	自由职业者	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.freelancer_dur.dur	vehicle	Freelancer DUR	自由dur	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.freelancer_dur.dur	vehicle	Freelancer DUR	自由枪骑兵dur	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.freelancer_max.max	vehicle	Freelancer MAX	自由max	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.freelancer_max.max	vehicle	Freelancer MAX	自由枪骑兵max	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.freelancer_mis.mis	vehicle	Freelancer MIS	自由mis	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.freelancer_mis.mis	vehicle	Freelancer MIS	自由枪骑兵mis	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.fury.82e1e24d49	vehicle	Fury	狂怒	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.fury.bb1aa18d93	vehicle	Fury	福瑞	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.fury_lx.lx	vehicle	Fury LX	狂怒LX	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.fury_lx.lx	vehicle	Fury LX	福瑞LX	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.fury_mx.mx	vehicle	Fury MX	狂怒MX	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.fury_mx.mx	vehicle	Fury MX	福瑞MX	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.g12.g12	vehicle	G12	G12基础	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.galaxy.760cfba51d	vehicle	Galaxy	银河	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.genesis_starliner.f32f749399	vehicle	Genesis Starliner	创世纪	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.gladiator.ae7064fdf4	vehicle	Gladiator	角斗士	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.gladius.623a8ae944	vehicle	Gladius	剑兰	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.gladius.66d48b8360	vehicle	Gladius	短剑	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.gladius_galiant.0e182e5729	vehicle	Gladius galiant	短剑勇士	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.gladius_pirate.b4b22bb260	vehicle	Gladius pirate	海盗短剑	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.gladius_pirate.c943ac9dd4	vehicle	Gladius pirate	短剑海盗	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.glaive.0ab124d322	vehicle	Glaive	长刀	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.guardian.af2b124217	vehicle	Guardian	噶点	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.guardian.0f32c6c3a4	vehicle	Guardian	大福瑞	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.guardian.37127c907a	vehicle	Guardian	守卫	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.guardian.bf690d0bad	vehicle	Guardian	守护者	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.guardian_qi.qi	vehicle	Guardian QI	噶点QI	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.guardian_qi.qi	vehicle	Guardian QI	大福瑞QI	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.guardian_qi.59f2d700a9	vehicle	Guardian QI	大福瑞拦截	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.guardian_qi.qi	vehicle	Guardian QI	守卫QI	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.guardian_qi.4e1ff48435	vehicle	Guardian QI	守卫拦截	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.guardian_qi.qi	vehicle	Guardian QI	守护者QI	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.guardian_qi.7d110ff18e	vehicle	Guardian QI	守护者拦截	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.hammerhead.81f7583cd4	vehicle	Hammerhead	锤头	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.hammerhead.6ea71392b0	vehicle	Hammerhead	锤头鲨	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.hawk.80fc1ea72e	vehicle	Hawk	小鹰	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.hawk.e40e459ae2	vehicle	Hawk	猎鹰	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.hawk.4956a27025	vehicle	Hawk	鹰	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.herald.c00c81573a	vehicle	Herald	信使	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.hoverquad.7519add019	vehicle	HoverQuad	悬浮四	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.hoverquad.31277a8ae8	vehicle	HoverQuad	悬浮驷	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.hull_a.a	vehicle	Hull A	货A	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.hull_a.a	vehicle	Hull A	货轮A	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.hull_b.b	vehicle	Hull B	货B	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.hull_b.b	vehicle	Hull B	货轮B	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.hull_c.c	vehicle	Hull C	货C	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.hull_c.c	vehicle	Hull C	货轮C	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.hull_d.d	vehicle	Hull D	货D	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.hull_d.d	vehicle	Hull D	货轮D	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.hull_e.e	vehicle	Hull E	货E	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.hull_e.e	vehicle	Hull E	货轮E	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.hurricane.34dcef5564	vehicle	Hurricane	飓风	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.idris_k.k	vehicle	Idris-K	伊德里斯K	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.idris_k.k	vehicle	Idris-K	小姨K	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.idris_m.m	vehicle	Idris-M	伊德里斯M	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.idris_m.m	vehicle	Idris-M	小姨M	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.idris_p.db95ef902b	vehicle	Idris-P	伊德里斯	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.idris_p.p	vehicle	Idris-P	伊德里斯P	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.idris_p.354ca047c4	vehicle	Idris-P	小姨	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.idris_p.p	vehicle	Idris-P	小姨P	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.intrepid.104ce4bdf8	vehicle	Intrepid	无畏	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ironclad.12b592a7f4	vehicle	IRONCLAD	铁甲	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ironclad_assault.a347398f26	vehicle	IRONCLAD ASSAULT	突击铁甲	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ironclad_assault.7c2082df75	vehicle	IRONCLAD ASSAULT	突袭铁甲	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ironclad_assault.84fa154a35	vehicle	IRONCLAD ASSAULT	铁甲突击	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ironclad_assault.8999a7e381	vehicle	IRONCLAD ASSAULT	铁甲突袭	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ironclad_assault.e5c741805c	vehicle	IRONCLAD ASSAULT	铁甲舰突袭	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.javelin.c756186f74	vehicle	Javelin	标枪	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.khartu_al.2581258fda	vehicle	Khartu-al	卡图	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.kingship.541d5f8240	vehicle	Kingship	王船	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.kraken.ac09f58ed3	vehicle	Kraken	海妖	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.kraken.30573ccef4	vehicle	Kraken	黑海妖	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.kraken_privateer.e0a455762b	vehicle	Kraken Privateer	海妖私掠	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.kraken_privateer.a65f959c0b	vehicle	Kraken Privateer	白海妖	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.legionnaire.d3eb74a977	vehicle	Legionnaire	军团兵	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.liberator.0badea3df7	vehicle	Liberator	解放	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.lynx.65b866db80	vehicle	Lynx	天猫	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.lynx.17f7f390bc	vehicle	Lynx	山猫	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.m2_hercules_starlifter.m2	vehicle	M2 Hercules Starlifter	大力神M2	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mantis.ef76443ada	vehicle	Mantis	螳螂	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.merchantman.385aff47fe	vehicle	Merchantman	商船	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.merchantman.e5067a7424	vehicle	Merchantman	巴商	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.merchantman.3948eb460a	vehicle	Merchantman	巴奴商船	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mercury_star_runner.d7f0c21dbe	vehicle	Mercury Star Runner	墨丘利	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mercury_star_runner.2b16d7a47c	vehicle	Mercury Star Runner	水星	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mole.6aa7854799	vehicle	MOLE	鼹鼠	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mpuv_cargo.mpuv	vehicle	MPUV Cargo	MPUV货运	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mpuv_personnel.mpuv	vehicle	MPUV Personnel	MPUV载人	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mpuv_tractor.mpuv	vehicle	MPUV Tractor	MPUV牵引	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mule.ec14f9eda6	vehicle	Mule	骡	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mustang_alpha.f930241a28	vehicle	Mustang Alpha	野马	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mustang_alpha.a	vehicle	Mustang Alpha	野马A	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mustang_alpha.f5f9cb385d	vehicle	Mustang Alpha	野马阿尔法	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mustang_alpha_vindicator.a182db7b35	vehicle	Mustang Alpha Vindicator	白野马	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mustang_alpha_vindicator.e713feb750	vehicle	Mustang Alpha Vindicator	野马维和	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mustang_beta.b	vehicle	Mustang Beta	野马B	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mustang_beta.2078c9c2ce	vehicle	Mustang Beta	野马贝塔	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mustang_delta.d	vehicle	Mustang Delta	野马D	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mustang_delta.d2ec52d5c9	vehicle	Mustang Delta	野马德尔塔	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mustang_gamma.g	vehicle	Mustang Gamma	野马G	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mustang_gamma.d9e2153f67	vehicle	Mustang Gamma	野马伽马	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mustang_omega.b4635bae32	vehicle	Mustang Omega	红野马	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mustang_omega.o	vehicle	Mustang Omega	野马O	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.mustang_omega.3af1b37777	vehicle	Mustang Omega	野马欧米伽	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.nautilus.73b3368557	vehicle	Nautilus	鹦鹉螺	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.nomad.b992febea6	vehicle	Nomad	游牧	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.nova.f8b9af7251	vehicle	Nova	新星	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.nox.7c9088457f	vehicle	Nox	诺克斯	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.odyssey.f0d11a4109	vehicle	Odyssey	奥德赛	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.orion.0aa1f5d2c3	vehicle	Orion	猎户	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.p_52_merlin.81bb5d4391	vehicle	P-52 Merlin	梅林	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.p_72_archimedes.f529778c23	vehicle	P-72 Archimedes	阿基米德	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.paladin.556a830f29	vehicle	PALADIN	圣骑士	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.paladin.ded39cafed	vehicle	PALADIN	帕拉丁	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.pegasus.4349722cf0	vehicle	Pegasus	天马座	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.pegasus.3432fcb65f	vehicle	Pegasus	飞马座	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.perseus.ec505b41a7	vehicle	Perseus	英仙	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.pioneer.5b6574ae56	vehicle	Pioneer	开拓	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.pioneer.55075e1383	vehicle	Pioneer	开拓者	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.polaris.f27616abbc	vehicle	Polaris	北极星	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.prospector.c14bd87bb6	vehicle	Prospector	勘探	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.prowler.7f2ffbd930	vehicle	Prowler	徘徊	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.pulse.a3ececd8b8	vehicle	Pulse	脉冲	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.pulse_lx.lx	vehicle	Pulse LX	脉冲LX	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.raft.07e8d521a3	vehicle	RAFT	木筏	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.railen.1930d61a32	vehicle	Railen	莱伦	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.railen.2f74757bb2	vehicle	Railen	锐伦	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ranger_cv.cv	vehicle	Ranger CV	游侠CV	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ranger_cv.cv	vehicle	Ranger CV	游骑兵CV	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ranger_rc.rc	vehicle	Ranger RC	游侠RC	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ranger_rc.rc	vehicle	Ranger RC	游骑兵RC	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ranger_tr.8aebc5220d	vehicle	Ranger TR	游侠	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ranger_tr.tr	vehicle	Ranger TR	游侠TR	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ranger_tr.a57d9e7804	vehicle	Ranger TR	游骑兵	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ranger_tr.tr	vehicle	Ranger TR	游骑兵TR	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.raptor.e2fa6c7e20	vehicle	RAPTOR	垃圾车	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.raptor.2e1b60244f	vehicle	RAPTOR	扫地车	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.raptor.af24e3406a	vehicle	RAPTOR	清洁车	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.raptor.fc8c0c63b4	vehicle	RAPTOR	猛禽	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.razor.eb723893ff	vehicle	Razor	剃刀	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.razor_ex.ex	vehicle	Razor EX	剃刀EX	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.razor_lx.lx	vehicle	Razor LX	剃刀LX	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.reclaimer.4708c3b24f	vehicle	Reclaimer	再生者	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.reclaimer.6eda6254dd	vehicle	Reclaimer	回收	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.redeemer.a2fba0cf24	vehicle	Redeemer	救赎	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.reliant_kore.933056f0f6	vehicle	Reliant Kore	信赖	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.reliant_kore.kore	vehicle	Reliant Kore	信赖kore	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.reliant_kore.5a9b66144e	vehicle	Reliant Kore	信赖货运	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.reliant_mako.mako	vehicle	Reliant Mako	信赖mako	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.reliant_mako.045ed57c6d	vehicle	Reliant Mako	信赖新闻	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.reliant_sen.sen	vehicle	Reliant Sen	信赖sen	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.reliant_sen.1774be6990	vehicle	Reliant Sen	信赖科考	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.reliant_tana.tana	vehicle	Reliant Tana	信赖Tana	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.reliant_tana.9e4ff9ce9f	vehicle	Reliant Tana	信赖武装	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.retaliator.56f5a7e806	vehicle	Retaliator	报复	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.retribution.1fdc48e668	vehicle	Retribution	惩戒	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.sabre.b345c9cb9e	vehicle	Sabre	军刀	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.sabre_comet.5e9a82f19a	vehicle	Sabre Comet	军刀彗星	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.sabre_firebird.8e5f4c44a0	vehicle	Sabre Firebird	军刀火鸟	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.sabre_firebird.b2b4a79663	vehicle	Sabre Firebird	火鸟	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.sabre_firebird.531e5252d6	vehicle	Sabre Firebird	烧鸡	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.sabre_peregrine.e492652061	vehicle	SABRE PEREGRINE	军刀游隼	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.sabre_peregrine.79a86945f2	vehicle	SABRE PEREGRINE	军刀竞速	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.sabre_peregrine.650c0a4cbb	vehicle	SABRE PEREGRINE	游隼	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.sabre_raven.a680bb2b20	vehicle	Sabre Raven	军刀渡鸦	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.sabre_raven.3a595c8407	vehicle	Sabre Raven	渡鸦	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.santokiya.a4e09d9e70	vehicle	Santokiya	大青椒	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.santokiya.f949fe41a4	vehicle	Santokiya	桑托起亚	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.scorpius.1c72acf322	vehicle	Scorpius	天蝎	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.scorpius.c95f1d86a0	vehicle	Scorpius	天蝎座	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.scorpius_antares.ffb0c9618f	vehicle	Scorpius Antares	天蝎座心宿二	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.scorpius_antares.3a50e62852	vehicle	Scorpius Antares	天蝎座蝎心	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.scorpius_antares.5dd4d1fd42	vehicle	Scorpius Antares	心宿二	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.scorpius_antares.32b7e3bf68	vehicle	Scorpius Antares	电蝎	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.scorpius_antares.c9448ee094	vehicle	Scorpius Antares	蝎心	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.scythe.eba4ff1003	vehicle	Scythe	死镰	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.spartan.381266a99d	vehicle	Spartan	斯巴达	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.srv.4f32f5bc0b	vehicle	SRV	拖船	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.starfarer.7b438432ee	vehicle	Starfarer	加油船	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.starfarer.4c7a61570f	vehicle	Starfarer	星际远航者	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.starfarer.238ddf49ba	vehicle	Starfarer	民油	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.starfarer.f7dcfd9ba6	vehicle	Starfarer	油船	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.starfarer_gemini.63563a63b6	vehicle	Starfarer Gemini	军油	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.starfarer_gemini.fa5e10128f	vehicle	Starfarer Gemini	双子座	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.starfarer_gemini.5f779f31d6	vehicle	Starfarer Gemini	星际远航者双子座	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.starlancer_max.max	vehicle	STARLANCER MAX	星枪MAX	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.starlancer_max.max	vehicle	STARLANCER MAX	星际枪骑兵MAX	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.starlancer_tac.6a2dd4084c	vehicle	STARLANCER TAC	星枪	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.starlancer_tac.tac	vehicle	STARLANCER TAC	星枪TAC	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.starlancer_tac.67367f3400	vehicle	STARLANCER TAC	星际枪骑兵	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.starlancer_tac.tac	vehicle	STARLANCER TAC	星际枪骑兵TAC	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.storm.452980d9cb	vehicle	Storm	风暴	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.storm.dece3ec854	vehicle	Storm	风暴基础	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.stormaa.aa	vehicle	StormAA	风暴AA	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.syulen.95341bd5b2	vehicle	Syulen	苏伦	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.syulen.c0ed6c9467	vehicle	Syulen	速伦	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.talon.d42556cc0c	vehicle	Talon	利爪	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.talon.9b37dafc9d	vehicle	Talon	炮鸟	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.talon_shrike.25b52dccbb	vehicle	Talon Shrike	伯劳	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.talon_shrike.356fdc17d3	vehicle	Talon Shrike	伯劳鸟	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.talon_shrike.081b357037	vehicle	Talon Shrike	利爪伯劳	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.terrapin.adacfd1d48	vehicle	Terrapin	水龟	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.terrapin_medic.5578498bce	vehicle	Terrapin MEDIC	医疗水龟	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.terrapin_medic.5baba00ac3	vehicle	Terrapin MEDIC	水龟医疗	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ursa.bac20f7903	vehicle	Ursa	大熊	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ursa_medivac.5a308e25a7	vehicle	Ursa Medivac	医疗大熊	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ursa_medivac.aa78550e0a	vehicle	Ursa Medivac	医疗熊	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ursa_medivac.60cefcad42	vehicle	Ursa Medivac	大熊医疗	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ursa_medivac.70ba60ab50	vehicle	Ursa Medivac	大熊座医疗	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.valkyrie.72b53ae601	vehicle	Valkyrie	女武神	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.valkyrie.5ebf111e43	vehicle	Valkyrie	瓦尔基里	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.valkyrie_liberator.8b9a8a0c24	vehicle	Valkyrie Liberator	女武神解放者	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.valkyrie_liberator.b21576d5dd	vehicle	Valkyrie Liberator	解放者女武神	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.vanguard_harbinger.68481c8089	vehicle	Vanguard Harbinger	先锋先驱	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.vanguard_harbinger.b6775b2c46	vehicle	Vanguard Harbinger	先驱	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.vanguard_hoplite.463b5e81b0	vehicle	Vanguard Hoplite	先锋重装	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.vanguard_hoplite.31891e040e	vehicle	Vanguard Hoplite	重装	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.vanguard_sentinel.d56ad33f61	vehicle	Vanguard Sentinel	先锋	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.vanguard_sentinel.6c5596764a	vehicle	Vanguard Sentinel	先锋哨兵	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.vanguard_sentinel.f98712d43b	vehicle	Vanguard Sentinel	哨兵	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.vanguard_warden.bb536a085a	vehicle	Vanguard Warden	先锋典狱长	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.vanguard_warden.a669675388	vehicle	Vanguard Warden	典狱长	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.vulcan.f029fe4ae0	vehicle	Vulcan	火神	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.vulture.d026617ea1	vehicle	Vulture	秃鹫	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.x1.x1	vehicle	X1	X1基础	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.x1_force.x1	vehicle	X1 Force	X1力	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.x1_force.x1	vehicle	X1 Force	X1武装	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.x1_velocity.x1	vehicle	X1 Velocity	X1竞速	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.x1_velocity.x1	vehicle	X1 Velocity	X1速	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.zeus_mkii_cl.b7c21aa411	vehicle	Zeus MkII CL	宙斯	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.zeus_mkii_cl.cl	vehicle	Zeus MkII CL	宙斯CL	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.zeus_mkii_es.es	vehicle	Zeus MkII ES	宙斯ES	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.zeus_mkii_mr.mr	vehicle	Zeus MkII MR	宙斯MR	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.ship.37068bafe3	vehicle	仙女座级	仙女座级	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
+ship_alias.es.cb019064e3	vehicle	摇摇车ES	摇摇车	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py

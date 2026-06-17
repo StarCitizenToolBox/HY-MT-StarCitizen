@@ -273,6 +273,45 @@ def build_example_samples(path: Path, repeat: int = 1) -> tuple[list[PairSample]
     return samples, {"example.samples": len(samples)}
 
 
+def build_ship_alias_samples(
+    path: Path,
+    repeat: int = 1,
+    existing_pairs: Iterable[tuple[str, str]] | None = None,
+) -> tuple[list[PairSample], dict[str, int]]:
+    if not path.exists():
+        return [], {"ship_alias.samples": 0, "ship_alias.skipped_existing": 0}
+    samples: list[PairSample] = []
+    existing = {(clean_text(zh), clean_text(en).casefold()) for zh, en in (existing_pairs or [])}
+    skipped_existing = 0
+    for line_number, raw_line in enumerate(path.read_text(encoding="utf-8-sig").splitlines(), start=1):
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line_number == 1 and line.casefold().startswith("key\t"):
+            continue
+        parts = raw_line.split("\t")
+        if len(parts) < 4:
+            raise ValueError(f"Invalid ship alias row {path}:{line_number}; expected key, category, en, zh")
+        key, category, en, zh = (clean_text(part) for part in parts[:4])
+        if not contains_cjk(zh):
+            raise ValueError(f"Invalid ship alias row {path}:{line_number}; zh alias must contain CJK text")
+        if (zh, en.casefold()) in existing:
+            skipped_existing += 1
+            continue
+        for index in range(max(1, repeat)):
+            samples.append(
+                PairSample(
+                    key=f"ship_alias:{key}:{index + 1}",
+                    en=en,
+                    zh=zh,
+                    category=category,
+                    is_priority=True,
+                    source="ship_alias",
+                )
+            )
+    return samples, {"ship_alias.samples": len(samples), "ship_alias.skipped_existing": skipped_existing}
+
+
 def contains_cjk(text: str) -> bool:
     return re.search(r"[\u3400-\u9fff]", text) is not None
 
