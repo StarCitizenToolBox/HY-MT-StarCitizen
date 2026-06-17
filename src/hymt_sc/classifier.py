@@ -11,6 +11,8 @@ class CategoryResult:
 class StarCitizenKeyClassifier:
     """Key classifier adapted from Opus-MT-StarCitizen's priority categories."""
 
+    CATEGORY_ORDER = ["vehicle", "location", "item", "subtitle", "mission"]
+
     PRIORITY_CATEGORIES: dict[str, list[str]] = {
         "location": [
             r"^Bacchus(?!.*_Desc).*",
@@ -33,10 +35,18 @@ class StarCitizenKeyClassifier:
             r"^Virgil(?!.*_Desc).*",
             r"^(Crusader|ArcCorp|Hurston|microTech|Orison|Area18|Lorville|NewBabbage)(?!.*_Desc).*",
             r"^(Port_Olisar|GrimHex|Everus|Baijini|Seraphim).*",
+            r"^ATC_(Lorville|Area18|Orison|NewBabbage).*",
+            r".*_(RepUI_)?(Headquarters|Location)$",
+            r".*(?:Lorville|Area18|Orison|NewBabbage|GrimHex|Everus|Baijini|Seraphim).*",
             r".*(?:Station|Port|Outpost|Settlement)(?!.*_Desc).*",
         ],
         "vehicle": [
             r"^vehicle_Name.*",
+            r"^(Event|event)_Ship(Name|Title)_.*",
+            r"^Ship(Name|Title)_.*",
+            r".*_Ship(Name|Title)$",
+            r"^item_(Name|Desc)[A-Za-z0-9]+_Paint_.*",
+            r".*_Ships_[A-Za-z0-9]+_(Desc|Title)$",
         ],
         "item": [
             r"^item_Name.*",
@@ -69,7 +79,8 @@ class StarCitizenKeyClassifier:
 
     @classmethod
     def classify(cls, key: str) -> CategoryResult:
-        for category, patterns in cls.PRIORITY_CATEGORIES.items():
+        for category in cls.CATEGORY_ORDER:
+            patterns = cls.PRIORITY_CATEGORIES[category]
             for pattern in patterns:
                 if re.match(pattern, key, re.IGNORECASE):
                     return CategoryResult(category=category, is_priority=True)

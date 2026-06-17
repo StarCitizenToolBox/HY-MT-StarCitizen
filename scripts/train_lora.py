@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 import torch
-from peft import LoraConfig, get_peft_model
+from peft import LoraConfig, PeftModel, get_peft_model
 from torch.utils.data import Dataset
 from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer, Trainer, TrainingArguments
 
@@ -131,6 +131,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--lora-rank", type=int, default=defaults.get("lora_rank", 16))
     parser.add_argument("--lora-alpha", type=int, default=defaults.get("lora_alpha", 32))
     parser.add_argument("--lora-dropout", type=float, default=defaults.get("lora_dropout", 0.05))
+    parser.add_argument("--adapter-init-path", default=defaults.get("adapter_init_path"))
+    parser.add_argument(
+        "--target-modules",
+        nargs="+",
+        default=defaults.get("target_modules", ["q_proj", "k_proj", "v_proj", "o_proj"]),
+    )
     parser.add_argument("--bf16", action="store_true", default=defaults.get("bf16", False))
     parser.add_argument("--gradient-checkpointing", action="store_true", default=defaults.get("gradient_checkpointing", False))
     parser.add_argument("--resume-from-checkpoint", default=defaults.get("resume_from_checkpoint"))
@@ -150,6 +156,8 @@ def main() -> None:
     args.train_file = resolve_project_path(args.train_file)
     args.eval_file = resolve_project_path(args.eval_file)
     args.output_dir = resolve_output_path(args.output_dir)
+    if args.adapter_init_path:
+        args.adapter_init_path = resolve_project_path(args.adapter_init_path)
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_path, trust_remote_code=True)
     if tokenizer.pad_token_id is None:
@@ -170,15 +178,18 @@ def main() -> None:
         model.gradient_checkpointing_enable()
         model.config.use_cache = False
 
-    lora_config = LoraConfig(
-        r=args.lora_rank,
-        lora_alpha=args.lora_alpha,
-        lora_dropout=args.lora_dropout,
-        bias="none",
-        task_type="CAUSAL_LM",
-        target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
-    )
-    model = get_peft_model(model, lora_config)
+    if args.adapter_init_path:
+        model = PeftModel.from_pretrained(model, args.adapter_init_path, is_trainable=True)
+    else:
+        lora_config = LoraConfig(
+            r=args.lora_rank,
+            lora_alpha=args.lora_alpha,
+            lora_dropout=args.lora_dropout,
+            bias="none",
+            task_type="CAUSAL_LM",
+            target_modules=args.target_modules,
+        )
+        model = get_peft_model(model, lora_config)
     model.print_trainable_parameters()
 
     train_dataset = SFTJsonlDataset(args.train_file, tokenizer, args.max_seq_length)
