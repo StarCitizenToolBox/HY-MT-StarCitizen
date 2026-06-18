@@ -114,6 +114,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Keep lm_head unquantized. This also disables shared quantized embeddings.",
     )
+    parser.add_argument(
+        "--unquantized-lora",
+        action="store_true",
+        help="Keep LoRA adapter MatMul weights unquantized while quantizing base model weights.",
+    )
     parser.add_argument("--no-shared-embeddings", action="store_true", help="Do not share token embeddings with lm_head.")
     parser.add_argument(
         "--int4-accuracy-level",
@@ -162,6 +167,23 @@ def main() -> None:
         "hf_remote": "false",
     }
     if args.precision == "int4":
+        nodes_to_exclude = []
+        if args.unquantized_lm_head:
+            nodes_to_exclude.append("/lm_head/MatMul")
+        if args.unquantized_lora:
+            lora_modules = [
+                "attn/q_proj",
+                "attn/k_proj",
+                "attn/v_proj",
+                "attn/o_proj",
+                "mlp/gate_proj",
+                "mlp/up_proj",
+                "mlp/down_proj",
+            ]
+            for layer_index in range(32):
+                for module in lora_modules:
+                    nodes_to_exclude.append(f"/model/layers.{layer_index}/{module}/lora_A/MatMul")
+                    nodes_to_exclude.append(f"/model/layers.{layer_index}/{module}/lora_B/MatMul")
         extra_options.update(
             {
                 "int4_accuracy_level": args.int4_accuracy_level,
@@ -172,8 +194,8 @@ def main() -> None:
         )
         if args.use_qdq:
             extra_options["use_qdq"] = True
-        if args.unquantized_lm_head:
-            extra_options["int4_nodes_to_exclude"] = ["/lm_head/MatMul"]
+        if nodes_to_exclude:
+            extra_options["int4_nodes_to_exclude"] = nodes_to_exclude
     if adapter_path:
         extra_options["adapter_path"] = adapter_path
     if args.num_hidden_layers is not None:
