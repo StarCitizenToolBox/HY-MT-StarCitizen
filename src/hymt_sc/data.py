@@ -312,6 +312,105 @@ def build_ship_alias_samples(
     return samples, {"ship_alias.samples": len(samples), "ship_alias.skipped_existing": skipped_existing}
 
 
+def load_ship_alias_entries(
+    path: Path,
+    existing_pairs: Iterable[tuple[str, str]] | None = None,
+) -> tuple[list[TermEntry], int]:
+    if not path.exists():
+        return [], 0
+    existing = {(clean_text(zh), clean_text(en).casefold()) for zh, en in (existing_pairs or [])}
+    entries: list[TermEntry] = []
+    skipped_existing = 0
+    seen: set[tuple[str, str]] = set()
+    for line_number, raw_line in enumerate(path.read_text(encoding="utf-8-sig").splitlines(), start=1):
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line_number == 1 and line.casefold().startswith("key\t"):
+            continue
+        parts = raw_line.split("\t")
+        if len(parts) < 4:
+            raise ValueError(f"Invalid ship alias row {path}:{line_number}; expected key, category, en, zh")
+        key, category, en, zh = (clean_text(part) for part in parts[:4])
+        if not contains_cjk(zh):
+            raise ValueError(f"Invalid ship alias row {path}:{line_number}; zh alias must contain CJK text")
+        if (zh, en.casefold()) in existing:
+            skipped_existing += 1
+            continue
+        dedupe_key = (zh, en.casefold())
+        if dedupe_key in seen:
+            continue
+        seen.add(dedupe_key)
+        entries.append(TermEntry(key=f"ship_alias:{key}", category=category, en=en, zh=zh))
+    return entries, skipped_existing
+
+
+def build_quant_focus_samples(
+    term_entries: Iterable[TermEntry],
+    alias_entries: Iterable[TermEntry],
+    term_repeat: int = 1,
+    alias_repeat: int = 1,
+) -> tuple[list[PairSample], dict[str, int]]:
+    samples: list[PairSample] = []
+    templates = [
+        ("{en}", "{zh}"),
+        ("{en}", "“{zh}”"),
+        ("The Star Citizen term is {en}.", "《星际公民》术语是{zh}。"),
+        ("The correct English name is {en}.", "正确英文名是{zh}。"),
+        ("Use {en}.", "使用{zh}。"),
+        ("Do not change {en} into another term.", "不要把{zh}改成其他术语。"),
+    ]
+    vehicle_templates = [
+        ("The ship is {en}.", "这艘船是{zh}。"),
+        ("The ship name is {en}.", "船名是{zh}。"),
+        ("I said {en}, not another ship.", "我说的是{zh}，不是别的船。"),
+        ("Do not translate {en} as a generic ship.", "不要把{zh}翻成普通飞船。"),
+        ("I am flying the {en}.", "我开{zh}。"),
+        ("I am using the {en} for bounty missions.", "我用{zh}打赏金。"),
+        ("The {en} is in the hangar.", "{zh}在机库里。"),
+        ("The {en} is ready.", "{zh}准备好了。"),
+        ("The {en} is a Star Citizen ship.", "{zh}是《星际公民》里的船。"),
+    ]
+    location_templates = [
+        ("The location is {en}.", "这个地点是{zh}。"),
+        ("The station is {en}.", "这个空间站是{zh}。"),
+        ("I am at {en}.", "我在{zh}。"),
+        ("Meet me at {en}.", "来{zh}找我。"),
+        ("Set a route to {en}.", "设置前往{zh}的路线。"),
+        ("Do not expand {en} into another location.", "不要把{zh}扩写成其他地点。"),
+        ("The marker says {en}.", "标记显示{zh}。"),
+        ("The official location name is {en}.", "{zh}是官方地点名称。"),
+        ("The official station name is {en}.", "{zh}是官方空间站名称。"),
+    ]
+
+    entries = list(term_entries) + list(alias_entries)
+    seen_entries: set[tuple[str, str, str]] = set()
+    for entry in entries:
+        dedupe_key = (entry.category, entry.zh, entry.en.casefold())
+        if dedupe_key in seen_entries:
+            continue
+        seen_entries.add(dedupe_key)
+        entry_templates = templates[:]
+        if entry.category == "vehicle":
+            entry_templates.extend(vehicle_templates)
+        elif entry.category == "location":
+            entry_templates.extend(location_templates)
+        repeats = alias_repeat if entry.key.startswith("ship_alias:") else term_repeat
+        for repeat_index in range(max(1, repeats)):
+            for template_index, (en_template, zh_template) in enumerate(entry_templates, start=1):
+                samples.append(
+                    PairSample(
+                        key=f"quant_focus:{entry.key}:{repeat_index + 1}:{template_index}",
+                        en=en_template.format(en=entry.en, zh=entry.zh),
+                        zh=zh_template.format(en=entry.en, zh=entry.zh),
+                        category=entry.category,
+                        is_priority=True,
+                        source="quant_focus",
+                    )
+                )
+    return samples, {"quant_focus.samples": len(samples)}
+
+
 def contains_cjk(text: str) -> bool:
     return re.search(r"[\u3400-\u9fff]", text) is not None
 
