@@ -411,6 +411,126 @@ def build_quant_focus_samples(
     return samples, {"quant_focus.samples": len(samples)}
 
 
+def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[str, int]]:
+    servers = [
+        ("EU server", "欧服"),
+        ("US server", "美服"),
+        ("Asia server", "亚服"),
+        ("Australian server", "澳服"),
+        ("test server", "测试服"),
+        ("live server", "正式服"),
+    ]
+    ships = [
+        ("Ironclad", "铁甲"),
+        ("Corsair", "海盗船"),
+        ("Cutter", "小刀"),
+        ("Glaive", "长刀"),
+        ("Polaris", "北极星"),
+        ("Perseus", "英仙座"),
+        ("Scorpius", "天蝎座"),
+        ("Vulcan", "火神"),
+    ]
+    server_templates = [
+        ("I am on the {server_en}.", "我在{server_zh}。"),
+        ("I switched to the {server_en}.", "我换到{server_zh}了。"),
+        ("The {server_en} is lagging today.", "{server_zh}今天很卡。"),
+        ("Do not translate {server_en} as a service name.", "不要把{server_zh}翻成服务名称。"),
+        ("{server_en} means a game server region.", "{server_zh}指的是游戏服务器区域。"),
+        ("People are fighting at the outpost on the {server_en}.", "{server_zh}前哨站有人打架。"),
+    ]
+    ship_chat_templates = [
+        (
+            "I got robbed on the {server_en}; my {ship_en} had just been filled with cargo, then I got killed.",
+            "我在{server_zh}被打劫了，{ship_zh}刚装满货，就被人打死。",
+        ),
+        (
+            "I was robbed on the {server_en}; the {ship_en} was full of cargo, and then someone killed me.",
+            "我在{server_zh}被抢了，{ship_zh}装满了货，然后被人打死了。",
+        ),
+        (
+            "Someone pirated me on the {server_en} after I loaded the {ship_en} with cargo.",
+            "我在{server_zh}刚给{ship_zh}装完货就被海盗了。",
+        ),
+        (
+            "I loaded the {ship_en} on the {server_en}, got interdicted, and died before I could escape.",
+            "我在{server_zh}给{ship_zh}装货，结果被拦截，没跑掉就死了。",
+        ),
+        (
+            "My {ship_en} was packed with cargo on the {server_en}, and I got killed by another player.",
+            "我在{server_zh}的{ship_zh}满载货物，被别的玩家打死了。",
+        ),
+        (
+            "I was doing cargo on the {server_en} in the {ship_en}, but someone killed me near the outpost.",
+            "我在{server_zh}开{ship_zh}跑货，在前哨站附近被人打死了。",
+        ),
+        (
+            "The {ship_en} was loaded, but I was killed on the {server_en} before takeoff.",
+            "{ship_zh}已经装好货了，但我在{server_zh}起飞前被杀了。",
+        ),
+        (
+            "I got killed on the {server_en}; the {ship_en} was still full of cargo.",
+            "我在{server_zh}被杀了，{ship_zh}里还满是货。",
+        ),
+        (
+            "A pirate killed me on the {server_en}, and my {ship_en} was full of cargo.",
+            "有个海盗在{server_zh}把我打死了，我的{ship_zh}还装满了货。",
+        ),
+        (
+            "I was hauling cargo on the {server_en} with the {ship_en}, then got robbed and killed.",
+            "我在{server_zh}用{ship_zh}运货，然后被抢还被打死。",
+        ),
+        (
+            "I just filled the {ship_en} with cargo on the {server_en}, and then I got shot dead.",
+            "我刚在{server_zh}把{ship_zh}装满货，然后就被人打死了。",
+        ),
+        (
+            "The {ship_en} got destroyed on the {server_en}, but I was the one who got killed first.",
+            "{ship_zh}在{server_zh}被炸了，但先被打死的是我。",
+        ),
+    ]
+
+    samples: list[PairSample] = []
+    for repeat_index in range(max(1, repeat)):
+        for server_index, (server_en, server_zh) in enumerate(servers, start=1):
+            for template_index, (en_template, zh_template) in enumerate(server_templates, start=1):
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:server:{server_index}:{repeat_index + 1}:{template_index}",
+                        en=en_template.format(server_en=server_en, server_zh=server_zh),
+                        zh=zh_template.format(server_en=server_en, server_zh=server_zh),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+            for ship_index, (ship_en, ship_zh) in enumerate(ships, start=1):
+                for template_index, (en_template, zh_template) in enumerate(ship_chat_templates, start=1):
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:cargo:{server_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{template_index}"
+                            ),
+                            en=en_template.format(
+                                server_en=server_en,
+                                server_zh=server_zh,
+                                ship_en=ship_en,
+                                ship_zh=ship_zh,
+                            ),
+                            zh=zh_template.format(
+                                server_en=server_en,
+                                server_zh=server_zh,
+                                ship_en=ship_en,
+                                ship_zh=ship_zh,
+                            ),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+    return samples, {"chat_guard.samples": len(samples)}
+
+
 def contains_cjk(text: str) -> bool:
     return re.search(r"[\u3400-\u9fff]", text) is not None
 
