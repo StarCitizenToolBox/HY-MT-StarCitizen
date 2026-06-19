@@ -293,6 +293,9 @@ def build_ship_alias_samples(
         if len(parts) < 4:
             raise ValueError(f"Invalid ship alias row {path}:{line_number}; expected key, category, en, zh")
         key, category, en, zh = (clean_text(part) for part in parts[:4])
+        if contains_cjk(en):
+            skipped_existing += 1
+            continue
         if not contains_cjk(zh):
             raise ValueError(f"Invalid ship alias row {path}:{line_number}; zh alias must contain CJK text")
         if (zh, en.casefold()) in existing:
@@ -332,6 +335,9 @@ def load_ship_alias_entries(
         if len(parts) < 4:
             raise ValueError(f"Invalid ship alias row {path}:{line_number}; expected key, category, en, zh")
         key, category, en, zh = (clean_text(part) for part in parts[:4])
+        if contains_cjk(en):
+            skipped_existing += 1
+            continue
         if not contains_cjk(zh):
             raise ValueError(f"Invalid ship alias row {path}:{line_number}; zh alias must contain CJK text")
         if (zh, en.casefold()) in existing:
@@ -382,10 +388,34 @@ def build_quant_focus_samples(
         ("The official location name is {en}.", "{zh}是官方地点名称。"),
         ("The official station name is {en}.", "{zh}是官方空间站名称。"),
     ]
+    alias_chat_locations = [
+        ("Seraphim", "炽天使"),
+        ("Seraphim Station", "炽天使空间站"),
+        ("Lorville", "洛维尔"),
+        ("Area18", "18区"),
+        ("Orison", "奥里森"),
+        ("New Babbage", "新巴贝奇"),
+        ("Everus Harbor", "埃弗勒斯港"),
+        ("Port Tressler", "特雷斯勒港"),
+    ]
+    alias_chat_templates = [
+        ("The {en} at {location_en} is firing everywhere.", "{location_zh}有个{zh}到处开火。"),
+        ("The {en} near {location_en} is shooting at players.", "{location_zh}附近有个{zh}在攻击玩家。"),
+        ("I am taking the {en} from {location_en} for bounty missions.", "我从{location_zh}开{zh}打赏金。"),
+        ("Anyone want to run bounty missions in the {en} from {location_en}?", "有人从{location_zh}开{zh}一起打赏金吗？"),
+        ("I am hauling cargo in the {en} from {location_en}; need escort.", "我从{location_zh}开{zh}跑货，需要护航。"),
+        ("The {en} at {location_en} is in soft death; board carefully.", "{location_zh}那艘{zh}软死亡了，小心登船。"),
+        ("Do not confuse this ship: it is the {en}.", "别把这艘船认错，它是{zh}。"),
+        ("Global chat: the {en} at {location_en} is not friendly.", "全局频道：{location_zh}那艘{zh}不是友军。"),
+        ("Voice chat: bring the {en} to {location_en}.", "语音里说：把{zh}开到{location_zh}。"),
+        ("Warning, the {en} is camping the hangar at {location_en}.", "注意，{location_zh}有个{zh}在蹲机库。"),
+        ("The target is a {en}, not a Hornet Ghost.", "目标是{zh}，不是大黄蜂幽灵。"),
+        ("The {en} at {location_en} is firing everywhere. > F7C-S Hornet Ghost", "{location_zh}有个{zh}到处开火。>F7C-S Hornet Ghost"),
+    ]
 
     entries = list(term_entries) + list(alias_entries)
     seen_entries: set[tuple[str, str, str]] = set()
-    for entry in entries:
+    for entry_index, entry in enumerate(entries, start=1):
         dedupe_key = (entry.category, entry.zh, entry.en.casefold())
         if dedupe_key in seen_entries:
             continue
@@ -408,6 +438,28 @@ def build_quant_focus_samples(
                         source="quant_focus",
                     )
                 )
+        if entry.key.startswith("ship_alias:") and entry.category == "vehicle":
+            location_count = len(alias_chat_locations)
+            selected_locations = [
+                alias_chat_locations[(entry_index - 1) % location_count],
+                alias_chat_locations[(entry_index + 2) % location_count],
+            ]
+            for repeat_index in range(max(1, alias_repeat)):
+                for location_index, (location_en, location_zh) in enumerate(selected_locations, start=1):
+                    for template_index, (en_template, zh_template) in enumerate(alias_chat_templates, start=1):
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"quant_focus_alias_chat:{entry.key}:{repeat_index + 1}:"
+                                    f"{location_index}:{template_index}"
+                                ),
+                                en=en_template.format(en=entry.en, zh=entry.zh, location_en=location_en, location_zh=location_zh),
+                                zh=zh_template.format(en=entry.en, zh=entry.zh, location_en=location_en, location_zh=location_zh),
+                                category=entry.category,
+                                is_priority=True,
+                                source="quant_focus",
+                            )
+                        )
     return samples, {"quant_focus.samples": len(samples)}
 
 
@@ -758,6 +810,46 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             "Do not translate this phrase as ordinary Chinese; use {term_en}.",
             "不要把{term_zh}按普通中文翻译，要用{term_en}。",
         ),
+    ]
+    gameplay_direct_templates = [
+        ("{term_en}", "{term_zh}"),
+        ("Status: {term_en}.", "状态：{term_zh}。"),
+        ("Chat term: {term_en}.", "聊天术语：{term_zh}。"),
+        ("The player said {term_en}.", "玩家说的是{term_zh}。"),
+        ("This message is about {term_en}.", "这句话说的是{term_zh}。"),
+        ("In this context, use {term_en}.", "这个语境里用{term_zh}。"),
+        ("Do not replace {term_en} with a random ship name.", "不要把{term_zh}替换成随机船名。"),
+        ("Keep the gameplay phrase as {term_en}.", "这个玩法词保留为{term_zh}对应的术语。"),
+    ]
+    chat_prefix_wrappers = [
+        ("Global chat: ", "全局频道："),
+        ("Voice chat: ", "语音里说："),
+        ("Someone in party chat said: ", "队伍频道有人说："),
+        ("Help, ", "救命，"),
+        ("Warning, ", "注意，"),
+        ("This feels bad; ", "感觉不太行，"),
+        ("Can someone confirm this? ", "谁确认一下，"),
+        ("I just logged in and saw this: ", "我刚上线看到，"),
+        ("Do not panic, but ", "先别慌，"),
+        ("For the new players: ", "给新手说一下，"),
+    ]
+    chat_suffix_wrappers = [
+        (" Anyone want to join?", "有没有一起的？"),
+        (" Can anyone help?", "有人能帮忙吗？"),
+        (" Please confirm before firing.", "开火前确认一下。"),
+        (" I am not sure if it is friendly.", "我不确定是不是友军。"),
+        (" Tell the party on voice.", "在语音里告诉队伍。"),
+        (" Mark it before we engage.", "开打前先标记一下。"),
+        (" New players should stay away.", "新手先离远点。"),
+        (" Do not confuse the ship name.", "别把船名认错。"),
+    ]
+    chat_noise_suffixes = [
+        (" > F7C-S Hornet Ghost", ">F7C-S Hornet Ghost"),
+        (" > Aegis Gladius", ">Aegis Gladius"),
+        (" > Drake Cutter", ">Drake Cutter"),
+        (" @...", "@..."),
+        (" [global]", "[全局]"),
+        (" [voice]", "[语音]"),
     ]
     ambiguous_ship_chat_templates = [
         (
@@ -1265,6 +1357,17 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                         source="chat_guard",
                     )
                 )
+            for template_index, (en_template, zh_template) in enumerate(gameplay_direct_templates, start=1):
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:gameplay_direct:{term_index}:{repeat_index + 1}:{template_index}",
+                        en=en_template.format(term_en=term_en, term_zh=term_zh),
+                        zh=zh_template.format(term_en=term_en, term_zh=term_zh),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
         for server_index, (server_en, server_zh) in enumerate(servers, start=1):
             for template_index, (en_template, zh_template) in enumerate(server_templates, start=1):
                 samples.append(
@@ -1516,6 +1619,49 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                                 source="chat_guard",
                             )
                         )
+    base_samples = list(samples)
+    for sample_index, sample in enumerate(base_samples, start=1):
+        if sample.source != "chat_guard" or sample.category != "chat":
+            continue
+        if sample_index % 5 == 0:
+            wrapper_index = (sample_index // 5 - 1) % len(chat_prefix_wrappers)
+            en_prefix, zh_prefix = chat_prefix_wrappers[wrapper_index]
+            samples.append(
+                PairSample(
+                    key=f"{sample.key}:prefix:{wrapper_index + 1}",
+                    en=f"{en_prefix}{sample.en}",
+                    zh=f"{zh_prefix}{sample.zh}",
+                    category="chat",
+                    is_priority=True,
+                    source="chat_guard",
+                )
+            )
+        if sample_index % 7 == 0:
+            wrapper_index = (sample_index // 7 - 1) % len(chat_suffix_wrappers)
+            en_suffix, zh_suffix = chat_suffix_wrappers[wrapper_index]
+            samples.append(
+                PairSample(
+                    key=f"{sample.key}:suffix:{wrapper_index + 1}",
+                    en=f"{sample.en}{en_suffix}",
+                    zh=f"{sample.zh}{zh_suffix}",
+                    category="chat",
+                    is_priority=True,
+                    source="chat_guard",
+                )
+            )
+        if sample_index % 11 == 0:
+            wrapper_index = (sample_index // 11 - 1) % len(chat_noise_suffixes)
+            en_noise, zh_noise = chat_noise_suffixes[wrapper_index]
+            samples.append(
+                PairSample(
+                    key=f"{sample.key}:noise:{wrapper_index + 1}",
+                    en=f"{sample.en}{en_noise}",
+                    zh=f"{sample.zh}{zh_noise}",
+                    category="chat",
+                    is_priority=True,
+                    source="chat_guard",
+                )
+            )
     return samples, {"chat_guard.samples": len(samples)}
 
 

@@ -407,5 +407,3 @@ ship_alias.zeus_mkii_cl.b7c21aa411	vehicle	Zeus MkII CL	宙斯	https://raw.githu
 ship_alias.zeus_mkii_cl.cl	vehicle	Zeus MkII CL	宙斯CL	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
 ship_alias.zeus_mkii_es.es	vehicle	Zeus MkII ES	宙斯ES	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
 ship_alias.zeus_mkii_mr.mr	vehicle	Zeus MkII MR	宙斯MR	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
-ship_alias.ship.37068bafe3	vehicle	仙女座级	仙女座级	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py
-ship_alias.es.cb019064e3	vehicle	摇摇车ES	摇摇车	https://raw.githubusercontent.com/UEETianX/n55-bot/main/n55/src/plugins/ship.py

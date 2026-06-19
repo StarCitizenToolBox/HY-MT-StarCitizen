@@ -81,6 +81,7 @@ def extract_aliases(source: str, source_url: str) -> tuple[list[ShipAlias], dict
         "rules": 0,
         "query_literals": 0,
         "non_chinese_aliases": 0,
+        "non_english_names": 0,
         "duplicate_aliases": 0,
         "conflicting_aliases": 0,
     }
@@ -88,6 +89,9 @@ def extract_aliases(source: str, source_url: str) -> tuple[list[ShipAlias], dict
     for match in SHIP_RULE_PATTERN.finditer(source):
         stats["rules"] += 1
         en = normalize_ship_name(match.group("filename"))
+        if contains_cjk(en):
+            stats["non_english_names"] += 1
+            continue
         for query_match in QUERY_LITERAL_PATTERN.finditer(match.group("condition")):
             stats["query_literals"] += 1
             zh = normalize_alias(query_match.group("query"))
