@@ -469,7 +469,7 @@ def build_quant_focus_samples(
         ),
         (
             "Voice chat: keep the {en} outside {location_en} while we clear the bunker and loot the boxes.",
-            "yy里说 我们清地堡和摸箱子的时候，让{zh}停在{location_zh}外面。",
+            "语音里说 我们清地堡和摸箱子的时候，让{zh}停在{location_zh}外面。",
         ),
         (
             "Need help at {location_en}; the {en} is in soft death, cargo is still on board, and pirates are boarding.",
@@ -519,7 +519,7 @@ def build_quant_focus_samples(
         ),
         (
             "Voice chat says the {en} at {location_en} needs refuel, repair, and quantum fuel before the jump.",
-            "yy里说{location_zh}那艘{zh}跳跃前需要补油、维修和量子燃料。",
+            "语音里说{location_zh}那艘{zh}跳跃前需要补油、维修和量子燃料。",
         ),
         (
             "SC global says the {en} near {location_en} is mining; keep escort until the refinery run.",
@@ -560,24 +560,24 @@ def build_quant_focus_samples(
             "有无一起共享个快速合同？我可以从{location_zh}开{zh}过去。",
         ),
         (
-            "WTB cargo escort from {location_en}; the {en} is loaded and payment is on success.",
-            "WTB 从{location_zh}出发的跑货护航，{zh}已经装货，成功后给报酬。",
+            "Looking for cargo escort from {location_en}; the {en} is loaded and payment is on success.",
+            "求从{location_zh}出发的跑货护航，{zh}已经装货，成功后给报酬。",
         ),
         (
-            "WTS salvage boxes at {location_en}; meet the {en} and bring a tractor beam.",
-            "WTS {location_zh}的打捞箱子，到{zh}旁边集合，带牵引光束。",
+            "Selling salvage boxes at {location_en}; meet the {en} and bring a tractor beam.",
+            "出售{location_zh}的打捞箱子，到{zh}旁边集合，带牵引光束。",
         ),
         (
             "Need med rescue at {location_en}; the {en} is in soft death and pirates are boarding.",
             "{location_zh}需要医疗救援，{zh}软死亡了，海盗正在登船。",
         ),
         (
-            "Party invite open for the {en} crew at {location_en}; plz join voice before launch.",
-            "{location_zh}的{zh}船员队伍开放邀请，出发前plz进语音。",
+            "Party invite open for the {en} crew at {location_en}; please join voice before launch.",
+            "{location_zh}的{zh}船员队伍开放邀请，出发前请进语音。",
         ),
         (
-            "ASAP pickup near {location_en}; my {en} exploded and I still have the contract.",
-            "{location_zh}附近ASAP来接，我的{zh}炸了，但合同还在。",
+            "Need pickup soon near {location_en}; my {en} exploded and I still have the contract.",
+            "{location_zh}附近尽快来接，我的{zh}炸了，但合同还在。",
         ),
         (
             "o7, the {en} at {location_en} needs a turret player for high-risk bounty work.",
@@ -662,24 +662,24 @@ def build_quant_focus_samples(
             "LFG {zh}集合，我开{ship_zh}打赏金，有没有一起的？",
         ),
         (
-            "WTB escort from {en}; my {ship_en} has cargo and I can pay after delivery.",
-            "WTB 从{zh}出发的护航，我的{ship_zh}有货，到货后给报酬。",
+            "Looking for escort from {en}; my {ship_en} has cargo and I can pay after delivery.",
+            "求从{zh}出发的护航，我的{ship_zh}有货，到货后给报酬。",
         ),
         (
-            "WTS RMC near {en}; meet my {ship_en} and bring a tractor beam.",
-            "WTS {zh}附近的RMC，到我的{ship_zh}旁边集合，带牵引光束。",
+            "Selling RMC near {en}; meet my {ship_en} and bring a tractor beam.",
+            "出售{zh}附近的RMC，到我的{ship_zh}旁边集合，带牵引光束。",
         ),
         (
             "Need med rescue near {en}; the {ship_en} is down and the beacon payment is shared.",
             "{zh}附近需要医疗救援，{ship_zh}倒了，信标报酬共享。",
         ),
         (
-            "Party invite for {en}; plz join voice before we launch the {ship_en}.",
-            "{zh}队伍邀请开放，开{ship_zh}出发前plz进语音。",
+            "Party invite for {en}; please join voice before we launch the {ship_en}.",
+            "{zh}队伍邀请开放，开{ship_zh}出发前请进语音。",
         ),
         (
-            "ASAP pickup at {en}; contract is shared and the {ship_en} is waiting outside.",
-            "{zh}ASAP来接，合同已共享，{ship_zh}在外面等。",
+            "Need pickup soon at {en}; contract is shared and the {ship_en} is waiting outside.",
+            "{zh}尽快来接，合同已共享，{ship_zh}在外面等。",
         ),
         (
             "o7, anyone at {en} want to run cargo, bunkers, or bounty contracts with a {ship_en}?",
@@ -731,7 +731,7 @@ def build_quant_focus_samples(
         ),
         (
             "Voice chat: the {left_en} needs refuel and repair, while the {right_en} needs a turret seat.",
-            "yy里说 {left_zh}需要补油维修，{right_zh}缺炮塔位。",
+            "语音里说 {left_zh}需要补油维修，{right_zh}缺炮塔位。",
         ),
         (
             "If the {left_en} goes into soft death near {location_en}, do not blame the {right_en} tag after the message.",
@@ -757,25 +757,25 @@ def build_quant_focus_samples(
         ),
         (
             "Voice: {en} needs refuel and repair at {location_en}; do not read > F7C-S Hornet Ghost as the ship.",
-            "yy {zh}在{location_zh}要补油维修，别把 >F7C-S Hornet Ghost 当船名",
+            "语音 {zh}在{location_zh}要补油维修，别把 >F7C-S Hornet Ghost 当船名",
         ),
     ]
     location_mixed_format_templates = [
         (
             "[global] @teammate A {ship_en} is blocking pad 03 at {en} >>> switch route.",
-            "[全局] @队友 {zh} pad 03 有{ship_zh}堵门 >>> 换route",
+            "[全局] @队友 {zh} pad 03 有{ship_zh}堵门 >>> 换路线",
         ),
         (
             "{en} to OM-1 has a medical beacon; can the {ship_en} take it?",
             "{zh}->OM-1 有救援信标，{ship_zh}接吗？",
         ),
         (
-            "Voice: elevator bug at {en}; do not land the {ship_en}.",
-            "yy {zh} elevator bug，{ship_zh}别landing",
+            "Voice: elevator problem at {en}; do not land the {ship_en}.",
+            "语音 {zh}电梯又卡了，{ship_zh}先别降落",
         ),
         (
             "Quick callout: marker 2 is at {en}, not the tag after @...",
-            "报点 marker 2在{zh}，不是@...后面的标签",
+            "报点 2号标记在{zh}，不是@...后面的标签",
         ),
     ]
     vehicle_chat_log_templates = [
@@ -794,8 +794,8 @@ def build_quant_focus_samples(
     ]
     location_chat_log_templates = [
         (
-            "[Global][Ari]: status at {en}?\n[Party][Me]: elevator bug, keep the {ship_en} outside\n[Party][Ren]: copy, no landing yet",
-            "[Global][Ari]: {zh}什么情况？\n[Party][Me]: elevator bug，让{ship_zh}在外面等\n[Party][Ren]: 收到，先不landing",
+            "[Global][Ari]: status at {en}?\n[Party][Me]: elevator problem, keep the {ship_en} outside\n[Party][Ren]: copy, no landing yet",
+            "[Global][Ari]: {zh}什么情况？\n[Party][Me]: 电梯又卡了，让{ship_zh}在外面等\n[Party][Ren]: 收到，先不降落",
         ),
         (
             "20:11 [Team] Lyn: route {en} -> OM-1 has a med beacon\n20:12 [Team] Vox: bring {ship_en}?\n20:12 [Team] Lyn: yes, but wait for escort",
@@ -803,7 +803,7 @@ def build_quant_focus_samples(
         ),
         (
             "[Voice] Kai: marker 2 is at {en}\n[Global] Nova: I only see > F7C-S Hornet Ghost\n[Voice] Kai: ignore that tag, follow marker 2",
-            "[Voice] Kai: marker 2在{zh}\n[Global] Nova: 我只看到 >F7C-S Hornet Ghost\n[Voice] Kai: 忽略那个标签，跟marker 2",
+            "[Voice] Kai: 2号标记在{zh}\n[Global] Nova: 我只看到 >F7C-S Hornet Ghost\n[Voice] Kai: 忽略那个标签，跟2号标记",
         ),
     ]
     alias_chat_log_templates = [
@@ -813,7 +813,7 @@ def build_quant_focus_samples(
         ),
         (
             "21:04 [Party] Mira: {en} from {location_en} is asking for escort\n21:05 [Party] Sol: target or friendly?\n21:05 [Party] Mira: friendly, do not shoot",
-            "21:04 [Party] Mira: {location_zh}那艘{zh}在喊escort\n21:05 [Party] Sol: 目标还是友军？\n21:05 [Party] Mira: 友军，别开火",
+            "21:04 [Party] Mira: {location_zh}那艘{zh}在喊护航\n21:05 [Party] Sol: 目标还是友军？\n21:05 [Party] Mira: 友军，别开火",
         ),
     ]
     gameplay_comm_templates = [
@@ -831,7 +831,7 @@ def build_quant_focus_samples(
         ),
         (
             "Voice: if players say this term, use {en}; keep the party on voice and wait for escort.",
-            "yy 玩家说{zh}就用{en}，队伍保持语音并等护航。",
+            "语音里说 玩家说{zh}就用{en}，队伍保持语音并等护航。",
         ),
     ]
     gameplay_social_templates = [
@@ -840,16 +840,16 @@ def build_quant_focus_samples(
             "LFG: 这里说的是{zh}；共享合同并等所有人接了再走。",
         ),
         (
-            "WTB help with {en} near {location_en}; payment after the beacon completes.",
-            "WTB {location_zh}附近{zh}帮忙，信标完成后给报酬。",
+            "Looking for help with {en} near {location_en}; payment after the beacon completes.",
+            "求{location_zh}附近{zh}帮忙，信标完成后给报酬。",
         ),
         (
-            "Need someone on voice for {en}; plz do not translate it as a ship.",
-            "{zh}需要有人上语音，plz别把它翻成船名。",
+            "Need someone on voice for {en}; please do not translate it as a ship.",
+            "{zh}需要有人上语音，请别把它翻成船名。",
         ),
         (
-            "ASAP party invite for {en}; the {ship_en} is waiting at {location_en}.",
-            "{zh}ASAP进队，{ship_zh}在{location_zh}等。",
+            "Need party invite soon for {en}; the {ship_en} is waiting at {location_en}.",
+            "{zh}尽快进队，{ship_zh}在{location_zh}等。",
         ),
         (
             "o7, if global chat says {en}, keep that gameplay term and do not replace it with a vehicle.",
@@ -863,14 +863,14 @@ def build_quant_focus_samples(
     alias_chat_slang_prefixes = [
         ("SC global: ", "全局 "),
         ("Party: ", "队伍 "),
-        ("Voice: ", "yy里 "),
+        ("Voice: ", "语音 "),
         ("Need help: ", "来人 "),
         ("This feels bad; ", "情况不太对 "),
         ("Newbie warning: ", "萌新注意 "),
         ("Quick callout: ", "报点 "),
     ]
     alias_chat_slang_suffixes = [
-        (" ASAP.", " 速来"),
+        (" Soon.", " 速来"),
         (" Anyone up?", " 有人吗"),
         (" Check marker.", " 看标记"),
         (" Stay on voice.", " 进语音"),
@@ -2653,7 +2653,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("", ""),
         ("SC global: ", "全局 "),
         ("Party chat: ", "队伍 "),
-        ("Voice: ", "yy里 "),
+        ("Voice: ", "语音 "),
         ("Need help: ", "来人 "),
         ("New player note: ", "萌新注意 "),
         ("Quick callout: ", "报点 "),
@@ -2666,7 +2666,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
     player_route_channels = [
         ("", ""),
         ("Party chat: ", "队伍 "),
-        ("Voice: ", "yy里 "),
+        ("Voice: ", "语音 "),
         ("Need help: ", "来人 "),
         ("New player note: ", "萌新注意 "),
         ("Quick callout: ", "报点 "),
@@ -2808,9 +2808,9 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("recovered cargo", "找回来的货"),
     ]
     player_trade_modes = [
-        ("WTB", "WTB"),
-        ("WTS", "WTS"),
-        ("WTT", "WTT"),
+        ("buying", "求购"),
+        ("selling", "出售"),
+        ("trade offer", "换货"),
         ("price check", "查价"),
         ("bulk sale", "批量卖"),
     ]
@@ -2880,10 +2880,10 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             "[Voice] Kai: 收到，现在标记{ship_zh}",
         ),
         (
-            "[Trade] Vox: WTB escort for the {ship_en}, or is that {term_en}?\n"
+            "[Trade] Vox: Looking for escort for the {ship_en}, or is that {term_en}?\n"
             "[Party] Me: {ship_en} is the ship; {term_en} is the term in that message near {location_en}\n"
             "[Org] Ari: keep both terms exactly",
-            "[Trade] Vox: WTB {ship_zh}护航，还是说{term_zh}？\n"
+            "[Trade] Vox: 求{ship_zh}护航，还是说{term_zh}？\n"
             "[Party] Me: {ship_zh}是船；{term_zh}是{location_zh}那条消息里的术语\n"
             "[Org] Ari: 两个术语都照原意保留",
         ),
@@ -3861,13 +3861,13 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
     slang_prefixes = [
         ("SC global: ", "全局 "),
         ("Party: ", "队伍 "),
-        ("Voice: ", "yy里 "),
+        ("Voice: ", "语音 "),
         ("Need help: ", "来人 "),
         ("Newbie warning: ", "萌新注意 "),
         ("Quick callout: ", "报点 "),
     ]
     slang_suffixes = [
-        (" ASAP.", " 速来"),
+        (" Soon.", " 速来"),
         (" Anyone up?", " 有人吗"),
         (" Do not rush.", " 别急着上"),
         (" Check marker.", " 看标记"),
