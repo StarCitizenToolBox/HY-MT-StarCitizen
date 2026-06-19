@@ -2915,6 +2915,40 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             "[Voice] Me: 不是，开{ship_zh}来；{term_zh}是玩法术语",
         ),
     ]
+    player_nav_points = [
+        ("OM-1", "OM-1"),
+        ("OM-3", "OM-3"),
+        ("marker 2", "marker 2"),
+        ("pad 03", "pad 03"),
+        ("hangar 07", "hangar 07"),
+        ("ASOP terminal", "ASOP终端"),
+        ("comm array", "comm array"),
+        ("QT marker", "QT标记"),
+        ("party marker", "party marker"),
+        ("route marker", "route marker"),
+    ]
+    player_nav_states = [
+        ("holding position", "原地等"),
+        ("spooling quantum", "正在量子预热"),
+        ("short on quantum fuel", "量子燃料不足"),
+        ("blocked by hangar traffic", "被机库交通堵住"),
+        ("waiting for ASOP claim", "等ASOP申领"),
+        ("missing the party marker", "看不到队伍标记"),
+        ("orbiting above the pad", "在停机坪上空盘旋"),
+        ("approaching with cargo", "带货接近中"),
+        ("breaking off from missile lock", "被锁导弹后脱离"),
+        ("waiting for rescue beacon confirmation", "等救援信标确认"),
+    ]
+    player_nav_actions = [
+        ("hold QT until the marker updates", "标记更新前先别QT"),
+        ("call the pad number in party chat", "在队伍里报停机坪编号"),
+        ("do not translate the nav point as a ship", "别把导航点翻成船名"),
+        ("keep the ship name separate from the marker", "把船名和标记分开"),
+        ("ask global if the route is camped", "去全局问路线有没有人蹲"),
+        ("wait for escort before crossing the route", "等护航到了再过线"),
+        ("clear the hangar before bringing cargo in", "带货进来前先清机库"),
+        ("share the contract marker again", "再共享一次合同标记"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -3759,6 +3793,67 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             source="chat_guard",
                         )
                     )
+                for nav_index, (nav_en, nav_zh) in enumerate(player_nav_points, start=1):
+                    nav_state_en, nav_state_zh = player_nav_states[
+                        (repeat_index + location_index + ship_index + nav_index) % len(player_nav_states)
+                    ]
+                    nav_action_en, nav_action_zh = player_nav_actions[
+                        (repeat_index + ship_index + nav_index) % len(player_nav_actions)
+                    ]
+                    channel_en, channel_zh = player_comm_channels[
+                        (repeat_index + location_index + nav_index) % len(player_comm_channels)
+                    ]
+                    nav_en_text = (
+                        f"{channel_en}{ship_en} at {location_en}, {nav_en}: {nav_state_en}; {nav_action_en}."
+                    )
+                    nav_zh_text = (
+                        f"{channel_zh}{location_zh}{nav_zh}附近的{ship_zh}: {nav_state_zh}；{nav_action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=f"chat_guard:player_nav_status:{location_index}:{ship_index}:{repeat_index + 1}:{nav_index}:standard",
+                            en=nav_en_text,
+                            zh=nav_zh_text,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=f"chat_guard:player_nav_status:{location_index}:{ship_index}:{repeat_index + 1}:{nav_index}:compact",
+                            en=nav_en_text,
+                            zh=slangify_player_chat(nav_zh_text),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                nav_en, nav_zh = player_nav_points[(repeat_index + location_index + ship_index) % len(player_nav_points)]
+                nav_state_en, nav_state_zh = player_nav_states[
+                    (repeat_index + location_index + ship_index + 3) % len(player_nav_states)
+                ]
+                nav_action_en, nav_action_zh = player_nav_actions[
+                    (repeat_index + location_index + ship_index + 5) % len(player_nav_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_nav_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Team] Nav: {location_en} {nav_en}, {ship_en} is {nav_state_en}\n"
+                            f"[Party] Me: {nav_action_en}\n"
+                            f"[Voice] Kai: ship is {ship_en}, nav point is {nav_en}"
+                        ),
+                        zh=(
+                            f"[Team] Nav: {location_zh} {nav_zh}，{ship_zh}{nav_state_zh}\n"
+                            f"[Party] Me: {nav_action_zh}\n"
+                            f"[Voice] Kai: 船是{ship_zh}，导航点是{nav_zh}"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
             for ship_index, (ship_en, ship_zh, literal_en, _literal_zh) in enumerate(ambiguous_ships, start=1):
                 for template_index, (en_template, zh_template) in enumerate(ambiguous_ship_chat_templates, start=1):
                     samples.append(
