@@ -3926,6 +3926,48 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("hold outside the station until traffic clears", "空间站外先等交通散开"),
         ("test the current ship before buying the upgrade", "先把现在这艘试熟，再决定要不要升级"),
     ]
+    player_rescue_topics = [
+        ("distress call coordination", "求救报点协调"),
+        ("ship loss report", "船只损失报告"),
+        ("cargo recovery decision", "货物找回决定"),
+        ("injured crew pickup", "伤员接送安排"),
+        ("beacon response coordination", "信标响应协调"),
+        ("post-explosion regroup", "爆炸后重新集合"),
+        ("stranded pilot pickup", "滞留驾驶接送"),
+        ("boarding risk report", "登船风险报告"),
+        ("claim and return plan", "申领返航安排"),
+        ("safe extraction plan", "安全撤离安排"),
+        ("rescue payment split", "救援报酬分配"),
+        ("incident recap handoff", "事故复盘交接"),
+    ]
+    player_rescue_states = [
+        ("crew is alive but the ship cannot leave the pad", "船员还活着，但船离不开停机坪"),
+        ("ship exploded before the cargo was unloaded", "货还没卸完，船就炸了"),
+        ("cargo marker is still visible but the area is not safe", "货物标记还在，但区域不安全"),
+        ("one crew member is down near the outpost door", "有个队友倒在前哨门口附近"),
+        ("medical beacon is active but nobody has accepted it", "医疗信标开了，但还没人接"),
+        ("party spawned at different stations after the explosion", "船炸以后队伍刷在不同空间站"),
+        ("pilot is stranded without a ship at the surface marker", "驾驶滞留在地表标记旁边，身边没船"),
+        ("hostile players may be waiting inside the wreck", "敌对玩家可能在残骸里面等着"),
+        ("claim timer is short but the route back is busy", "申领时间不长，但返航路线很忙"),
+        ("extraction point is clear for now but may not stay safe", "撤离点现在安全，但不一定能保持"),
+        ("beacon payout is small but the cargo is valuable", "信标报酬不高，但货物很值钱"),
+        ("crew needs a clear summary before deciding what to do", "队伍需要先听清楚情况再决定怎么做"),
+    ]
+    player_rescue_actions = [
+        ("send the closest pickup ship and keep voice open", "派最近的接人船过去，并保持语音"),
+        ("regroup at the station before claiming another ship", "先在空间站集合，再申领下一艘船"),
+        ("send one escort to check the boxes before everyone moves", "先派一个护航去看箱子，再让全队移动"),
+        ("mark the body and wait for medical support", "标记尸体位置，等医疗支援"),
+        ("ask party chat before canceling the beacon", "取消信标前先在队伍聊天里问一下"),
+        ("pick one station as the regroup point", "指定一个空间站作为重新集合点"),
+        ("land only after the pilot confirms the marker", "驾驶确认标记后再落地接人"),
+        ("scan the wreck before boarding", "登船前先扫描残骸"),
+        ("claim the ship and take the quieter route back", "申领船以后走安静一点的返航路线"),
+        ("move the crew before loading anything else", "先撤人，再考虑继续装货"),
+        ("split payment after the cargo is safe", "货物安全后再分报酬"),
+        ("write the short version in party chat", "把简短情况发到队伍聊天里"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -6476,6 +6518,74 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Party] Mentor: {location_zh}这边{advice_topic_zh}，建议用{ship_zh}\n"
                             f"[Voice] Crew: {advice_state_zh}\n"
                             f"[Team] Lead: {advice_action_zh}；出发前说清楚原因"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for rescue_index, (topic_en, topic_zh) in enumerate(player_rescue_topics, start=1):
+                    state_en, state_zh = player_rescue_states[(rescue_index - 1) % len(player_rescue_states)]
+                    action_en, action_zh = player_rescue_actions[(rescue_index - 1) % len(player_rescue_actions)]
+                    other_ship_en, other_ship_zh = pick_other_ship(ship_index, rescue_index + 47, ship_zh)
+                    channel_en, channel_zh = player_route_channels[
+                        (repeat_index + rescue_index + location_index + ship_index) % len(player_route_channels)
+                    ]
+                    rescue_en = (
+                        f"{channel_en}{topic_en} at {location_en}: use the {ship_en}, "
+                        f"not the {other_ship_en}; {state_en}; {action_en}."
+                    )
+                    rescue_zh = (
+                        f"{channel_zh}{location_zh}这边{topic_zh}: 用{ship_zh}处理，不是{other_ship_zh}；"
+                        f"{state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_rescue_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{rescue_index}:standard"
+                            ),
+                            en=rescue_en,
+                            zh=rescue_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_rescue_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{rescue_index}:compact"
+                            ),
+                            en=rescue_en,
+                            zh=compact_chat_text(rescue_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                rescue_topic_en, rescue_topic_zh = player_rescue_topics[
+                    (repeat_index + location_index + ship_index) % len(player_rescue_topics)
+                ]
+                rescue_state_en, rescue_state_zh = player_rescue_states[
+                    (repeat_index + location_index + ship_index) % len(player_rescue_states)
+                ]
+                rescue_action_en, rescue_action_zh = player_rescue_actions[
+                    (repeat_index + location_index + ship_index) % len(player_rescue_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_rescue_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Party] Rescue: {rescue_topic_en} at {location_en}; bring the {ship_en}\n"
+                            f"[Voice] Crew: {rescue_state_en}\n"
+                            f"[Team] Lead: {rescue_action_en}; report when the pickup is safe"
+                        ),
+                        zh=(
+                            f"[Party] Rescue: {location_zh}这边{rescue_topic_zh}，开{ship_zh}过去\n"
+                            f"[Voice] Crew: {rescue_state_zh}\n"
+                            f"[Team] Lead: {rescue_action_zh}；接人安全后报一下"
                         ),
                         category="chat",
                         is_priority=True,

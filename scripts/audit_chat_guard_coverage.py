@@ -454,6 +454,19 @@ SOURCE_PHRASES = {
         "练习路线建议",
         "活动准备建议",
         "出发前说清楚原因",
+        "求救报点协调",
+        "船只损失报告",
+        "货物找回决定",
+        "伤员接送安排",
+        "信标响应协调",
+        "爆炸后重新集合",
+        "滞留驾驶接送",
+        "登船风险报告",
+        "申领返航安排",
+        "安全撤离安排",
+        "救援报酬分配",
+        "事故复盘交接",
+        "接人安全后报一下",
         "引擎离线",
         "报点和船名",
         "量子矿",
@@ -734,6 +747,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     ]
     player_advice_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_advice_status:")]
     player_advice_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_advice_log:")]
+    player_rescue_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_rescue_status:")]
+    player_rescue_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_rescue_log:")]
     target_cjk = [row for row in rows if re.search(r"[\u3400-\u9fff]", row.get("target", ""))]
     unnatural_mixed_rows = find_unnatural_mixed_rows(rows)
     alias_chat_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat:")]
@@ -870,6 +885,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "player_scouting_log_rows": len(player_scouting_log_rows),
         "player_advice_rows": len(player_advice_rows),
         "player_advice_log_rows": len(player_advice_log_rows),
+        "player_rescue_rows": len(player_rescue_rows),
+        "player_rescue_log_rows": len(player_rescue_log_rows),
         "alias_chat_rows": len(alias_chat_rows),
         "alias_slang_rows": len(alias_slang_rows),
         "alias_chat_unique": len(alias_chat_keys - {""}),
@@ -990,6 +1007,8 @@ def main() -> int:
     print(f"player_scouting_log_rows: {report['player_scouting_log_rows']}")
     print(f"player_advice_rows: {report['player_advice_rows']}")
     print(f"player_advice_log_rows: {report['player_advice_log_rows']}")
+    print(f"player_rescue_rows: {report['player_rescue_rows']}")
+    print(f"player_rescue_log_rows: {report['player_rescue_log_rows']}")
     print(f"alias_chat_rows: {report['alias_chat_rows']}")
     print(f"alias_slang_rows: {report['alias_slang_rows']}")
     print(f"alias_chat_unique: {report['alias_chat_unique']}")
