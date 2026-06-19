@@ -3346,6 +3346,48 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("make the pilot party lead before sharing the contract", "共享合同前先把驾驶员设成队长"),
         ("confirm who is flying before opening the ramp", "开舱门前先确认谁来开船"),
     ]
+    player_newbie_topics = [
+        ("first flight help", "第一次飞行教学"),
+        ("contract pickup", "接合同教学"),
+        ("hangar route", "找机库路线"),
+        ("party marker follow", "跟队伍标记"),
+        ("quantum jump practice", "量子跳跃练习"),
+        ("landing request", "降落请求"),
+        ("seat and turret lesson", "座位和炮塔教学"),
+        ("inventory cleanup", "仓库整理"),
+        ("medical rescue lesson", "医疗救援教学"),
+        ("crime stat warning", "犯罪等级提醒"),
+        ("cargo loading practice", "装货练习"),
+        ("claim and retrieve help", "申领取船教学"),
+    ]
+    player_newbie_states = [
+        ("new player cannot find the ASOP terminal", "萌新找不到ASOP终端"),
+        ("they accepted the wrong contract", "他接错合同了"),
+        ("they are following the wrong marker", "他跟错标记了"),
+        ("they do not know which ship is ours", "他不知道哪艘是我们的船"),
+        ("they are still inside local inventory", "他还在整理本地仓库"),
+        ("they opened fire before we scanned", "还没扫描他就先开火了"),
+        ("they cannot find the hangar elevator", "他找不到去机库的电梯"),
+        ("they forgot to request landing", "他忘了呼叫降落"),
+        ("they left the ship before the pilot parked", "驾驶员停稳前他就下船了"),
+        ("they respawned before rescue arrived", "救援到之前他就重生了"),
+        ("they put cargo on the wrong grid", "他把货放到错的货物网格上了"),
+        ("they claimed the ship instead of retrieving it", "他把取船点成申领了"),
+    ]
+    player_newbie_actions = [
+        ("ask them to follow the party marker first", "先让他跟着队伍标记走"),
+        ("share the contract again and wait for acceptance", "重新共享合同并等他接了再走"),
+        ("tell them to sit in the copilot seat", "让他先坐副驾驶位"),
+        ("mark our ship before opening the ramp", "开舱门前先标一下我们的船"),
+        ("walk them to the hangar elevator", "带他走到机库电梯那边"),
+        ("do the first quantum jump together", "第一次量子跳跃一起做"),
+        ("let the pilot request landing this time", "这次先让驾驶员呼叫降落"),
+        ("keep weapons down until the scan finishes", "扫描完成前先别开火"),
+        ("wait for medical rescue before respawning", "医疗救援到之前先别重生"),
+        ("load one box at a time and check the cargo grid", "一次放一个箱子并检查货物网格"),
+        ("show the difference between retrieve and claim", "给他看取船和申领的区别"),
+        ("explain the crime stat before anyone shoots", "开火前先讲清楚犯罪等级"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -4939,6 +4981,77 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Party] Lead: {location_zh}{topic_zh}，{state_zh}\n"
                             f"[Voice] Pilot: {ship_zh}在等船员\n"
                             f"[Team] Crew: {action_zh}；队伍聊天不是船名"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for newbie_index, (topic_en, topic_zh) in enumerate(player_newbie_topics, start=1):
+                    state_en, state_zh = player_newbie_states[
+                        (repeat_index + location_index + ship_index + newbie_index) % len(player_newbie_states)
+                    ]
+                    action_en, action_zh = player_newbie_actions[
+                        (repeat_index + location_index + newbie_index) % len(player_newbie_actions)
+                    ]
+                    channel_en, channel_zh = player_session_channels[
+                        (repeat_index + newbie_index + ship_index) % len(player_session_channels)
+                    ]
+                    newbie_en_text = (
+                        f"{channel_en}{topic_en} at {location_en}: {ship_en} is waiting for the new player; "
+                        f"{state_en}; {action_en}."
+                    )
+                    newbie_zh_text = (
+                        f"{channel_zh}{location_zh}{topic_zh}: {ship_zh}在等萌新；"
+                        f"{state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_newbie_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{newbie_index}:standard"
+                            ),
+                            en=newbie_en_text,
+                            zh=newbie_zh_text,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_newbie_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{newbie_index}:compact"
+                            ),
+                            en=newbie_en_text,
+                            zh=compact_chat_text(newbie_zh_text),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                topic_en, topic_zh = player_newbie_topics[
+                    (repeat_index + location_index + ship_index) % len(player_newbie_topics)
+                ]
+                state_en, state_zh = player_newbie_states[
+                    (repeat_index + location_index + ship_index + 4) % len(player_newbie_states)
+                ]
+                action_en, action_zh = player_newbie_actions[
+                    (repeat_index + location_index + ship_index + 6) % len(player_newbie_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_newbie_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Party] Mentor: {topic_en} at {location_en}, {state_en}\n"
+                            f"[Voice] Pilot: the {ship_en} is staying parked for now\n"
+                            f"[Team] Helper: {action_en}; teaching chat is not a ship name"
+                        ),
+                        zh=(
+                            f"[Party] Mentor: {location_zh}{topic_zh}，{state_zh}\n"
+                            f"[Voice] Pilot: {ship_zh}先停着不走\n"
+                            f"[Team] Helper: {action_zh}；教学聊天不是船名"
                         ),
                         category="chat",
                         is_priority=True,
