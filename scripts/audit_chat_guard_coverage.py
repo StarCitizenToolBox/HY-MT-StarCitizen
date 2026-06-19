@@ -91,8 +91,33 @@ SOURCE_PHRASES = {
         "o7",
         "有无",
         "有没有一起的",
+        "LF1M",
+        "WTT",
+        "30k",
+        "[Org]",
+        "[Team]",
+        "[Trade]",
+        "ETA",
     ],
-    "chat_style": ["sc全局", "队伍", "yy里", "来人", "萌新注意", "报点", "感觉不太行"],
+    "chat_style": [
+        "sc全局",
+        "队伍",
+        "yy里",
+        "来人",
+        "萌新注意",
+        "报点",
+        "感觉不太行",
+        "完成后分账",
+        "成功后给报酬",
+        "货款分成",
+        "补油维修费用平摊",
+        "合同共享后",
+        "全员进语音后",
+        "缺炮手",
+        "缺炮塔手",
+        "缺医疗",
+        "缺护航飞行员",
+    ],
 }
 
 
@@ -227,6 +252,9 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     gameplay_pairs = load_term_pairs(terms_file, category_filter="gameplay")
     root_counts = Counter(key_root(row.get("key", "")) for row in rows)
     chat_counts = Counter(chat_subkey(row.get("key", "")) for row in rows if row.get("key", "").startswith("chat_guard:"))
+    player_lfg_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_lfg_matrix:")]
+    player_trade_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_trade_matrix:")]
+    player_recovery_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_recovery_log:")]
     target_cjk = [row for row in rows if re.search(r"[\u3400-\u9fff]", row.get("target", ""))]
     alias_chat_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat:")]
     alias_slang_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_slang:")]
@@ -307,6 +335,9 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "gameplay_social_covered_pairs": count_pair_coverage(rows, gameplay_pairs, "quant_focus_gameplay_social:"),
         "root_counts": dict(sorted(root_counts.items())),
         "chat_subkey_counts": dict(sorted((key, value) for key, value in chat_counts.items() if key)),
+        "player_lfg_rows": len(player_lfg_rows),
+        "player_trade_rows": len(player_trade_rows),
+        "player_recovery_rows": len(player_recovery_rows),
         "alias_chat_rows": len(alias_chat_rows),
         "alias_slang_rows": len(alias_slang_rows),
         "alias_chat_unique": len(alias_chat_keys - {""}),
@@ -373,6 +404,9 @@ def main() -> int:
     print(f"gameplay_comm_covered_pairs: {report['gameplay_comm_covered_pairs']}")
     print(f"gameplay_social_rows: {report['gameplay_social_rows']}")
     print(f"gameplay_social_covered_pairs: {report['gameplay_social_covered_pairs']}")
+    print(f"player_lfg_rows: {report['player_lfg_rows']}")
+    print(f"player_trade_rows: {report['player_trade_rows']}")
+    print(f"player_recovery_rows: {report['player_recovery_rows']}")
     print(f"alias_chat_rows: {report['alias_chat_rows']}")
     print(f"alias_slang_rows: {report['alias_slang_rows']}")
     print(f"alias_chat_unique: {report['alias_chat_unique']}")

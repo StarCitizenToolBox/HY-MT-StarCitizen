@@ -2680,6 +2680,9 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("New player note: ", "萌新注意 "),
         ("Quick callout: ", "报点 "),
         ("This feels bad; ", "感觉不太行 "),
+        ("[Org] ", "[Org] "),
+        ("[Team] ", "[Team] "),
+        ("[Trade] ", "[Trade] "),
     ]
     player_comm_noise_pairs = [
         ("", ""),
@@ -2742,6 +2745,107 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("repair the engines and refill quantum fuel first", "先修引擎并补满量子燃料"),
         ("wait outside the hangar until the elevator bug clears", "在机库外等电梯问题恢复"),
         ("ping the marker again because the party cannot see it", "再 ping 一次标记，队伍看不到"),
+    ]
+    player_group_tasks = [
+        ("a bounty chain", "连打赏金"),
+        ("an ERT bounty run", "打ERT赏金"),
+        ("cargo hauling", "跑货"),
+        ("a salvage loop", "打捞循环"),
+        ("mining escort", "采矿护航"),
+        ("a bunker clear", "清地堡"),
+        ("medical rescue", "医疗救援"),
+        ("a service beacon", "服务信标"),
+        ("contract sharing", "共享合同"),
+        ("an escort route", "护航路线"),
+        ("pirate interdiction", "拦海盗"),
+        ("a rescue pickup", "救援接送"),
+        ("refuel and repair support", "补油维修支援"),
+        ("a cargo recovery run", "找回货物"),
+    ]
+    player_lfg_tags = [
+        ("LFG", "LFG"),
+        ("LFM", "LFM"),
+        ("LF1M", "LF1M"),
+        ("crew needed", "缺船员"),
+        ("party open", "队伍开放"),
+    ]
+    player_eta_terms = [
+        ("ETA 2 min", "ETA 2分钟"),
+        ("ETA 5 min", "ETA 5分钟"),
+        ("ready now", "现在就能出发"),
+        ("after claim timer", "申领计时结束后"),
+        ("after selling cargo", "卖完货以后"),
+    ]
+    player_crew_roles = [
+        ("gunner", "炮手"),
+        ("turret gunner", "炮塔手"),
+        ("medic", "医疗"),
+        ("escort pilot", "护航飞行员"),
+        ("cargo runner", "跑货的人"),
+        ("scanner", "扫描手"),
+        ("salvage operator", "打捞位"),
+        ("tractor beam operator", "牵引光束位"),
+        ("boarding lead", "登船带队"),
+        ("new player who can follow markers", "能跟标记走的萌新"),
+    ]
+    player_payment_terms = [
+        ("payment split after completion", "完成后分账"),
+        ("pay on success", "成功后给报酬"),
+        ("beacon payout shared", "信标报酬共享"),
+        ("cargo profit split", "货款分成"),
+        ("tips welcome but not required", "欢迎打赏但不强制"),
+        ("we split repair and refuel costs", "补油维修费用平摊"),
+    ]
+    player_stage_terms = [
+        ("before launch", "出发前"),
+        ("after refuel and repair", "补油维修后"),
+        ("after everyone joins voice", "全员进语音后"),
+        ("once the contract is shared", "合同共享后"),
+        ("when the marker appears", "标记出来后"),
+        ("after the cargo grid is clear", "货物网格清好后"),
+        ("before we quantum jump", "量子跳跃前"),
+        ("after the beacon is accepted", "信标接了以后"),
+    ]
+    player_trade_items = [
+        ("RMC", "RMC"),
+        ("quantanium", "量子矿"),
+        ("refined ore", "精炼矿"),
+        ("salvage boxes", "打捞箱子"),
+        ("cargo crates", "货箱"),
+        ("medical supplies", "医疗物资"),
+        ("weapons and armor", "武器和护甲"),
+        ("ship components", "飞船组件"),
+        ("loot boxes", "摸到的箱子"),
+        ("recovered cargo", "找回来的货"),
+    ]
+    player_trade_modes = [
+        ("WTB", "WTB"),
+        ("WTS", "WTS"),
+        ("WTT", "WTT"),
+        ("price check", "查价"),
+        ("bulk sale", "批量卖"),
+    ]
+    player_failure_events = [
+        ("hit a 30k while loaded", "满货时遇到30k"),
+        ("got stuck in the elevator", "卡电梯了"),
+        ("cannot open the hangar doors", "机库门打不开"),
+        ("lost the party marker", "队伍标记丢了"),
+        ("went into soft death", "软死亡了"),
+        ("rubber-banded from desync", "因为同步很差来回瞬移"),
+        ("lost quantum fuel before the jump", "跳跃前没量子燃料了"),
+        ("has loose cargo on the grid", "货物网格上散货了"),
+        ("got boarded by pirates", "被海盗登船了"),
+        ("has a claim timer longer than expected", "申领时间比预期久"),
+    ]
+    player_recovery_actions = [
+        ("reshare the contract and wait for everyone to accept", "重新共享合同并等所有人接"),
+        ("hold fire and scan before boarding", "先停火，登船前扫描"),
+        ("ask global chat for pickup", "去全局叫人接送"),
+        ("drop a medical beacon and stay on voice", "发医疗信标并保持语音"),
+        ("server hop only after we recover the cargo", "找回货物后再换服"),
+        ("bring a tractor beam and clear the cargo grid", "带牵引光束并清货物网格"),
+        ("refuel and repair before the next route", "下一段路线前先补油维修"),
+        ("keep escort outside until the elevator bug clears", "护航在外面等电梯问题恢复"),
     ]
 
     def sentence_start(text: str) -> str:
@@ -2809,6 +2913,16 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("标记", "marker"),
         ("量子燃料", "q油"),
     ]
+
+    def slangify_player_chat(text: str) -> str:
+        slang_text = compact_chat_text(text)
+        for source_phrase, replacement in sorted(
+            slang_replacements,
+            key=lambda item: len(item[0]),
+            reverse=True,
+        ):
+            slang_text = slang_text.replace(source_phrase, replacement)
+        return slang_text
 
     samples: list[PairSample] = []
     for repeat_index in range(max(1, repeat)):
@@ -3385,6 +3499,122 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                                 source="chat_guard",
                             )
                         )
+                for task_index, (task_en, task_zh) in enumerate(player_group_tasks, start=1):
+                    tag_en, tag_zh = player_lfg_tags[
+                        (repeat_index + location_index + ship_index + task_index) % len(player_lfg_tags)
+                    ]
+                    eta_en, eta_zh = player_eta_terms[
+                        (repeat_index + location_index + task_index) % len(player_eta_terms)
+                    ]
+                    role_en, role_zh = player_crew_roles[
+                        (repeat_index + location_index + ship_index + task_index) % len(player_crew_roles)
+                    ]
+                    payment_en, payment_zh = player_payment_terms[
+                        (repeat_index + ship_index + task_index) % len(player_payment_terms)
+                    ]
+                    stage_en, stage_zh = player_stage_terms[
+                        (repeat_index + location_index + task_index) % len(player_stage_terms)
+                    ]
+                    channel_en, channel_zh = player_comm_channels[
+                        (repeat_index + location_index + ship_index + task_index + 2) % len(player_comm_channels)
+                    ]
+                    noise_en, noise_zh = player_comm_noise_pairs[
+                        (repeat_index + location_index + ship_index + task_index + 1) % len(player_comm_noise_pairs)
+                    ]
+                    lfg_en = (
+                        f"{channel_en}{tag_en}: {stage_en}, taking the {ship_en} from {location_en} for "
+                        f"{task_en}; need one {role_en}; {payment_en}; {eta_en}{noise_en}"
+                    )
+                    lfg_zh = (
+                        f"{channel_zh}{tag_zh}: {stage_zh}从{location_zh}开{ship_zh}{task_zh}，"
+                        f"缺{role_zh}，{payment_zh}，{eta_zh}{noise_zh}"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=f"chat_guard:player_lfg_matrix:{location_index}:{ship_index}:{repeat_index + 1}:{task_index}:standard",
+                            en=lfg_en,
+                            zh=lfg_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=f"chat_guard:player_lfg_matrix:{location_index}:{ship_index}:{repeat_index + 1}:{task_index}:slang",
+                            en=lfg_en,
+                            zh=slangify_player_chat(lfg_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                for trade_index, (item_en, item_zh) in enumerate(player_trade_items, start=1):
+                    mode_en, mode_zh = player_trade_modes[
+                        (repeat_index + location_index + ship_index + trade_index) % len(player_trade_modes)
+                    ]
+                    role_en, role_zh = player_crew_roles[
+                        (repeat_index + trade_index + ship_index) % len(player_crew_roles)
+                    ]
+                    payment_en, payment_zh = player_payment_terms[
+                        (repeat_index + location_index + trade_index) % len(player_payment_terms)
+                    ]
+                    trade_en = (
+                        f"{mode_en} {item_en} near {location_en}; the {ship_en} is loaded, "
+                        f"bring one {role_en}, {payment_en}."
+                    )
+                    trade_zh = (
+                        f"{mode_zh} {location_zh}附近的{item_zh}，{ship_zh}已经装货，"
+                        f"带{role_zh}来，{payment_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=f"chat_guard:player_trade_matrix:{location_index}:{ship_index}:{repeat_index + 1}:{trade_index}:standard",
+                            en=trade_en,
+                            zh=trade_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=f"chat_guard:player_trade_matrix:{location_index}:{ship_index}:{repeat_index + 1}:{trade_index}:slang",
+                            en=trade_en,
+                            zh=slangify_player_chat(trade_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                for failure_index, (failure_en, failure_zh) in enumerate(player_failure_events, start=1):
+                    action_en, action_zh = player_recovery_actions[
+                        (repeat_index + location_index + ship_index + failure_index) % len(player_recovery_actions)
+                    ]
+                    role_en, role_zh = player_crew_roles[
+                        (repeat_index + failure_index + location_index) % len(player_crew_roles)
+                    ]
+                    payment_en, payment_zh = player_payment_terms[
+                        (repeat_index + failure_index + ship_index) % len(player_payment_terms)
+                    ]
+                    samples.append(
+                        PairSample(
+                            key=f"chat_guard:player_recovery_log:{location_index}:{ship_index}:{repeat_index + 1}:{failure_index}",
+                            en=(
+                                f"[Party] Ari: the {ship_en} at {location_en} {failure_en}\n"
+                                f"[Voice] Me: {action_en}\n"
+                                f"[Global] LFG: need one {role_en}; {payment_en}"
+                            ),
+                            zh=(
+                                f"[Party] Ari: {location_zh}那艘{ship_zh}{failure_zh}\n"
+                                f"[Voice] Me: {action_zh}\n"
+                                f"[Global] LFG: 缺{role_zh}，{payment_zh}"
+                            ),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
             for ship_index, (ship_en, ship_zh, literal_en, _literal_zh) in enumerate(ambiguous_ships, start=1):
                 for template_index, (en_template, zh_template) in enumerate(ambiguous_ship_chat_templates, start=1):
                     samples.append(
