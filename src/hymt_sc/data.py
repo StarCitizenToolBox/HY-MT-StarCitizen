@@ -1662,6 +1662,62 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             "别把后面的标签当船名，{location_zh}那艘是{ship_zh}>F7C-S Hornet Ghost",
         ),
     ]
+    player_comm_channels = [
+        ("", ""),
+        ("SC global: ", "sc全局 "),
+        ("Party chat: ", "队伍 "),
+        ("Voice: ", "yy里 "),
+        ("Need help: ", "来人 "),
+        ("New player note: ", "萌新注意 "),
+        ("Quick callout: ", "报点 "),
+        ("This feels bad; ", "感觉不太行 "),
+    ]
+    player_comm_noise_pairs = [
+        ("", ""),
+        (" > F7C-S Hornet Ghost", ">F7C-S Hornet Ghost"),
+        (" @...", "@..."),
+        (" [global]", "[全局]"),
+        (" [voice]", "[语音]"),
+        (" > Drake Cutter", ">Drake Cutter"),
+        (" > Aegis Gladius", ">Aegis Gladius"),
+        (". Check marker.", " 看标记"),
+    ]
+    player_comm_state_templates = [
+        ("the {ship_en} at {location_en} is firing everywhere", "{location_zh}有个{ship_zh}到处开火"),
+        ("the {ship_en} near {location_en} is camping the hangar", "{location_zh}附近有个{ship_zh}在蹲机库"),
+        ("the {ship_en} above {location_en} is red", "{location_zh}上空那艘{ship_zh}红名了"),
+        ("the {ship_en} at {location_en} is in soft death", "{location_zh}那艘{ship_zh}软死亡了"),
+        ("the {ship_en} near {location_en} is locking missiles", "{location_zh}附近那艘{ship_zh}在锁导弹"),
+        ("the {ship_en} at {location_en} is full of cargo", "{ship_zh}在{location_zh}满载货物"),
+        ("the {ship_en} from {location_en} needs escort", "从{location_zh}出发的{ship_zh}需要护航"),
+        ("the {ship_en} at {location_en} is forming a bounty party", "{location_zh}的{ship_zh}在组队打赏金"),
+        ("the {ship_en} at {location_en} needs a gunner", "{location_zh}那艘{ship_zh}缺炮手"),
+        ("the {ship_en} at {location_en} needs quantum fuel", "{location_zh}那艘{ship_zh}需要量子燃料"),
+        ("medical rescue is needed near the {ship_en} at {location_en}", "{location_zh}那艘{ship_zh}附近需要医疗救援"),
+        ("the {ship_en} is waiting outside the bunker near {location_en}", "{ship_zh}在{location_zh}附近的地堡外面等人"),
+        ("the {ship_en} at {location_en} has a bounty target on board", "{location_zh}那艘{ship_zh}上有赏金目标"),
+        ("the {ship_en} claim timer at {location_en} is almost done", "{ship_zh}在{location_zh}的申领时间快好了"),
+        ("the {ship_en} near {location_en} is being boarded", "{location_zh}附近那艘{ship_zh}正在被登船"),
+        ("the {ship_en} at {location_en} is rubber-banding from desync", "{location_zh}那艘{ship_zh}因为同步很差在瞬移"),
+    ]
+    player_comm_action_templates = [
+        ("please mark it before anyone opens fire", "开火前先标记一下"),
+        ("do not shoot until we confirm whether it is friendly", "确认是不是友军前先别开火"),
+        ("bring backup and stay on voice", "带支援过来并保持语音"),
+        ("ask in global chat if anyone wants to join", "去全局问有没有一起的"),
+        ("keep the party away from the pad", "让队伍先离停机坪远点"),
+        ("scan it before boarding", "登船前先扫描一下"),
+        ("wait for the turret seat to fill before engaging", "炮塔位坐满前先别开打"),
+        ("refuel and repair before the next bounty mission", "下一单赏金前先补油维修"),
+        ("escort the cargo ship until it reaches the station", "货船到空间站前继续护航"),
+        ("drop a medical beacon and call for rescue", "发医疗信标并叫医疗救援"),
+        ("clear your crime stat before regrouping", "重新集合前先清犯罪等级"),
+        ("pull the bounty target away from the station", "把赏金目标从空间站拉开"),
+        ("tell new players not to confuse the ship name", "提醒新手别把船名认错"),
+        ("hold fire and check the marker again", "先停火再看一眼标记"),
+        ("pick me up if the ship explodes", "船炸了就来接我"),
+        ("switch server if the desync gets worse", "同步更差就换服"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -2177,6 +2233,107 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             source="chat_guard",
                         )
                     )
+                for state_index, (state_en_template, state_zh_template) in enumerate(
+                    player_comm_state_templates,
+                    start=1,
+                ):
+                    state_en = state_en_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                    )
+                    state_zh = state_zh_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                    )
+                    for action_index, (action_en_template, action_zh_template) in enumerate(
+                        player_comm_action_templates,
+                        start=1,
+                    ):
+                        action_en = action_en_template.format(
+                            location_en=location_en,
+                            location_zh=location_zh,
+                            ship_en=ship_en,
+                            ship_zh=ship_zh,
+                        )
+                        action_zh = action_zh_template.format(
+                            location_en=location_en,
+                            location_zh=location_zh,
+                            ship_en=ship_en,
+                            ship_zh=ship_zh,
+                        )
+                        style_index = (
+                            repeat_index + location_index + ship_index + state_index + action_index
+                        ) % len(player_comm_channels)
+                        noise_index = (
+                            repeat_index + (location_index * 3) + ship_index + state_index + action_index
+                        ) % len(player_comm_noise_pairs)
+                        channel_en, channel_zh = player_comm_channels[style_index]
+                        noise_en, noise_zh = player_comm_noise_pairs[noise_index]
+                        state_sentence_en = sentence_start(state_en)
+                        action_sentence_en = sentence_start(action_en)
+                        compact_state_zh = compact_chat_text(state_zh)
+                        compact_action_zh = compact_chat_text(action_zh)
+                        slang_state_zh = compact_state_zh
+                        slang_action_zh = compact_action_zh
+                        for source_phrase, replacement in slang_replacements:
+                            slang_state_zh = slang_state_zh.replace(source_phrase, replacement)
+                            slang_action_zh = slang_action_zh.replace(source_phrase, replacement)
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"chat_guard:player_comm_matrix:{location_index}:{ship_index}:"
+                                    f"{repeat_index + 1}:{state_index}:{action_index}:standard"
+                                ),
+                                en=f"{channel_en}{state_sentence_en}. {action_sentence_en}{noise_en}",
+                                zh=f"{channel_zh}{state_zh}。{action_zh}{noise_zh}",
+                                category="chat",
+                                is_priority=True,
+                                source="chat_guard",
+                            )
+                        )
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"chat_guard:player_comm_matrix:{location_index}:{ship_index}:"
+                                    f"{repeat_index + 1}:{state_index}:{action_index}:conditional"
+                                ),
+                                en=f"{channel_en}If {state_en}, {action_en}{noise_en}",
+                                zh=f"{channel_zh}如果{state_zh}，{action_zh}{noise_zh}",
+                                category="chat",
+                                is_priority=True,
+                                source="chat_guard",
+                            )
+                        )
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"chat_guard:player_comm_matrix:{location_index}:{ship_index}:"
+                                    f"{repeat_index + 1}:{state_index}:{action_index}:compact"
+                                ),
+                                en=f"{channel_en}{state_sentence_en}; {action_en}{noise_en}",
+                                zh=f"{channel_zh}{compact_state_zh} {compact_action_zh}{noise_zh}",
+                                category="chat",
+                                is_priority=True,
+                                source="chat_guard",
+                            )
+                        )
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"chat_guard:player_comm_matrix:{location_index}:{ship_index}:"
+                                    f"{repeat_index + 1}:{state_index}:{action_index}:slang"
+                                ),
+                                en=f"{channel_en}{state_sentence_en}; {action_en}{noise_en}",
+                                zh=f"{channel_zh}{slang_state_zh} {slang_action_zh}{noise_zh}",
+                                category="chat",
+                                is_priority=True,
+                                source="chat_guard",
+                            )
+                        )
             for ship_index, (ship_en, ship_zh, literal_en, _literal_zh) in enumerate(ambiguous_ships, start=1):
                 for template_index, (en_template, zh_template) in enumerate(ambiguous_ship_chat_templates, start=1):
                     samples.append(
