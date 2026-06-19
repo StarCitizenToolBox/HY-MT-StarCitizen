@@ -265,6 +265,20 @@ SOURCE_PHRASES = {
         "货值",
         "收益分配",
         "付款报点",
+        "队伍邀请",
+        "准备确认",
+        "集合时间",
+        "座位分配",
+        "语音确认",
+        "换服",
+        "等重登",
+        "接人请求",
+        "标记整理",
+        "换人接手",
+        "出发报点",
+        "暂离通知",
+        "副驾驶位",
+        "队伍聊天",
         "引擎离线",
         "报点和船名",
         "量子矿",
@@ -442,6 +456,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     player_gear_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_gear_log:")]
     player_economy_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_economy_status:")]
     player_economy_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_economy_log:")]
+    player_session_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_session_status:")]
+    player_session_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_session_log:")]
     target_cjk = [row for row in rows if re.search(r"[\u3400-\u9fff]", row.get("target", ""))]
     alias_chat_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat:")]
     alias_slang_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_slang:")]
@@ -547,6 +563,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "player_gear_log_rows": len(player_gear_log_rows),
         "player_economy_rows": len(player_economy_rows),
         "player_economy_log_rows": len(player_economy_log_rows),
+        "player_session_rows": len(player_session_rows),
+        "player_session_log_rows": len(player_session_log_rows),
         "alias_chat_rows": len(alias_chat_rows),
         "alias_slang_rows": len(alias_slang_rows),
         "alias_chat_unique": len(alias_chat_keys - {""}),
@@ -638,6 +656,8 @@ def main() -> int:
     print(f"player_gear_log_rows: {report['player_gear_log_rows']}")
     print(f"player_economy_rows: {report['player_economy_rows']}")
     print(f"player_economy_log_rows: {report['player_economy_log_rows']}")
+    print(f"player_session_rows: {report['player_session_rows']}")
+    print(f"player_session_log_rows: {report['player_session_log_rows']}")
     print(f"alias_chat_rows: {report['alias_chat_rows']}")
     print(f"alias_slang_rows: {report['alias_slang_rows']}")
     print(f"alias_chat_unique: {report['alias_chat_unique']}")
