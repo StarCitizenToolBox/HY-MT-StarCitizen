@@ -405,6 +405,17 @@ def build_quant_focus_samples(
         ("Anyone want to run bounty missions in the {en} from {location_en}?", "有人从{location_zh}开{zh}一起打赏金吗？"),
         ("I am hauling cargo in the {en} from {location_en}; need escort.", "我从{location_zh}开{zh}跑货，需要护航。"),
         ("The {en} at {location_en} is in soft death; board carefully.", "{location_zh}那艘{zh}软死亡了，小心登船。"),
+        ("The {en} near {location_en} is locking missiles.", "{location_zh}附近那艘{zh}在锁导弹。"),
+        ("The {en} at {location_en} needs quantum fuel before we jump.", "{location_zh}那艘{zh}跳跃前需要量子燃料。"),
+        ("I dropped a medical beacon near {location_en}; the {en} can land there.", "我在{location_zh}附近发了医疗信标，{zh}能在那里降落。"),
+        ("Medical rescue is needed near {location_en}; bring the {en}.", "{location_zh}附近需要医疗救援，把{zh}开过来。"),
+        ("We are doing a bunker mission near {location_en}; leave the {en} outside.", "我们在{location_zh}附近做地堡任务，{zh}停外面。"),
+        ("The {en} claim timer at {location_en} is almost done.", "{zh}在{location_zh}的申领时间快好了。"),
+        ("{location_en} has heavy desync, so the {en} may rubber-band.", "{location_zh}同步很差，{zh}可能会来回瞬移。"),
+        ("The {en} at {location_en} needs a gunner and a turret seat.", "{location_zh}那艘{zh}缺炮手和炮塔位。"),
+        ("The {en} at {location_en} has a crime stat target on board.", "{location_zh}那艘{zh}上有犯罪等级目标。"),
+        ("The bounty target near {location_en} is flying the {en}.", "{location_zh}附近的赏金目标开着{zh}。"),
+        ("The {en} at {location_en} is red; do not stand near it.", "{location_zh}那艘{zh}红名了，别站太近。"),
         ("Do not confuse this ship: it is the {en}.", "别把这艘船认错，它是{zh}。"),
         ("Global chat: the {en} at {location_en} is not friendly.", "全局频道：{location_zh}那艘{zh}不是友军。"),
         ("Voice chat: bring the {en} to {location_en}.", "语音里说：把{zh}开到{location_zh}。"),
@@ -412,6 +423,50 @@ def build_quant_focus_samples(
         ("The target is a {en}, not a Hornet Ghost.", "目标是{zh}，不是大黄蜂幽灵。"),
         ("The {en} at {location_en} is firing everywhere. > F7C-S Hornet Ghost", "{location_zh}有个{zh}到处开火。>F7C-S Hornet Ghost"),
     ]
+    alias_chat_slang_prefixes = [
+        ("SC global: ", "sc全局 "),
+        ("Party: ", "队伍 "),
+        ("Voice: ", "yy里 "),
+        ("Need help: ", "来人 "),
+    ]
+    alias_chat_slang_suffixes = [
+        (" ASAP.", " 速来"),
+        (" Anyone up?", " 有人吗"),
+        (" Check marker.", " 看标记"),
+        (" Stay on voice.", " 进语音"),
+    ]
+    alias_chat_slang_replacements = [
+        ("打赏金", "打bounty"),
+        ("跑货", "跑cargo"),
+        ("护航", "escort"),
+        ("软死亡", "soft death"),
+        ("锁导弹", "锁missile"),
+        ("量子燃料", "q油"),
+        ("医疗信标", "med beacon"),
+        ("医疗救援", "med rescue"),
+        ("地堡任务", "bunker"),
+        ("申领时间", "claim timer"),
+        ("同步很差", "desync"),
+        ("炮塔位", "turret位"),
+        ("犯罪等级", "cs等级"),
+        ("红名", "red"),
+        ("赏金目标", "bounty目标"),
+    ]
+
+    def compact_alias_chat(text: str) -> str:
+        return (
+            text.replace("。", " ")
+            .replace("？", " ")
+            .replace("！", " ")
+            .replace("，", " ")
+            .replace("；", " ")
+            .replace("：", " ")
+            .replace("  ", " ")
+            .strip()
+        )
+
+    def strip_final_punctuation(text: str) -> str:
+        return text.rstrip().rstrip(".?!")
 
     entries = list(term_entries) + list(alias_entries)
     seen_entries: set[tuple[str, str, str]] = set()
@@ -447,14 +502,38 @@ def build_quant_focus_samples(
             for repeat_index in range(max(1, alias_repeat)):
                 for location_index, (location_en, location_zh) in enumerate(selected_locations, start=1):
                     for template_index, (en_template, zh_template) in enumerate(alias_chat_templates, start=1):
+                        en_text = en_template.format(en=entry.en, zh=entry.zh, location_en=location_en, location_zh=location_zh)
+                        zh_text = zh_template.format(en=entry.en, zh=entry.zh, location_en=location_en, location_zh=location_zh)
                         samples.append(
                             PairSample(
                                 key=(
                                     f"quant_focus_alias_chat:{entry.key}:{repeat_index + 1}:"
                                     f"{location_index}:{template_index}"
                                 ),
-                                en=en_template.format(en=entry.en, zh=entry.zh, location_en=location_en, location_zh=location_zh),
-                                zh=zh_template.format(en=entry.en, zh=entry.zh, location_en=location_en, location_zh=location_zh),
+                                en=en_text,
+                                zh=zh_text,
+                                category=entry.category,
+                                is_priority=True,
+                                source="quant_focus",
+                            )
+                        )
+                        slang_prefix_en, slang_prefix_zh = alias_chat_slang_prefixes[
+                            (entry_index + template_index + repeat_index) % len(alias_chat_slang_prefixes)
+                        ]
+                        slang_suffix_en, slang_suffix_zh = alias_chat_slang_suffixes[
+                            (entry_index + location_index + template_index) % len(alias_chat_slang_suffixes)
+                        ]
+                        slang_zh = compact_alias_chat(zh_text)
+                        for source_phrase, replacement in alias_chat_slang_replacements:
+                            slang_zh = slang_zh.replace(source_phrase, replacement)
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"quant_focus_alias_slang:{entry.key}:{repeat_index + 1}:"
+                                    f"{location_index}:{template_index}"
+                                ),
+                                en=f"{slang_prefix_en}{strip_final_punctuation(en_text)}.{slang_suffix_en}",
+                                zh=f"{slang_prefix_zh}{slang_zh}{slang_suffix_zh}",
                                 category=entry.category,
                                 is_priority=True,
                                 source="quant_focus",
