@@ -3506,6 +3506,48 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("keep destination and ship name separate in chat", "聊天里把目的地和船名分开说"),
         ("move the pickup marker after the contract updates", "合同更新后重新放接人标记"),
     ]
+    player_decision_topics = [
+        ("engage or hold fire", "开火还是先等"),
+        ("continue or return to station", "继续任务还是返航"),
+        ("sell cargo now or keep hauling", "现在卖货还是继续跑"),
+        ("take the service beacon or skip it", "接信标还是跳过"),
+        ("repair first or push the route", "先维修还是继续走"),
+        ("swap ships or keep the current ship", "换船还是继续用这艘"),
+        ("board now or wait for scan", "现在登船还是等扫描"),
+        ("server hop or stay together", "换服还是留在本服"),
+        ("pick up the late player or leave first", "等晚到的人还是先走"),
+        ("split crew or stay on one ship", "分船行动还是同船行动"),
+        ("take the bounty chain or change contract", "继续赏金链还是换合同"),
+        ("recover cargo or abandon the run", "找回货物还是放弃这趟"),
+    ]
+    player_decision_states = [
+        ("marker is on the wrong ship", "标记挂到错船上了"),
+        ("target is close to armistice", "目标离停火区太近"),
+        ("cargo value is high enough to avoid risk", "货值够高，不适合冒险"),
+        ("one turret seat is still empty", "还有一个炮塔位没人"),
+        ("new player is still finding the hangar", "萌新还在找机库"),
+        ("quantum fuel is barely enough", "量子燃料刚好够"),
+        ("server is starting to stutter", "服务器开始卡了"),
+        ("escort has not arrived yet", "护航还没到位"),
+        ("ship took engine damage", "船的引擎受损了"),
+        ("contract marker changed after sharing", "共享后合同标记变了"),
+        ("hostile ship may be friendly", "那艘红名船可能是友军"),
+        ("medical beacon is closer than expected", "医疗信标比预期近"),
+    ]
+    player_decision_actions = [
+        ("hold fire until the pilot confirms", "驾驶员确认前先别开火"),
+        ("return to the station and repair first", "先回空间站维修"),
+        ("sell the cargo before taking another fight", "再打之前先把货卖掉"),
+        ("ask party chat for a vote", "在队伍聊天里问一下大家意见"),
+        ("keep the ship outside and wait two minutes", "船停在外面再等两分钟"),
+        ("swap to the backup ship if the claim timer is short", "申领时间短就换备用船"),
+        ("scan before boarding", "登船前先扫描"),
+        ("regroup before switching server", "换服前先重新集合"),
+        ("pick up the late player before the next jump", "下一跳前先接晚到的人"),
+        ("split crew only after voice is clear", "语音确认清楚后再分船"),
+        ("change contract if the marker stays wrong", "标记一直不对就换合同"),
+        ("abandon the run only after cargo recovery fails", "找不回货再放弃这趟"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -5339,6 +5381,78 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Party] Nav: 从{location_zh}到{destination_zh}，{route_state_zh}\n"
                             f"[Voice] Pilot: {ship_zh}负责接人和转场\n"
                             f"[Team] Crew: {route_action_zh}；路线报点不是船名"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for decision_index, (topic_en, topic_zh) in enumerate(player_decision_topics, start=1):
+                    state_en, state_zh = player_decision_states[
+                        (repeat_index + location_index + ship_index + decision_index) % len(player_decision_states)
+                    ]
+                    action_en, action_zh = player_decision_actions[
+                        (repeat_index + ship_index + decision_index) % len(player_decision_actions)
+                    ]
+                    other_ship_en, other_ship_zh = pick_other_ship(ship_index, decision_index + 5, ship_zh)
+                    channel_en, channel_zh = player_route_channels[
+                        (repeat_index + decision_index + ship_index) % len(player_route_channels)
+                    ]
+                    decision_en = (
+                        f"{channel_en}{topic_en} at {location_en}: {ship_en} is assigned, "
+                        f"not {other_ship_en}; {state_en}; {action_en}."
+                    )
+                    decision_zh = (
+                        f"{channel_zh}{location_zh}这边{topic_zh}: {ship_zh}负责，不是{other_ship_zh}；"
+                        f"{state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_decision_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{decision_index}:standard"
+                            ),
+                            en=decision_en,
+                            zh=decision_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_decision_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{decision_index}:compact"
+                            ),
+                            en=decision_en,
+                            zh=compact_chat_text(decision_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                decision_topic_en, decision_topic_zh = player_decision_topics[
+                    (repeat_index + location_index + ship_index) % len(player_decision_topics)
+                ]
+                decision_state_en, decision_state_zh = player_decision_states[
+                    (repeat_index + location_index + ship_index + 4) % len(player_decision_states)
+                ]
+                decision_action_en, decision_action_zh = player_decision_actions[
+                    (repeat_index + location_index + ship_index + 6) % len(player_decision_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_decision_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Party] Lead: decision at {location_en}: {decision_topic_en}\n"
+                            f"[Voice] Pilot: {ship_en} is assigned, but {decision_state_en}\n"
+                            f"[Team] Crew: {decision_action_en}; confirm before changing ships"
+                        ),
+                        zh=(
+                            f"[Party] Lead: {location_zh}这边决定一下：{decision_topic_zh}\n"
+                            f"[Voice] Pilot: {ship_zh}负责，但{decision_state_zh}\n"
+                            f"[Team] Crew: {decision_action_zh}；换船前先确认"
                         ),
                         category="chat",
                         is_priority=True,

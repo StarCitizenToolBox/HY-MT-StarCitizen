@@ -328,6 +328,20 @@ SOURCE_PHRASES = {
         "路线标记",
         "路线报点",
         "接人标记",
+        "开火还是先等",
+        "继续任务还是返航",
+        "现在卖货还是继续跑",
+        "接信标还是跳过",
+        "先维修还是继续走",
+        "换船还是继续用这艘",
+        "现在登船还是等扫描",
+        "换服还是留在本服",
+        "等晚到的人还是先走",
+        "分船行动还是同船行动",
+        "继续赏金链还是换合同",
+        "找回货物还是放弃这趟",
+        "队伍聊天里问一下大家意见",
+        "换船前先确认",
         "引擎离线",
         "报点和船名",
         "量子矿",
@@ -563,6 +577,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     player_fragment_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_fragment:")]
     player_route_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_route_status:")]
     player_route_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_route_log:")]
+    player_decision_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_decision_status:")]
+    player_decision_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_decision_log:")]
     target_cjk = [row for row in rows if re.search(r"[\u3400-\u9fff]", row.get("target", ""))]
     unnatural_mixed_rows = find_unnatural_mixed_rows(rows)
     alias_chat_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat:")]
@@ -679,6 +695,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "player_fragment_rows": len(player_fragment_rows),
         "player_route_rows": len(player_route_rows),
         "player_route_log_rows": len(player_route_log_rows),
+        "player_decision_rows": len(player_decision_rows),
+        "player_decision_log_rows": len(player_decision_log_rows),
         "alias_chat_rows": len(alias_chat_rows),
         "alias_slang_rows": len(alias_slang_rows),
         "alias_chat_unique": len(alias_chat_keys - {""}),
@@ -779,6 +797,8 @@ def main() -> int:
     print(f"player_fragment_rows: {report['player_fragment_rows']}")
     print(f"player_route_rows: {report['player_route_rows']}")
     print(f"player_route_log_rows: {report['player_route_log_rows']}")
+    print(f"player_decision_rows: {report['player_decision_rows']}")
+    print(f"player_decision_log_rows: {report['player_decision_log_rows']}")
     print(f"alias_chat_rows: {report['alias_chat_rows']}")
     print(f"alias_slang_rows: {report['alias_slang_rows']}")
     print(f"alias_chat_unique: {report['alias_chat_unique']}")
