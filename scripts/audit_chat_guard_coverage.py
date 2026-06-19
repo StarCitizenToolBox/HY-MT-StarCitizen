@@ -117,6 +117,16 @@ SOURCE_PHRASES = {
         "缺炮塔手",
         "缺医疗",
         "缺护航飞行员",
+        "纠正",
+        "不是",
+        "我说的是",
+        "别翻成",
+        "随机船名",
+        "保留",
+        "引用",
+        "地点",
+        "玩法术语",
+        "消息里的术语",
     ],
 }
 
@@ -255,6 +265,10 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     player_lfg_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_lfg_matrix:")]
     player_trade_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_trade_matrix:")]
     player_recovery_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_recovery_log:")]
+    player_correction_rows = [
+        row for row in rows if row.get("key", "").startswith("chat_guard:player_correction_matrix:")
+    ]
+    player_qa_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_qa_thread:")]
     target_cjk = [row for row in rows if re.search(r"[\u3400-\u9fff]", row.get("target", ""))]
     alias_chat_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat:")]
     alias_slang_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_slang:")]
@@ -338,6 +352,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "player_lfg_rows": len(player_lfg_rows),
         "player_trade_rows": len(player_trade_rows),
         "player_recovery_rows": len(player_recovery_rows),
+        "player_correction_rows": len(player_correction_rows),
+        "player_qa_rows": len(player_qa_rows),
         "alias_chat_rows": len(alias_chat_rows),
         "alias_slang_rows": len(alias_slang_rows),
         "alias_chat_unique": len(alias_chat_keys - {""}),
@@ -407,6 +423,8 @@ def main() -> int:
     print(f"player_lfg_rows: {report['player_lfg_rows']}")
     print(f"player_trade_rows: {report['player_trade_rows']}")
     print(f"player_recovery_rows: {report['player_recovery_rows']}")
+    print(f"player_correction_rows: {report['player_correction_rows']}")
+    print(f"player_qa_rows: {report['player_qa_rows']}")
     print(f"alias_chat_rows: {report['alias_chat_rows']}")
     print(f"alias_slang_rows: {report['alias_slang_rows']}")
     print(f"alias_chat_unique: {report['alias_chat_unique']}")

@@ -2847,6 +2847,74 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("refuel and repair before the next route", "下一段路线前先补油维修"),
         ("keep escort outside until the elevator bug clears", "护航在外面等电梯问题恢复"),
     ]
+    player_correction_templates = [
+        (
+            "Correction: I said the {ship_en} at {location_en}, not the {wrong_ship_en}; keep the marker on the ship.",
+            "纠正一下：我说的是{location_zh}那艘{ship_zh}，不是{wrong_ship_zh}，标记别换船。",
+        ),
+        (
+            "No, {location_en} is the place and {ship_en} is the ship; do not swap them in chat.",
+            "不是，{location_zh}是地点，{ship_zh}是船名，聊天里别把它们互换。",
+        ),
+        (
+            "When I type {term_en}, keep it as the gameplay term; the ship is still the {ship_en}.",
+            "我打{term_zh}时保留玩法词，船还是{ship_zh}。",
+        ),
+        (
+            "The quote says {ship_en}; the tag after the message is just noise, not the target.",
+            "引用里说的是{ship_zh}，消息后面的标签只是噪声，不是目标。",
+        ),
+        (
+            "Do not turn {term_en} into a vehicle name; the vehicle in this sentence is {ship_en}.",
+            "别把{term_zh}转成载具名，这句话里的载具是{ship_zh}。",
+        ),
+        (
+            "If someone asks whether it is the {wrong_ship_en}, answer that the correct ship is the {ship_en}.",
+            "如果有人问是不是{wrong_ship_zh}，回答正确的船是{ship_zh}。",
+        ),
+        (
+            "{location_en} is the meetup point, not the ship; the {ship_en} is waiting outside.",
+            "{location_zh}是集合点，不是船名；{ship_zh}在外面等。",
+        ),
+        (
+            "This is a correction for new players: {ship_en} is the ship, {term_en} is the gameplay term.",
+            "这是给新手的纠正：{ship_zh}是船，{term_zh}是玩法术语。",
+        ),
+    ]
+    player_qa_thread_templates = [
+        (
+            "[Global] Ren: did you mean the {wrong_ship_en} at {location_en}?\n"
+            "[Party] Me: no, I mean the {ship_en}; {term_en} is the gameplay term\n"
+            "[Voice] Kai: copy, marking the {ship_en} now",
+            "[Global] Ren: 你是说{location_zh}那艘{wrong_ship_zh}吗？\n"
+            "[Party] Me: 不是，我说的是{ship_zh}；{term_zh}是玩法术语\n"
+            "[Voice] Kai: 收到，现在标记{ship_zh}",
+        ),
+        (
+            "[Trade] Vox: WTB escort for the {ship_en}, or is that {term_en}?\n"
+            "[Party] Me: {ship_en} is the ship; {term_en} is the term in that message near {location_en}\n"
+            "[Org] Ari: keep both terms exactly",
+            "[Trade] Vox: WTB {ship_zh}护航，还是说{term_zh}？\n"
+            "[Party] Me: {ship_zh}是船；{term_zh}是{location_zh}那条消息里的术语\n"
+            "[Org] Ari: 两个术语都照原意保留",
+        ),
+        (
+            "[Team] Sol: the marker says {location_en}, but global says {ship_en}\n"
+            "[Voice] Me: {location_en} is the location; the {ship_en} is parked there while chat talks about {term_en}\n"
+            "[Party] Fox: do not translate either one as a random ship",
+            "[Team] Sol: 标记写着{location_zh}，但全局说{ship_zh}\n"
+            "[Voice] Me: {location_zh}是地点；聊天说{term_zh}时{ship_zh}停在那里\n"
+            "[Party] Fox: 两个都别翻成随机船名",
+        ),
+        (
+            "[Global] LFG: need one pilot for {term_en} near {location_en}\n"
+            "[Party] Newbie: is {term_en} a ship?\n"
+            "[Voice] Me: no, bring the {ship_en}; {term_en} is the gameplay term",
+            "[Global] LFG: {location_zh}附近{term_zh}缺一个飞行员\n"
+            "[Party] Newbie: {term_zh}是船吗？\n"
+            "[Voice] Me: 不是，开{ship_zh}来；{term_zh}是玩法术语",
+        ),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -3609,6 +3677,82 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                                 f"[Party] Ari: {location_zh}那艘{ship_zh}{failure_zh}\n"
                                 f"[Voice] Me: {action_zh}\n"
                                 f"[Global] LFG: 缺{role_zh}，{payment_zh}"
+                            ),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                wrong_ship_en, wrong_ship_zh = ships[(ship_index + repeat_index + location_index) % len(ships)]
+                if wrong_ship_en == ship_en:
+                    wrong_ship_en, wrong_ship_zh = ships[(ship_index + repeat_index + location_index + 1) % len(ships)]
+                term_en, term_zh = gameplay_terms[
+                    (repeat_index + location_index + ship_index) % len(gameplay_terms)
+                ]
+                for correction_index, (en_template, zh_template) in enumerate(player_correction_templates, start=1):
+                    en_text = en_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                        wrong_ship_en=wrong_ship_en,
+                        wrong_ship_zh=wrong_ship_zh,
+                        term_en=term_en,
+                        term_zh=term_zh,
+                    )
+                    zh_text = zh_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                        wrong_ship_en=wrong_ship_en,
+                        wrong_ship_zh=wrong_ship_zh,
+                        term_en=term_en,
+                        term_zh=term_zh,
+                    )
+                    samples.append(
+                        PairSample(
+                            key=f"chat_guard:player_correction_matrix:{location_index}:{ship_index}:{repeat_index + 1}:{correction_index}:standard",
+                            en=en_text,
+                            zh=zh_text,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=f"chat_guard:player_correction_matrix:{location_index}:{ship_index}:{repeat_index + 1}:{correction_index}:slang",
+                            en=en_text,
+                            zh=slangify_player_chat(zh_text),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                for thread_index, (en_template, zh_template) in enumerate(player_qa_thread_templates, start=1):
+                    samples.append(
+                        PairSample(
+                            key=f"chat_guard:player_qa_thread:{location_index}:{ship_index}:{repeat_index + 1}:{thread_index}",
+                            en=en_template.format(
+                                location_en=location_en,
+                                location_zh=location_zh,
+                                ship_en=ship_en,
+                                ship_zh=ship_zh,
+                                wrong_ship_en=wrong_ship_en,
+                                wrong_ship_zh=wrong_ship_zh,
+                                term_en=term_en,
+                                term_zh=term_zh,
+                            ),
+                            zh=zh_template.format(
+                                location_en=location_en,
+                                location_zh=location_zh,
+                                ship_en=ship_en,
+                                ship_zh=ship_zh,
+                                wrong_ship_en=wrong_ship_en,
+                                wrong_ship_zh=wrong_ship_zh,
+                                term_en=term_en,
+                                term_zh=term_zh,
                             ),
                             category="chat",
                             is_priority=True,
