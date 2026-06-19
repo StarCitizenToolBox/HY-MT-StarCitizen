@@ -4409,6 +4409,202 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             "[Team] Crew: 收到，大家先别离队。",
         ),
     ]
+    player_micro_exchange_scenarios = [
+        (
+            "quick invite",
+            "临时拉人",
+            "can you take one more person on the {ship_en}?",
+            "{ship_zh}还能多带一个人吗？",
+            "yes, but they need to meet us at {location_en}",
+            "可以，但他要来{location_zh}集合",
+            "send the party invite and keep the ramp closed",
+            "先发队伍邀请，舱门暂时别开",
+        ),
+        (
+            "ETA check",
+            "到达时间确认",
+            "how long until the {ship_en} reaches {location_en}?",
+            "{ship_zh}还有多久到{location_zh}？",
+            "about two minutes if the route stays clear",
+            "路线不堵的话大概两分钟",
+            "hold the marker and do not start unloading yet",
+            "标记先别动，也先别开始卸货",
+        ),
+        (
+            "seat check",
+            "座位确认",
+            "which seat should I take on the {ship_en}?",
+            "我上{ship_zh}以后坐哪个位？",
+            "take the turret seat unless the medic needs it",
+            "先坐炮塔位，除非医疗要用",
+            "type ready after you sit down",
+            "坐好以后在队伍里打准备好了",
+        ),
+        (
+            "fuel check",
+            "燃料确认",
+            "does the {ship_en} have enough quantum fuel to leave {location_en}?",
+            "{ship_zh}的量子燃料够离开{location_zh}吗？",
+            "enough for one jump, not enough for the return",
+            "够跳一段，但不够返程",
+            "refuel before accepting the next contract",
+            "接下一单前先补油",
+        ),
+        (
+            "cargo count",
+            "货箱数量确认",
+            "how many boxes are still on the {ship_en}?",
+            "{ship_zh}上还剩几箱？",
+            "three boxes, all near the rear door",
+            "三箱，都在后门附近",
+            "count them again before payment",
+            "付款前再数一遍",
+        ),
+        (
+            "bounty join",
+            "赏金组队",
+            "are you still taking the {ship_en} for bounty missions?",
+            "你还开{ship_zh}打赏金吗？",
+            "yes, leaving {location_en} after the contract is shared",
+            "还打，合同共享后从{location_zh}出发",
+            "bring ammo and stay on voice",
+            "带好弹药，保持语音在线",
+        ),
+        (
+            "rescue pickup",
+            "救援接人",
+            "can the {ship_en} pick me up outside {location_en}?",
+            "{ship_zh}能到{location_zh}外面接我吗？",
+            "yes, but stay in cover until the marker updates",
+            "可以，但标记更新前先找掩体别乱跑",
+            "send the beacon only after the ship is close",
+            "船快到以后再发信标",
+        ),
+        (
+            "landing wait",
+            "落地等待",
+            "should the {ship_en} enter the hangar now?",
+            "{ship_zh}现在进机库吗？",
+            "not yet, another crew is still blocking the door",
+            "先别，另一队还堵在门口",
+            "circle outside until ATC gives a clear hangar marker",
+            "先在外面绕，等ATC给清楚的机库标记",
+        ),
+        (
+            "repair choice",
+            "维修选择",
+            "can we keep flying the {ship_en} after this damage?",
+            "{ship_zh}受这个伤还能继续飞吗？",
+            "it can fly, but I would not take another fight",
+            "能飞，但我不建议再打一场",
+            "land at {location_en} and repair first",
+            "先回{location_zh}落地维修",
+        ),
+        (
+            "trade timing",
+            "交易时间确认",
+            "is the buyer ready near {location_en}?",
+            "{location_zh}附近买家准备好了吗？",
+            "ready, but they want to inspect the {ship_en} cargo first",
+            "准备好了，但他们想先看{ship_zh}上的货",
+            "open the ramp only after both sides confirm",
+            "双方确认后再开舱门",
+        ),
+        (
+            "voice fallback",
+            "语音备用方案",
+            "voice is cutting out; can you type the plan?",
+            "语音断断续续，你能把安排打字发一下吗？",
+            "yes, meet at {location_en} and board the {ship_en}",
+            "可以，在{location_zh}集合，上{ship_zh}",
+            "repeat changes in party chat until voice clears",
+            "语音恢复前，变更都在队伍聊天里再发一遍",
+        ),
+        (
+            "marker confusion",
+            "标记混乱",
+            "my marker is on a teammate, not the {ship_en}",
+            "我的标记在队友身上，不在{ship_zh}上",
+            "same here, the ship marker moved after the party invite",
+            "我也一样，组队邀请后船标跳了",
+            "ping the ship again before anyone launches",
+            "起飞前重新ping一下船",
+        ),
+        (
+            "escort timing",
+            "护航时机",
+            "should escort leave before the {ship_en}?",
+            "护航要先于{ship_zh}出发吗？",
+            "yes, scout the route out of {location_en} first",
+            "要，先侦察离开{location_zh}的路线",
+            "cargo ship waits until escort calls clear",
+            "护航报安全后货船再动",
+        ),
+        (
+            "handoff note",
+            "交接说明",
+            "what should I tell the replacement pilot?",
+            "我要跟接手的驾驶说什么？",
+            "the {ship_en} is fueled, cargo is counted, and we are near {location_en}",
+            "{ship_zh}补过油，货数过了，我们在{location_zh}附近",
+            "leave the short note in party chat",
+            "把简短说明留在队伍聊天里",
+        ),
+        (
+            "stop request",
+            "暂停请求",
+            "can we pause after the {ship_en} lands?",
+            "{ship_zh}落地以后能暂停一下吗？",
+            "yes, someone needs to sort inventory at {location_en}",
+            "可以，有人要在{location_zh}整理仓库",
+            "do not accept another contract until they return",
+            "他回来前先别接下一单",
+        ),
+        (
+            "risk call",
+            "风险提醒",
+            "is it safe to bring the {ship_en} through that route?",
+            "让{ship_zh}走那条路线安全吗？",
+            "not sure, local chat says someone is camping near {location_en}",
+            "不确定，本地聊天说{location_zh}附近有人蹲",
+            "take the wider route and keep shields up",
+            "绕远一点走，护盾保持开启",
+        ),
+    ]
+    player_micro_exchange_templates = [
+        (
+            "[Party] Crew: {ask_en}\n"
+            "[Voice] Pilot: {reply_en}.\n"
+            "[Team] Lead: {next_en}.",
+            "[Party] Crew: {ask_zh}\n"
+            "[Voice] Pilot: {reply_zh}。\n"
+            "[Team] Lead: {next_zh}。",
+        ),
+        (
+            "[Voice] Lead: {topic_en} near {location_en}: {ask_en}\n"
+            "[Party] Pilot: {reply_en}.\n"
+            "[Party] Lead: good, {next_en}.",
+            "[Voice] Lead: {location_zh}附近{topic_zh}: {ask_zh}\n"
+            "[Party] Pilot: {reply_zh}。\n"
+            "[Party] Lead: 好，{next_zh}。",
+        ),
+        (
+            "[Global] Helper: {ask_en}\n"
+            "[Party] Me: {reply_en}.\n"
+            "[Voice] Crew: copy, {next_en}.",
+            "[Global] Helper: {ask_zh}\n"
+            "[Party] Me: {reply_zh}。\n"
+            "[Voice] Crew: 收到，{next_zh}。",
+        ),
+        (
+            "[Team] Crew: quick check before we move: {ask_en}\n"
+            "[Voice] Pilot: {reply_en}.\n"
+            "[Party] Crew: then {next_en}.",
+            "[Team] Crew: 移动前快速确认一下：{ask_zh}\n"
+            "[Voice] Pilot: {reply_zh}。\n"
+            "[Party] Crew: 那就{next_zh}。",
+        ),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -7342,6 +7538,112 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             ),
                             en=general_en,
                             zh=compact_chat_text(general_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                for micro_index, (
+                    topic_en,
+                    topic_zh,
+                    ask_en_template,
+                    ask_zh_template,
+                    reply_en_template,
+                    reply_zh_template,
+                    next_en_template,
+                    next_zh_template,
+                ) in enumerate(player_micro_exchange_scenarios, start=1):
+                    if (repeat_index + location_index + ship_index + micro_index) % 2:
+                        continue
+                    template_index = (
+                        repeat_index + location_index + ship_index + micro_index
+                    ) % len(player_micro_exchange_templates)
+                    en_template, zh_template = player_micro_exchange_templates[template_index]
+                    ask_en = ask_en_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                    )
+                    ask_zh = ask_zh_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                    )
+                    reply_en = reply_en_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                    )
+                    reply_zh = reply_zh_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                    )
+                    next_en = next_en_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                    )
+                    next_zh = next_zh_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                    )
+                    micro_en = en_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                        topic_en=topic_en,
+                        topic_zh=topic_zh,
+                        ask_en=ask_en,
+                        ask_zh=ask_zh,
+                        reply_en=reply_en,
+                        reply_zh=reply_zh,
+                        next_en=next_en,
+                        next_zh=next_zh,
+                    )
+                    micro_zh = zh_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                        topic_en=topic_en,
+                        topic_zh=topic_zh,
+                        ask_en=ask_en,
+                        ask_zh=ask_zh,
+                        reply_en=reply_en,
+                        reply_zh=reply_zh,
+                        next_en=next_en,
+                        next_zh=next_zh,
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_micro_exchange:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{micro_index}:standard"
+                            ),
+                            en=micro_en,
+                            zh=micro_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_micro_exchange:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{micro_index}:compact"
+                            ),
+                            en=micro_en,
+                            zh=compact_chat_text(micro_zh),
                             category="chat",
                             is_priority=True,
                             source="chat_guard",

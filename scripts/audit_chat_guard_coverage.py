@@ -515,6 +515,14 @@ SOURCE_PHRASES = {
         "详细说就是",
         "简短版呢",
         "队伍聊天里打准备好了",
+        "临时拉人",
+        "到达时间确认",
+        "座位确认",
+        "燃料确认",
+        "货箱数量确认",
+        "语音备用方案",
+        "移动前快速确认一下",
+        "接下一单前先补油",
     ],
 }
 
@@ -802,6 +810,9 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     player_general_thread_rows = [
         row for row in rows if row.get("key", "").startswith("chat_guard:player_general_thread:")
     ]
+    player_micro_exchange_rows = [
+        row for row in rows if row.get("key", "").startswith("chat_guard:player_micro_exchange:")
+    ]
     target_cjk = [row for row in rows if re.search(r"[\u3400-\u9fff]", row.get("target", ""))]
     unnatural_mixed_rows = find_unnatural_mixed_rows(rows)
     alias_chat_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat:")]
@@ -946,6 +957,7 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "player_area_report_rows": len(player_area_report_rows),
         "player_area_report_log_rows": len(player_area_report_log_rows),
         "player_general_thread_rows": len(player_general_thread_rows),
+        "player_micro_exchange_rows": len(player_micro_exchange_rows),
         "alias_chat_rows": len(alias_chat_rows),
         "alias_slang_rows": len(alias_slang_rows),
         "alias_chat_unique": len(alias_chat_keys - {""}),
@@ -1074,6 +1086,7 @@ def main() -> int:
     print(f"player_area_report_rows: {report['player_area_report_rows']}")
     print(f"player_area_report_log_rows: {report['player_area_report_log_rows']}")
     print(f"player_general_thread_rows: {report['player_general_thread_rows']}")
+    print(f"player_micro_exchange_rows: {report['player_micro_exchange_rows']}")
     print(f"alias_chat_rows: {report['alias_chat_rows']}")
     print(f"alias_slang_rows: {report['alias_slang_rows']}")
     print(f"alias_chat_unique: {report['alias_chat_unique']}")
