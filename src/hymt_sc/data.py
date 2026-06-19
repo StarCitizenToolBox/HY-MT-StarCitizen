@@ -370,7 +370,7 @@ def build_quant_focus_samples(
         ("The ship is {en}.", "这艘船是{zh}。"),
         ("The ship name is {en}.", "船名是{zh}。"),
         ("I said {en}, not another ship.", "我说的是{zh}，不是别的船。"),
-        ("Do not translate {en} as a generic ship.", "不要把{zh}翻成普通飞船。"),
+        ("This is the Star Citizen ship {en}.", "这是《星际公民》飞船{zh}。"),
         ("I am flying the {en}.", "我开{zh}。"),
         ("I am using the {en} for bounty missions.", "我用{zh}打赏金。"),
         ("The {en} is in the hangar.", "{zh}在机库里。"),
@@ -818,12 +818,12 @@ def build_quant_focus_samples(
     ]
     gameplay_comm_templates = [
         (
-            "Party chat: this is {en}, not a ship name; keep the {ship_en} at {location_en} until we confirm it.",
-            "队伍说 这是{zh}，不是船名；确认前让{ship_zh}停在{location_zh}。",
+            "Party chat: this is about {en}; keep the {ship_en} at {location_en} until we confirm it.",
+            "队伍说 这是{zh}相关的事；确认前让{ship_zh}停在{location_zh}。",
         ),
         (
-            "[Global] Fox: {en} near {location_en} @...\n[Party] Me: translate that as {en}, not as a random ship\n[Voice] Kai: check marker before firing",
-            "[Global] Fox: {location_zh}附近{zh} @...\n[Party] Me: 这个要翻成{en}，不是随机船名\n[Voice] Kai: 开火前看标记",
+            "[Global] Fox: {en} near {location_en} @...\n[Party] Me: copy, keep the {ship_en} parked and check marker before firing\n[Voice] Kai: check marker before firing",
+            "[Global] Fox: {location_zh}附近{zh} @...\n[Party] Me: 收到，{ship_zh}先停着，开火前看标记\n[Voice] Kai: 开火前看标记",
         ),
         (
             "Quick callout: {en} on the {ship_en} at {location_en}; do not confuse it with > F7C-S Hornet Ghost.",
@@ -844,16 +844,16 @@ def build_quant_focus_samples(
             "求{location_zh}附近{zh}帮忙，信标完成后给报酬。",
         ),
         (
-            "Need someone on voice for {en}; please do not translate it as a ship.",
-            "{zh}需要有人上语音，请别把它翻成船名。",
+            "Need someone on voice for {en}; the {ship_en} is waiting at {location_en}.",
+            "{zh}需要有人上语音，{ship_zh}在{location_zh}等。",
         ),
         (
             "Need party invite soon for {en}; the {ship_en} is waiting at {location_en}.",
             "{zh}尽快进队，{ship_zh}在{location_zh}等。",
         ),
         (
-            "o7, if global chat says {en}, keep that gameplay term and do not replace it with a vehicle.",
-            "o7，如果全局说{zh}，保留这个玩法术语，别替换成载具。",
+            "o7, if global chat says {en}, ask party to confirm the marker before moving.",
+            "o7，如果全局说{zh}，让队伍确认标记后再动。",
         ),
         (
             "[Party] LFG for {en}: need escort, rescue, and someone to watch the marker.",
@@ -1655,7 +1655,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("I am on the {server_en}.", "我在{server_zh}。"),
         ("I switched to the {server_en}.", "我换到{server_zh}了。"),
         ("The {server_en} is lagging today.", "{server_zh}今天很卡。"),
-        ("Do not translate {server_en} as a service name.", "不要把{server_zh}翻成服务名称。"),
+        ("The {server_en} is a game server region.", "{server_zh}是游戏服务器区域。"),
         ("{server_en} means a game server region.", "{server_zh}指的是游戏服务器区域。"),
         ("People are fighting at the outpost on the {server_en}.", "{server_zh}前哨站有人打架。"),
     ]
@@ -1739,8 +1739,8 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             "{location_zh}那个{ship_zh}不是大黄蜂，就是{ship_zh}。",
         ),
         (
-            "Do not collapse {location_en} and {ship_en} into a different ship name.",
-            "不要把{location_zh}和{ship_zh}合并成另一个船名。",
+            "Check the marker: the {ship_en} is at {location_en}.",
+            "看标记：{ship_zh}在{location_zh}。",
         ),
         (
             "The {ship_en} at {location_en} is about to explode. Run!",
@@ -1909,30 +1909,30 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             "这里的{ship_zh}是船名：{ship_en}。",
         ),
         (
-            "When players use this term, translate it as {ship_en}.",
-            "玩家说{ship_zh}的时候，要翻成{ship_en}。",
+            "Players use this term for the ship {ship_en}.",
+            "玩家说{ship_zh}时，指的是{ship_en}这艘船。",
         ),
         (
-            "Do not translate the term literally in this game context; use {ship_en}.",
-            "这个游戏语境里不要把{ship_zh}直译，应该用{ship_en}。",
+            "In this game context, the intended ship is {ship_en}.",
+            "在这个游戏语境里，指的是{ship_en}这艘船。",
         ),
     ]
     gameplay_identity_templates = [
         (
-            "In Star Citizen chat, this phrase means {term_en}.",
-            "在星际公民聊天里，{term_zh}要翻成{term_en}。",
+            "In Star Citizen chat, this phrase refers to {term_en}.",
+            "在星际公民聊天里，{term_zh}通常指{term_en}。",
         ),
         (
             "Here this is gameplay slang: {term_en}.",
             "这里的{term_zh}是游戏黑话：{term_en}。",
         ),
         (
-            "When players use this phrase, translate it as {term_en}.",
-            "玩家说{term_zh}的时候，要翻成{term_en}。",
+            "Players use this phrase when talking about {term_en}.",
+            "玩家说{term_zh}时，通常是在说{term_en}。",
         ),
         (
-            "Do not translate this phrase as ordinary Chinese; use {term_en}.",
-            "不要把{term_zh}按普通中文翻译，要用{term_en}。",
+            "This phrase belongs to Star Citizen chat and points to {term_en}.",
+            "{term_zh}属于星际公民聊天用语，指向{term_en}。",
         ),
     ]
     gameplay_direct_templates = [
@@ -1942,8 +1942,8 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("The player said {term_en}.", "玩家说的是{term_zh}。"),
         ("This message is about {term_en}.", "这句话说的是{term_zh}。"),
         ("In this context, use {term_en}.", "这个语境里用{term_zh}。"),
-        ("Do not replace {term_en} with a random ship name.", "不要把{term_zh}替换成随机船名。"),
-        ("Keep the gameplay phrase as {term_en}.", "这个玩法词保留为{term_zh}对应的术语。"),
+        ("The crew is talking about {term_en}.", "队伍说的是{term_zh}。"),
+        ("The gameplay phrase here is {term_en}.", "这里的玩法词是{term_zh}。"),
     ]
     chat_prefix_wrappers = [
         ("Global chat: ", "全局频道："),
@@ -1965,7 +1965,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         (" Tell the party on voice.", "在语音里告诉队伍。"),
         (" Mark it before we engage.", "开打前先标记一下。"),
         (" New players should stay away.", "新手先离远点。"),
-        (" Do not confuse the ship name.", "别把船名认错。"),
+        (" Check the marker first.", "先看标记。"),
     ]
     chat_noise_suffixes = [
         (" > F7C-S Hornet Ghost", ">F7C-S Hornet Ghost"),
@@ -2273,8 +2273,8 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             "{server_zh}我们说的就是{ship_zh}这艘船。",
         ),
         (
-            "On the {server_en}, do not translate this ship name as a normal word; it is {ship_en}.",
-            "{server_zh}这里别把{ship_zh}当普通词，它是{ship_en}。",
+            "On the {server_en}, the callout is for the {ship_en}.",
+            "{server_zh}这条报点说的是{ship_zh}。",
         ),
         (
             "On the {server_en}, I said {ship_en}, not a different ship.",
@@ -2467,7 +2467,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         (" Stay away from the pad.", "先离停机坪远点。"),
         (" Tell the new players in global chat.", "在全局频道提醒一下新手。"),
         (" I am not sure if it is friendly.", "我不确定是不是友军。"),
-        (" Do not confuse the ship name.", "别把船名认错。"),
+        (" Check the marker first.", "先看标记。"),
     ]
     structured_chat_events = [
         (
@@ -2555,7 +2555,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("clear your crime stat before regrouping", "重新集合前先清犯罪等级"),
         ("refuel and repair before the next bounty mission", "下一单赏金前先补油维修"),
         ("keep escort on the cargo ship until it reaches the station", "货船到站前继续护航"),
-        ("tell new players not to confuse the ship name", "提醒新手别把船名认错"),
+        ("tell new players to check the marker first", "提醒新手先看标记"),
     ]
     structured_compound_templates = [
         (
@@ -2593,8 +2593,8 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             "{location_zh}有两艘船：{left_zh}软死亡了，{right_zh}在锁导弹。",
         ),
         (
-            "I said {left_en}, not {right_en}; do not confuse the ship names in global chat.",
-            "我说的是{left_zh}，不是{right_zh}；全局频道里别把船名认错。",
+            "I said {left_en}, not {right_en}; mark the correct target in global chat.",
+            "我说的是{left_zh}，不是{right_zh}；在全局频道把目标标清楚。",
         ),
         (
             "Bring the {left_en} for bounty missions and keep the {right_en} on cargo hauling.",
@@ -2722,7 +2722,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("drop a medical beacon and call for rescue", "发医疗信标并叫医疗救援"),
         ("clear your crime stat before regrouping", "重新集合前先清犯罪等级"),
         ("pull the bounty target away from the station", "把赏金目标从空间站拉开"),
-        ("tell new players not to confuse the ship name", "提醒新手别把船名认错"),
+        ("tell new players to check the marker first", "提醒新手先看标记"),
         ("hold fire and check the marker again", "先停火再看一眼标记"),
         ("pick me up if the ship explodes", "船炸了就来接我"),
         ("switch server if the desync gets worse", "同步更差就换服"),
@@ -2951,6 +2951,72 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("price check", "查价"),
         ("bulk sale", "批量卖"),
     ]
+    player_trade_amounts = [
+        ("a small batch", "一小批"),
+        ("one batch", "一批"),
+        ("a few boxes", "几箱"),
+        ("the recovered stack", "找回来的"),
+        ("the remaining stack", "剩下的"),
+        ("the marked stack", "标记好的"),
+    ]
+    player_trade_checks = [
+        ("check the boxes before payment", "付款前先看箱子"),
+        ("confirm the cargo grid before takeoff", "起飞前先确认货物网格"),
+        ("pay after the transfer is visible", "转移显示以后再付款"),
+        ("keep one person watching the ramp", "留一个人看舱门"),
+        ("move the ship only after both sides confirm", "双方确认后船再动"),
+        ("send the price in party chat", "把价格发到队伍聊天里"),
+    ]
+    player_trade_thread_templates = [
+        (
+            "[Trade] Buyer: are you still selling {amount_en} of {item_en} near {location_en}?\n"
+            "[Party] Seller: yes, the {ship_en} is loaded; {check_en}.",
+            "[Trade] Buyer: {location_zh}附近还出售{amount_zh}{item_zh}吗？\n"
+            "[Party] Seller: 还在，{ship_zh}已经装好；{check_zh}。",
+        ),
+        (
+            "[Party] Seller: before we meet, confirm the cargo is {item_en} and the price is unchanged.\n"
+            "[Trade] Buyer: understood, I am coming to {location_en} for {amount_en} of {item_en}.",
+            "[Party] Seller: 见面前先确认，货是{item_zh}，价格不变。\n"
+            "[Trade] Buyer: 明白，我去{location_zh}收{amount_zh}{item_zh}。",
+        ),
+        (
+            "[Trade] Buyer: I can pay after inspection; hold the {ship_en} at {location_en}.\n"
+            "[Party] Seller: fine, {check_en}; then we settle.",
+            "[Trade] Buyer: 我验完货再付款，{ship_zh}先停在{location_zh}。\n"
+            "[Party] Seller: 可以，{check_zh}；然后结算。",
+        ),
+        (
+            "[Party] Loader: {amount_en} of {item_en} is ready on the {ship_en}.\n"
+            "[Trade] Buyer: wait for me at {location_en}; do not move the ship yet.",
+            "[Party] Loader: {amount_zh}{item_zh}已经在{ship_zh}上了。\n"
+            "[Trade] Buyer: 在{location_zh}等我，船先别动。",
+        ),
+        (
+            "[Trade] Seller: price check for {item_en} at {location_en}; the {ship_en} can deliver.\n"
+            "[Party] Buyer: post the price first, then we decide.",
+            "[Trade] Seller: {location_zh}这边{item_zh}查价，{ship_zh}可以送货。\n"
+            "[Party] Buyer: 先把价格发出来，我们再决定。",
+        ),
+        (
+            "[Party] Seller: if the server looks unstable, we finish payment before moving cargo.\n"
+            "[Trade] Buyer: agreed; keep {amount_en} of {item_en} on the {ship_en}.",
+            "[Party] Seller: 如果服务器不太稳，先结账再搬货。\n"
+            "[Trade] Buyer: 可以，{amount_zh}{item_zh}先放在{ship_zh}上。",
+        ),
+        (
+            "[Trade] Buyer: I am at {location_en}; which ship has the {item_en}?\n"
+            "[Party] Seller: the {ship_en}; {check_en}.",
+            "[Trade] Buyer: 我到{location_zh}了，{item_zh}在哪艘船上？\n"
+            "[Party] Seller: 在{ship_zh}上；{check_zh}。",
+        ),
+        (
+            "[Party] Seller: after this trade, split the payout and mark the next pickup.\n"
+            "[Trade] Buyer: sure, {amount_en} of {item_en} first, then the next run.",
+            "[Party] Seller: 这笔交易完先分账，再标下一趟接货点。\n"
+            "[Trade] Buyer: 没问题，先交{amount_zh}{item_zh}，再跑下一趟。",
+        ),
+    ]
     player_failure_events = [
         ("hit a 30k while loaded", "满货时遇到30k"),
         ("got stuck in the elevator", "卡电梯了"),
@@ -2979,66 +3045,66 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             "纠正一下：我说的是{location_zh}那艘{ship_zh}，不是{wrong_ship_zh}，标记别换船。",
         ),
         (
-            "No, {location_en} is the place and {ship_en} is the ship; do not swap them in chat.",
-            "不是，{location_zh}是地点，{ship_zh}是船名，聊天里别把它们互换。",
+            "No, meet at {location_en}; the crew boards the {ship_en} after everyone arrives.",
+            "不是，在{location_zh}集合；人到齐以后上{ship_zh}。",
         ),
         (
-            "When I type {term_en}, keep it as the gameplay term; the ship is still the {ship_en}.",
-            "我打{term_zh}时保留玩法词，船还是{ship_zh}。",
+            "When I mention {term_en}, I mean that activity; bring the {ship_en} for the run.",
+            "我说{term_zh}是说这趟玩法，开{ship_zh}来跑。",
         ),
         (
             "The quote says {ship_en}; the tag after the message is just noise, not the target.",
             "引用里说的是{ship_zh}，消息后面的标签只是噪声，不是目标。",
         ),
         (
-            "Do not turn {term_en} into a vehicle name; the vehicle in this sentence is {ship_en}.",
-            "别把{term_zh}转成载具名，这句话里的载具是{ship_zh}。",
+            "For {term_en}, use the {ship_en}; we still need the crew to confirm before launch.",
+            "这趟{term_zh}用{ship_zh}，出发前还要等船员确认。",
         ),
         (
             "If someone asks whether it is the {wrong_ship_en}, answer that the correct ship is the {ship_en}.",
             "如果有人问是不是{wrong_ship_zh}，回答正确的船是{ship_zh}。",
         ),
         (
-            "{location_en} is the meetup point, not the ship; the {ship_en} is waiting outside.",
-            "{location_zh}是集合点，不是船名；{ship_zh}在外面等。",
+            "Meet at {location_en}; the {ship_en} is waiting outside for pickup.",
+            "在{location_zh}集合；{ship_zh}在外面等接人。",
         ),
         (
-            "This is a correction for new players: {ship_en} is the ship, {term_en} is the gameplay term.",
-            "这是给新手的纠正：{ship_zh}是船，{term_zh}是玩法术语。",
+            "Quick correction for the new player: take the {ship_en} and join us for {term_en}.",
+            "给萌新更正一下：坐{ship_zh}，跟我们一起做{term_zh}。",
         ),
     ]
     player_qa_thread_templates = [
         (
             "[Global] Ren: did you mean the {wrong_ship_en} at {location_en}?\n"
-            "[Party] Me: no, I mean the {ship_en}; {term_en} is the gameplay term\n"
+            "[Party] Me: no, we are taking the {ship_en} for {term_en}\n"
             "[Voice] Kai: copy, marking the {ship_en} now",
             "[Global] Ren: 你是说{location_zh}那艘{wrong_ship_zh}吗？\n"
-            "[Party] Me: 不是，我说的是{ship_zh}；{term_zh}是玩法术语\n"
+            "[Party] Me: 不是，这趟{term_zh}我们开{ship_zh}\n"
             "[Voice] Kai: 收到，现在标记{ship_zh}",
         ),
         (
-            "[Trade] Vox: Looking for escort for the {ship_en}, or is that {term_en}?\n"
-            "[Party] Me: {ship_en} is the ship; {term_en} is the term in that message near {location_en}\n"
-            "[Org] Ari: keep both terms exactly",
-            "[Trade] Vox: 求{ship_zh}护航，还是说{term_zh}？\n"
-            "[Party] Me: {ship_zh}是船；{term_zh}是{location_zh}那条消息里的术语\n"
-            "[Org] Ari: 两个术语都照原意保留",
+            "[Trade] Vox: are you asking for escort around the {ship_en}, or help with {term_en}?\n"
+            "[Party] Me: both, meet near {location_en} and stay with the {ship_en}\n"
+            "[Org] Ari: copy, escort stays close until the handoff",
+            "[Trade] Vox: 你是要护着{ship_zh}，还是要人帮忙{term_zh}？\n"
+            "[Party] Me: 都要，在{location_zh}附近集合，跟着{ship_zh}走\n"
+            "[Org] Ari: 收到，交接前护航都贴近一点",
         ),
         (
             "[Team] Sol: the marker says {location_en}, but global says {ship_en}\n"
-            "[Voice] Me: {location_en} is the location; the {ship_en} is parked there while chat talks about {term_en}\n"
-            "[Party] Fox: do not translate either one as a random ship",
+            "[Voice] Me: meet at {location_en}; the {ship_en} is parked there while we handle {term_en}\n"
+            "[Party] Fox: copy, I will follow the marker and wait for the pilot",
             "[Team] Sol: 标记写着{location_zh}，但全局说{ship_zh}\n"
-            "[Voice] Me: {location_zh}是地点；聊天说{term_zh}时{ship_zh}停在那里\n"
-            "[Party] Fox: 两个都别翻成随机船名",
+            "[Voice] Me: 在{location_zh}集合；我们处理{term_zh}时{ship_zh}停在那里\n"
+            "[Party] Fox: 收到，我跟标记走，等驾驶员",
         ),
         (
             "[Global] LFG: need one pilot for {term_en} near {location_en}\n"
-            "[Party] Newbie: is {term_en} a ship?\n"
-            "[Voice] Me: no, bring the {ship_en}; {term_en} is the gameplay term",
+            "[Party] Newbie: what should I bring?\n"
+            "[Voice] Me: bring the {ship_en}; we will explain the run on the way",
             "[Global] LFG: {location_zh}附近{term_zh}缺一个飞行员\n"
-            "[Party] Newbie: {term_zh}是船吗？\n"
-            "[Voice] Me: 不是，开{ship_zh}来；{term_zh}是玩法术语",
+            "[Party] Newbie: 我要带什么？\n"
+            "[Voice] Me: 开{ship_zh}来，路上跟你讲这趟怎么跑",
         ),
     ]
     player_nav_points = [
@@ -3068,8 +3134,8 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
     player_nav_actions = [
         ("hold QT until the marker updates", "标记更新前先别QT"),
         ("call the pad number in party chat", "在队伍里报停机坪编号"),
-        ("do not translate the nav point as a ship", "别把导航点翻成船名"),
-        ("keep the ship name separate from the marker", "把船名和标记分开"),
+        ("check the nav point before marking a ship", "标船前先确认导航点"),
+        ("send the ship and marker in the same party message", "把船和标记发在同一条队伍消息里"),
         ("ask global if the route is camped", "去全局问路线有没有人蹲"),
         ("wait for escort before crossing the route", "等护航到了再过线"),
         ("clear the hangar before bringing cargo in", "带货进来前先清机库"),
@@ -3111,7 +3177,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("scan before firing missiles", "发导弹前先扫描"),
         ("repair engines before chasing", "追击前先修引擎"),
         ("keep the turret on the red target", "炮塔盯红名目标"),
-        ("do not confuse the damage callout with a ship name", "别把伤害报点当船名"),
+        ("repeat the damaged side before the next pass", "下一轮前再报一遍受损方向"),
     ]
     player_industrial_jobs = [
         ("quantanium mining", "quantanium采矿"),
@@ -3145,11 +3211,11 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("move boxes before the grid snaps them wrong", "货物网格吸错前先挪箱子"),
         ("keep escort until the cargo reaches the station", "货到空间站前继续护航"),
         ("split the cargo profit after selling", "卖完货后分货款"),
-        ("do not translate RMC or CM as ship names", "别把RMC或CM翻成船名"),
+        ("label the RMC and CM boxes before loading", "装货前先把RMC和CM箱子标清楚"),
         ("bring a tractor beam and clear the ramp", "带牵引光束并清跳板"),
         ("wait for the refinery timer before calling pickup", "等精炼计时结束再叫接送"),
         ("check the sale route before loading the ship", "装船前先看卖货路线"),
-        ("keep the ship name separate from the cargo callout", "把船名和货物报点分开"),
+        ("repeat which ship is carrying which cargo", "再报一遍哪艘船装哪批货"),
     ]
     player_medical_scenarios = [
         ("medical rescue", "医疗救援"),
@@ -3187,7 +3253,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("share the body marker in party chat", "在队伍里共享尸体标记 body marker"),
         ("tell global this is rescue, not bounty", "去全局说明这是救援不是赏金"),
         ("wait for the security scan before opening fire", "等安保扫描后再开火"),
-        ("do not confuse Klescher with a ship name", "别把Klescher当船名"),
+        ("confirm the Klescher pickup point before takeoff", "起飞前先确认Klescher接人点"),
     ]
     player_ops_scenarios = [
         ("fleet rally", "舰队集结"),
@@ -3221,8 +3287,8 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("hold the fleet until the ground team confirms", "等地面队确认后舰队再动"),
         ("land the drop ship nose out", "登陆艇机头朝外落地"),
         ("call the airlock timer in party chat", "在队伍里报airlock计时"),
-        ("keep the sniper callout separate from the ship name", "把狙击手报点和船名分开"),
-        ("do not translate Jumptown as a location nickname", "别把Jumptown翻成地点外号"),
+        ("mark the sniper position before the drop ship turns in", "登陆艇转入前先标狙击手位置"),
+        ("confirm the Jumptown pad before cargo moves", "搬货前先确认Jumptown停机坪"),
         ("escort the cargo only after the marker updates", "标记更新后再护送货物"),
         ("clear the corridor before looting", "摸箱子前先清走廊"),
         ("wait for the contract share before pushing", "共享合同后再推进"),
@@ -3259,10 +3325,10 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
     ]
     player_meta_actions = [
         ("post the shard ID before everyone relogs", "大家重登前先发shard ID"),
-        ("keep the workaround separate from the ship callout", "把绕路办法和船名报点分开"),
+        ("post the workaround before anyone changes ships", "换船前先把绕路办法发出来"),
         ("paste the patch number with the screenshot", "截图一起贴补丁号"),
         ("move late players to the backup voice channel", "把迟到的人拉到备用语音频道"),
-        ("do not translate launcher or PTU as ship names", "别把launcher或PTU翻成船名"),
+        ("wait for launcher and PTU checks before forming up", "launcher和PTU确认完再集合"),
         ("record the reproduction steps before resetting", "重置前先录复现步骤"),
         ("confirm the org role before sharing the contract", "共享合同前先确认组织权限"),
         ("wait for file verification before joining the server", "等文件校验完再进服务器"),
@@ -3301,13 +3367,13 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
     ]
     player_service_actions = [
         ("screenshot the ASOP page before claiming", "申领前先截图ASOP页面"),
-        ("do not confuse the component name with the ship name", "别把组件名当船名"),
+        ("confirm the component slot before buying another part", "买新组件前先确认槽位"),
         ("wait for the claim timer before expediting", "等claim timer出来再加急"),
         ("save the loadout in Vehicle Manager again", "再去Vehicle Manager保存一次配置"),
         ("check NikNax before buying another component", "买新组件前先查NikNax"),
         ("call ATC only after the party is onboard", "队伍上船后再呼叫ATC"),
         ("repair before rearming if missiles are missing", "导弹没补上就先维修再补弹"),
-        ("keep the docking collar callout separate from the ship name", "把docking collar报点和船名分开"),
+        ("call the docking collar side before lining up", "对准前先报docking collar在哪一侧"),
         ("swap the quantum drive after landing", "落地后再换quantum drive"),
         ("record the paint reset before filing the report", "反馈前先录下涂装重置"),
     ]
@@ -3341,7 +3407,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
     ]
     player_mission_actions = [
         ("share the contract again before entering the cave", "进洞前再共享一次合同"),
-        ("do not translate the mission type as a ship name", "别把任务类型翻成船名"),
+        ("confirm the mission type before sharing the contract", "共享合同前先确认任务类型"),
         ("scan the outpost before dropping the box", "放箱子前先扫描前哨"),
         ("wait for the reputation tick before leaving", "等声望跳了再走"),
         ("call the checkpoint number in party chat", "在队伍里报checkpoint编号"),
@@ -3377,11 +3443,11 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("multi-tool attachment is missing", "multi-tool配件丢了"),
         ("backpack is full of gems", "背包装满gem了"),
         ("loot crate despawn timer is short", "战利品箱despawn计时很短"),
-        ("prison shiv is not a ship name", "prison shiv不是船名"),
+        ("prison shiv warning came from the prison crew", "监狱队友提醒了prison shiv"),
     ]
     player_gear_actions = [
         ("move ammo to the runner before pushing", "推进前先把弹药给跑腿"),
-        ("do not translate the weapon name as a ship", "别把武器名翻成船"),
+        ("check the weapon name before buying ammo", "买弹药前先确认武器名"),
         ("split medpens before entering the bunker", "进地堡前先分medpen"),
         ("mark the body bag before looting", "摸包前先标记尸体背包"),
         ("drop heavy armor if the route needs sprinting", "路线要冲刺就丢重甲"),
@@ -3421,7 +3487,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
     ]
     player_economy_actions = [
         ("post the amount before anyone transfers", "转账前先把金额发出来"),
-        ("do not translate the payment term as a ship name", "别把付款术语翻成船名"),
+        ("confirm the payment term before the transfer", "转账前先确认付款方式"),
         ("split payout only after the cargo is sold", "卖完货后再分账"),
         ("hold the deposit until both sides confirm", "双方确认前先压着押金"),
         ("use party chat for the escrow name", "用队伍聊天确认担保人名字"),
@@ -3575,10 +3641,10 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             "[Voice] Mentor: 没事，下次船在仓库里就点取出。",
         ),
         (
-            "[Voice] Lead: do not translate {location_en} as the ship name.\n"
-            "[Party] Helper: right, {location_en} is the place; the ship is the {ship_en}.",
-            "[Voice] Lead: 别把{location_zh}当成船名。\n"
-            "[Party] Helper: 对，{location_zh}是地点；船是{ship_zh}。",
+            "[Voice] Lead: meet at {location_en} and board the {ship_en} after the pilot pings it.\n"
+            "[Party] Helper: copy, I will wait at the marker.",
+            "[Voice] Lead: 在{location_zh}集合，驾驶员ping完以后上{ship_zh}。\n"
+            "[Party] Helper: 收到，我在标记那边等。",
         ),
         (
             "[Party] Crew: I lost the party marker near {location_en}.\n"
@@ -5014,6 +5080,67 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             source="chat_guard",
                         )
                     )
+                    for trade_thread_index, (en_template, zh_template) in enumerate(
+                        player_trade_thread_templates,
+                        start=1,
+                    ):
+                        amount_en, amount_zh = player_trade_amounts[
+                            (repeat_index + location_index + ship_index + trade_index + trade_thread_index)
+                            % len(player_trade_amounts)
+                        ]
+                        check_en, check_zh = player_trade_checks[
+                            (repeat_index + ship_index + trade_index + trade_thread_index) % len(player_trade_checks)
+                        ]
+                        trade_thread_en = en_template.format(
+                            location_en=location_en,
+                            location_zh=location_zh,
+                            ship_en=ship_en,
+                            ship_zh=ship_zh,
+                            item_en=item_en,
+                            item_zh=item_zh,
+                            amount_en=amount_en,
+                            amount_zh=amount_zh,
+                            check_en=check_en,
+                            check_zh=check_zh,
+                        )
+                        trade_thread_zh = zh_template.format(
+                            location_en=location_en,
+                            location_zh=location_zh,
+                            ship_en=ship_en,
+                            ship_zh=ship_zh,
+                            item_en=item_en,
+                            item_zh=item_zh,
+                            amount_en=amount_en,
+                            amount_zh=amount_zh,
+                            check_en=check_en,
+                            check_zh=check_zh,
+                        )
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"chat_guard:player_trade_thread:{location_index}:{ship_index}:"
+                                    f"{repeat_index + 1}:{trade_index}:{trade_thread_index}:standard"
+                                ),
+                                en=trade_thread_en,
+                                zh=trade_thread_zh,
+                                category="chat",
+                                is_priority=True,
+                                source="chat_guard",
+                            )
+                        )
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"chat_guard:player_trade_thread:{location_index}:{ship_index}:"
+                                    f"{repeat_index + 1}:{trade_index}:{trade_thread_index}:compact"
+                                ),
+                                en=trade_thread_en,
+                                zh=compact_chat_text(trade_thread_zh),
+                                category="chat",
+                                is_priority=True,
+                                source="chat_guard",
+                            )
+                        )
                 for failure_index, (failure_en, failure_zh) in enumerate(player_failure_events, start=1):
                     action_en, action_zh = player_recovery_actions[
                         (repeat_index + location_index + ship_index + failure_index) % len(player_recovery_actions)
@@ -5230,12 +5357,12 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                         en=(
                             f"[Voice] Gunner: {ship_en} at {location_en}, {combat_en}\n"
                             f"[Party] Pilot: {system_en}\n"
-                            f"[Team] Lead: {action_en}; keep the callout separate from the ship name"
+                            f"[Team] Lead: {action_en}; repeat the target before the next pass"
                         ),
                         zh=(
                             f"[Voice] Gunner: {location_zh}那艘{ship_zh}，{combat_zh}\n"
                             f"[Party] Pilot: {system_zh}\n"
-                            f"[Team] Lead: {action_zh}；把报点和船名分开"
+                            f"[Team] Lead: {action_zh}；下一轮前再报一遍目标"
                         ),
                         category="chat",
                         is_priority=True,
@@ -5299,12 +5426,12 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                         en=(
                             f"[Trade] Miner: {job_en} near {location_en}, {state_en}\n"
                             f"[Party] Pilot: the {ship_en} is loaded and waiting\n"
-                            f"[Voice] Lead: {action_en}; cargo callout is not the ship name"
+                            f"[Voice] Lead: {action_en}; confirm the cargo before takeoff"
                         ),
                         zh=(
                             f"[Trade] Miner: {location_zh}附近{job_zh}，{state_zh}\n"
                             f"[Party] Pilot: {ship_zh}已经装货在等\n"
-                            f"[Voice] Lead: {action_zh}；货物报点不是船名"
+                            f"[Voice] Lead: {action_zh}；起飞前先确认货物"
                         ),
                         category="chat",
                         is_priority=True,
@@ -5369,12 +5496,12 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                         en=(
                             f"[Global] Rescue: {scenario_en} near {location_en}, {state_en}\n"
                             f"[Party] Pilot: the {ship_en} is parked outside armistice\n"
-                            f"[Voice] Medic: {action_en}; rescue callout is not a ship name"
+                            f"[Voice] Medic: {action_en}; confirm the pickup point before landing"
                         ),
                         zh=(
                             f"[Global] Rescue: {location_zh}附近{scenario_zh}，{state_zh}\n"
                             f"[Party] Pilot: {ship_zh}停在armistice外\n"
-                            f"[Voice] Medic: {action_zh}；救援报点不是船名"
+                            f"[Voice] Medic: {action_zh}；降落前先确认接人点"
                         ),
                         category="chat",
                         is_priority=True,
@@ -5439,12 +5566,12 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                         en=(
                             f"[Org] Lead: {scenario_en} at {location_en}, {ship_en} is assigned\n"
                             f"[Team] Ground: {state_en}\n"
-                            f"[Voice] Flight: {action_en}; operation callout is not the ship name"
+                            f"[Voice] Flight: {action_en}; repeat the ground marker before approach"
                         ),
                         zh=(
                             f"[Org] Lead: {location_zh}{scenario_zh}，{ship_zh}负责\n"
                             f"[Team] Ground: {state_zh}\n"
-                            f"[Voice] Flight: {action_zh}；行动报点不是船名"
+                            f"[Voice] Flight: {action_zh}；进场前再报一遍地面标记"
                         ),
                         category="chat",
                         is_priority=True,
@@ -5509,12 +5636,12 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                         en=(
                             f"[Local] Helper: {topic_en} near {location_en}, {state_en}\n"
                             f"[Party] Pilot: the {ship_en} stays assigned for now\n"
-                            f"[Org] Admin: {action_en}; support callout is not the ship name"
+                            f"[Org] Admin: {action_en}; keep the crew on the current plan"
                         ),
                         zh=(
                             f"[Local] Helper: {location_zh}附近{topic_zh}，{state_zh}\n"
                             f"[Party] Pilot: {ship_zh}暂时继续负责\n"
-                            f"[Org] Admin: {action_zh}；支持报点不是船名"
+                            f"[Org] Admin: {action_zh}；队伍先按当前安排走"
                         ),
                         category="chat",
                         is_priority=True,
@@ -5579,12 +5706,12 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                         en=(
                             f"[Local] Mechanic: {topic_en} at {location_en}, {state_en}\n"
                             f"[Party] Pilot: the {ship_en} stays in the hangar\n"
-                            f"[Voice] Crew: {action_en}; service callout is not the ship name"
+                            f"[Voice] Crew: {action_en}; confirm the service step before launch"
                         ),
                         zh=(
                             f"[Local] Mechanic: {location_zh}{topic_zh}，{state_zh}\n"
                             f"[Party] Pilot: {ship_zh}留在机库\n"
-                            f"[Voice] Crew: {action_zh}；整备报点不是船名"
+                            f"[Voice] Crew: {action_zh}；出发前先确认整备步骤"
                         ),
                         category="chat",
                         is_priority=True,
@@ -5649,12 +5776,12 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                         en=(
                             f"[Party] Runner: {topic_en} at {location_en}, {state_en}\n"
                             f"[Team] Pilot: the {ship_en} is assigned to the mission\n"
-                            f"[Voice] Lead: {action_en}; mission callout is not the ship name"
+                            f"[Voice] Lead: {action_en}; repeat the objective before moving"
                         ),
                         zh=(
                             f"[Party] Runner: {location_zh}{topic_zh}，{state_zh}\n"
                             f"[Team] Pilot: {ship_zh}负责这个任务\n"
-                            f"[Voice] Lead: {action_zh}；任务报点不是船名"
+                            f"[Voice] Lead: {action_zh}；行动前再报一遍目标"
                         ),
                         category="chat",
                         is_priority=True,
@@ -5719,12 +5846,12 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                         en=(
                             f"[Team] Gear: {topic_en} at {location_en}, {state_en}\n"
                             f"[Party] Pilot: the {ship_en} is holding outside\n"
-                            f"[Voice] Runner: {action_en}; gear callout is not the ship name"
+                            f"[Voice] Runner: {action_en}; confirm the kit before boarding"
                         ),
                         zh=(
                             f"[Team] Gear: {location_zh}{topic_zh}，{state_zh}\n"
                             f"[Party] Pilot: {ship_zh}在外面等\n"
-                            f"[Voice] Runner: {action_zh}；装备报点不是船名"
+                            f"[Voice] Runner: {action_zh}；登船前先确认装备"
                         ),
                         category="chat",
                         is_priority=True,
@@ -5789,12 +5916,12 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                         en=(
                             f"[Trade] Broker: {topic_en} at {location_en}, {state_en}\n"
                             f"[Party] Pilot: the {ship_en} is waiting for payout\n"
-                            f"[Voice] Lead: {action_en}; payment callout is not the ship name"
+                            f"[Voice] Lead: {action_en}; confirm the amount before payout"
                         ),
                         zh=(
                             f"[Trade] Broker: {location_zh}{topic_zh}，{state_zh}\n"
                             f"[Party] Pilot: {ship_zh}在等付款\n"
-                            f"[Voice] Lead: {action_zh}；付款报点不是船名"
+                            f"[Voice] Lead: {action_zh}；付款前先确认金额"
                         ),
                         category="chat",
                         is_priority=True,
@@ -5859,12 +5986,12 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                         en=(
                             f"[Party] Lead: {topic_en} at {location_en}, {state_en}\n"
                             f"[Voice] Pilot: the {ship_en} is holding for the crew\n"
-                            f"[Team] Crew: {action_en}; crew chat is not a ship name"
+                            f"[Team] Crew: {action_en}; wait for the crew check before launch"
                         ),
                         zh=(
                             f"[Party] Lead: {location_zh}{topic_zh}，{state_zh}\n"
                             f"[Voice] Pilot: {ship_zh}在等船员\n"
-                            f"[Team] Crew: {action_zh}；队伍聊天不是船名"
+                            f"[Team] Crew: {action_zh}；船员确认前先别出发"
                         ),
                         category="chat",
                         is_priority=True,
@@ -5930,12 +6057,12 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                         en=(
                             f"[Party] Mentor: {topic_en} at {location_en}, {state_en}\n"
                             f"[Voice] Pilot: the {ship_en} is staying parked for now\n"
-                            f"[Team] Helper: {action_en}; teaching chat is not a ship name"
+                            f"[Team] Helper: {action_en}; keep the new player with the crew"
                         ),
                         zh=(
                             f"[Party] Mentor: {location_zh}{topic_zh}，{state_zh}\n"
                             f"[Voice] Pilot: {ship_zh}先停着不走\n"
-                            f"[Team] Helper: {action_zh}；教学聊天不是船名"
+                            f"[Team] Helper: {action_zh}；让萌新先跟着队伍走"
                         ),
                         category="chat",
                         is_priority=True,
@@ -6098,12 +6225,12 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                         en=(
                             f"[Party] Nav: route from {location_en} to {destination_en}, {route_state_en}\n"
                             f"[Voice] Pilot: the {ship_en} is assigned for pickup and transfer\n"
-                            f"[Team] Crew: {route_action_en}; route callout is not the ship name"
+                            f"[Team] Crew: {route_action_en}; confirm the destination before jumping"
                         ),
                         zh=(
                             f"[Party] Nav: 从{location_zh}到{destination_zh}，{route_state_zh}\n"
                             f"[Voice] Pilot: {ship_zh}负责接人和转场\n"
-                            f"[Team] Crew: {route_action_zh}；路线报点不是船名"
+                            f"[Team] Crew: {route_action_zh}；跳跃前先确认目的地"
                         ),
                         category="chat",
                         is_priority=True,
@@ -7437,12 +7564,12 @@ def build_dialogue_context_samples(
             "{location_zh}这艘{vehicle_zh}还缺一个驾驶和一个炮手。",
         ),
         (
-            "Do not translate {vehicle_en} as a generic ship when the Chinese text says {vehicle_zh}.",
-            "中文写{vehicle_zh}的时候，不要把它翻成普通飞船。",
+            "The Chinese text {vehicle_zh} refers to the Star Citizen vehicle {vehicle_en}.",
+            "中文里的{vehicle_zh}指《星际公民》载具{vehicle_en}。",
         ),
         (
-            "Do not translate {location_en} as a generic station when the Chinese text says {location_zh}.",
-            "中文写{location_zh}的时候，不要把它翻成普通空间站。",
+            "The Chinese text {location_zh} refers to the Star Citizen location {location_en}.",
+            "中文里的{location_zh}指《星际公民》地点{location_en}。",
         ),
         (
             "Player chat: bounty team forming at {location_en}, {vehicle_en} pilot already online.",

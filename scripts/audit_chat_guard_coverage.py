@@ -490,16 +490,23 @@ SOURCE_PHRASES = {
         "旁观等待建议",
         "开火前先确认",
         "引擎离线",
-        "报点和船名",
+        "下一轮前再报一遍目标",
         "量子矿",
         "矿石不稳定",
         "破裂窗口",
         "精炼订单",
-        "货物报点",
+        "起飞前先确认货物",
         "货物网格",
         "卖货路线",
         "卖货终端",
         "拆残骸",
+        "付款前先看箱子",
+        "价格不变",
+        "货是",
+        "验完货再付款",
+        "先结账再搬货",
+        "先交",
+        "先把价格发出来",
     ],
 }
 
@@ -704,6 +711,9 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         row for row in rows if row.get("key", "").startswith("chat_guard:player_after_action_thread:")
     ]
     player_trade_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_trade_matrix:")]
+    player_trade_thread_rows = [
+        row for row in rows if row.get("key", "").startswith("chat_guard:player_trade_thread:")
+    ]
     player_recovery_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_recovery_log:")]
     player_correction_rows = [
         row for row in rows if row.get("key", "").startswith("chat_guard:player_correction_matrix:")
@@ -868,6 +878,7 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "player_join_rows": len(player_join_rows),
         "player_after_action_rows": len(player_after_action_rows),
         "player_trade_rows": len(player_trade_rows),
+        "player_trade_thread_rows": len(player_trade_thread_rows),
         "player_recovery_rows": len(player_recovery_rows),
         "player_correction_rows": len(player_correction_rows),
         "player_qa_rows": len(player_qa_rows),
@@ -994,6 +1005,7 @@ def main() -> int:
     print(f"player_join_rows: {report['player_join_rows']}")
     print(f"player_after_action_rows: {report['player_after_action_rows']}")
     print(f"player_trade_rows: {report['player_trade_rows']}")
+    print(f"player_trade_thread_rows: {report['player_trade_thread_rows']}")
     print(f"player_recovery_rows: {report['player_recovery_rows']}")
     print(f"player_correction_rows: {report['player_correction_rows']}")
     print(f"player_qa_rows: {report['player_qa_rows']}")
