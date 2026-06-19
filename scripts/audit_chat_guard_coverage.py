@@ -428,6 +428,19 @@ SOURCE_PHRASES = {
         "复飞后重新进场",
         "机库号确认",
         "最后进场前确认",
+        "侦察报点协调",
+        "目标识别确认",
+        "友军目标确认",
+        "绕行路线协调",
+        "前哨接近报点",
+        "空间站外围确认",
+        "货运路线预警",
+        "赏金目标观察",
+        "降落区威胁报点",
+        "护航侦察交接",
+        "未知船只确认",
+        "路线安全确认",
+        "交火前确认",
         "引擎离线",
         "报点和船名",
         "量子矿",
@@ -702,6 +715,10 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     player_landing_log_rows = [
         row for row in rows if row.get("key", "").startswith("chat_guard:player_landing_log:")
     ]
+    player_scouting_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_scouting_status:")]
+    player_scouting_log_rows = [
+        row for row in rows if row.get("key", "").startswith("chat_guard:player_scouting_log:")
+    ]
     target_cjk = [row for row in rows if re.search(r"[\u3400-\u9fff]", row.get("target", ""))]
     unnatural_mixed_rows = find_unnatural_mixed_rows(rows)
     alias_chat_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat:")]
@@ -834,6 +851,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "player_schedule_log_rows": len(player_schedule_log_rows),
         "player_landing_rows": len(player_landing_rows),
         "player_landing_log_rows": len(player_landing_log_rows),
+        "player_scouting_rows": len(player_scouting_rows),
+        "player_scouting_log_rows": len(player_scouting_log_rows),
         "alias_chat_rows": len(alias_chat_rows),
         "alias_slang_rows": len(alias_slang_rows),
         "alias_chat_unique": len(alias_chat_keys - {""}),
@@ -950,6 +969,8 @@ def main() -> int:
     print(f"player_schedule_log_rows: {report['player_schedule_log_rows']}")
     print(f"player_landing_rows: {report['player_landing_rows']}")
     print(f"player_landing_log_rows: {report['player_landing_log_rows']}")
+    print(f"player_scouting_rows: {report['player_scouting_rows']}")
+    print(f"player_scouting_log_rows: {report['player_scouting_log_rows']}")
     print(f"alias_chat_rows: {report['alias_chat_rows']}")
     print(f"alias_slang_rows: {report['alias_slang_rows']}")
     print(f"alias_chat_unique: {report['alias_chat_unique']}")

@@ -3842,6 +3842,48 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("confirm the hangar number before entering", "进门前再确认一次机库号"),
         ("move the pickup ship only after the crew boards", "接人的船等船员上来后再动"),
     ]
+    player_scouting_topics = [
+        ("scouting report coordination", "侦察报点协调"),
+        ("contact identification check", "目标识别确认"),
+        ("friendly contact check", "友军目标确认"),
+        ("avoidance route coordination", "绕行路线协调"),
+        ("outpost approach report", "前哨接近报点"),
+        ("station perimeter check", "空间站外围确认"),
+        ("cargo lane warning", "货运路线预警"),
+        ("bounty target watch", "赏金目标观察"),
+        ("landing zone threat report", "降落区威胁报点"),
+        ("escort scouting handoff", "护航侦察交接"),
+        ("unknown ship check", "未知船只确认"),
+        ("route safety check", "路线安全确认"),
+    ]
+    player_scouting_states = [
+        ("unknown contact is firing near the station marker", "未知目标在空间站标记附近开火"),
+        ("ship silhouette looks similar but the marker name is different", "船影很像，但标记名字不一样"),
+        ("contact is red but may be a party sync issue", "目标是红名，但可能是队伍同步问题"),
+        ("cargo route has two ships waiting off the marker", "跑货路线标记外有两艘船在等"),
+        ("outpost pad has someone circling low", "前哨停机坪上方有人低空绕圈"),
+        ("bounty marker moved behind the moon", "赏金标记跳到卫星背面了"),
+        ("landing zone looks clear but scanner still shows one contact", "降落区看起来干净，但扫描还有一个目标"),
+        ("escort can see the ship but cargo crew cannot", "护航看得到那艘船，货船船员看不到"),
+        ("unknown ship is between us and the jump point", "未知船挡在我们和跳点之间"),
+        ("friendly pilot is not answering in voice", "友军驾驶语音里没回应"),
+        ("route marker is safe but the station side is busy", "路线标记安全，但空间站那侧很忙"),
+        ("target turned away after being scanned", "目标被扫描后转向离开了"),
+    ]
+    player_scouting_actions = [
+        ("confirm the ship name before calling it hostile", "喊敌对前先确认船名"),
+        ("keep distance and wait for scanner confirmation", "保持距离，等扫描确认"),
+        ("ask party chat before firing", "开火前先在队伍聊天里问一下"),
+        ("take the wide route around the marker", "绕标记外侧走"),
+        ("let escort move first and report the pad", "让护航先过去报停机坪情况"),
+        ("do not chase until the bounty marker settles", "赏金标记稳定前先别追"),
+        ("hold landing until the last contact leaves", "最后一个目标离开前先别落地"),
+        ("repeat the callout with location and ship name", "用地点和船名重新报一遍"),
+        ("mark the unknown ship but do not lock missiles yet", "先标记未知船，暂时别锁导弹"),
+        ("move cargo ship behind cover", "让货船先躲到掩体后面"),
+        ("send one scout instead of the full crew", "先派一个人侦察，不要全队过去"),
+        ("clear the route before bringing the new player in", "路线确认安全后再带萌新过来"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -6252,6 +6294,78 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Party] Pilot: {location_zh}这边{landing_topic_zh}，让{ship_zh}进场\n"
                             f"[Voice] Crew: {landing_state_zh}\n"
                             f"[Team] Lead: {landing_action_zh}；最后进场前确认"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for scouting_index, (topic_en, topic_zh) in enumerate(player_scouting_topics, start=1):
+                    state_en, state_zh = player_scouting_states[
+                        (repeat_index + location_index + ship_index + scouting_index) % len(player_scouting_states)
+                    ]
+                    action_en, action_zh = player_scouting_actions[
+                        (repeat_index + ship_index + scouting_index) % len(player_scouting_actions)
+                    ]
+                    other_ship_en, other_ship_zh = pick_other_ship(ship_index, scouting_index + 37, ship_zh)
+                    channel_en, channel_zh = player_route_channels[
+                        (repeat_index + scouting_index + location_index + ship_index) % len(player_route_channels)
+                    ]
+                    scouting_en = (
+                        f"{channel_en}{topic_en} at {location_en}: watch the {ship_en}, "
+                        f"not the {other_ship_en}; {state_en}; {action_en}."
+                    )
+                    scouting_zh = (
+                        f"{channel_zh}{location_zh}这边{topic_zh}: 盯{ship_zh}，不是{other_ship_zh}；"
+                        f"{state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_scouting_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{scouting_index}:standard"
+                            ),
+                            en=scouting_en,
+                            zh=scouting_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_scouting_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{scouting_index}:compact"
+                            ),
+                            en=scouting_en,
+                            zh=compact_chat_text(scouting_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                scouting_topic_en, scouting_topic_zh = player_scouting_topics[
+                    (repeat_index + location_index + ship_index) % len(player_scouting_topics)
+                ]
+                scouting_state_en, scouting_state_zh = player_scouting_states[
+                    (repeat_index + location_index + ship_index + 9) % len(player_scouting_states)
+                ]
+                scouting_action_en, scouting_action_zh = player_scouting_actions[
+                    (repeat_index + location_index + ship_index + 11) % len(player_scouting_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_scouting_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Party] Scout: {scouting_topic_en} at {location_en}; watching the {ship_en}\n"
+                            f"[Voice] Crew: {scouting_state_en}\n"
+                            f"[Team] Lead: {scouting_action_en}; confirm before engaging"
+                        ),
+                        zh=(
+                            f"[Party] Scout: {location_zh}这边{scouting_topic_zh}，盯{ship_zh}\n"
+                            f"[Voice] Crew: {scouting_state_zh}\n"
+                            f"[Team] Lead: {scouting_action_zh}；交火前确认"
                         ),
                         category="chat",
                         is_priority=True,
