@@ -78,6 +78,10 @@ SOURCE_PHRASES = {
         "pad 03",
         "OM-1",
         "marker 2",
+        "[Global]",
+        "[Party]",
+        "[Voice]",
+        "[Local]",
     ],
     "chat_style": ["sc全局", "队伍", "yy里", "来人", "萌新注意", "报点", "感觉不太行"],
 }
@@ -221,11 +225,14 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     vehicle_mixed_format_rows = [
         row for row in rows if row.get("key", "").startswith("quant_focus_vehicle_mixed_format:")
     ]
+    vehicle_chat_log_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_vehicle_chat_log:")]
     location_comm_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_location_comm:")]
     location_route_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_location_route:")]
     location_mixed_format_rows = [
         row for row in rows if row.get("key", "").startswith("quant_focus_location_mixed_format:")
     ]
+    location_chat_log_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_location_chat_log:")]
+    alias_chat_log_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat_log:")]
     alias_chat_keys = {alias_key(row.get("key", "")) for row in alias_chat_rows}
     alias_slang_keys = {alias_key(row.get("key", "")) for row in alias_slang_rows}
 
@@ -253,6 +260,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
             vehicle_pairs,
             "quant_focus_vehicle_mixed_format:",
         ),
+        "vehicle_chat_log_rows": len(vehicle_chat_log_rows),
+        "vehicle_chat_log_covered_pairs": count_pair_coverage(rows, vehicle_pairs, "quant_focus_vehicle_chat_log:"),
         "location_term_rows": len(location_pairs),
         "location_term_unique_pairs": len(set(location_pairs)),
         "location_comm_rows": len(location_comm_rows),
@@ -265,6 +274,10 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
             location_pairs,
             "quant_focus_location_mixed_format:",
         ),
+        "location_chat_log_rows": len(location_chat_log_rows),
+        "location_chat_log_covered_pairs": count_pair_coverage(rows, location_pairs, "quant_focus_location_chat_log:"),
+        "alias_chat_log_rows": len(alias_chat_log_rows),
+        "alias_chat_log_covered_pairs": count_pair_coverage(rows, alias_pairs, "quant_focus_alias_chat_log:"),
         "root_counts": dict(sorted(root_counts.items())),
         "chat_subkey_counts": dict(sorted((key, value) for key, value in chat_counts.items() if key)),
         "alias_chat_rows": len(alias_chat_rows),
@@ -307,6 +320,8 @@ def main() -> int:
     print(f"vehicle_contrast_covered_pairs: {report['vehicle_contrast_covered_pairs']}")
     print(f"vehicle_mixed_format_rows: {report['vehicle_mixed_format_rows']}")
     print(f"vehicle_mixed_format_covered_pairs: {report['vehicle_mixed_format_covered_pairs']}")
+    print(f"vehicle_chat_log_rows: {report['vehicle_chat_log_rows']}")
+    print(f"vehicle_chat_log_covered_pairs: {report['vehicle_chat_log_covered_pairs']}")
     print(f"location_term_rows: {report['location_term_rows']}")
     print(f"location_term_unique_pairs: {report['location_term_unique_pairs']}")
     print(f"location_comm_rows: {report['location_comm_rows']}")
@@ -315,6 +330,10 @@ def main() -> int:
     print(f"location_route_covered_pairs: {report['location_route_covered_pairs']}")
     print(f"location_mixed_format_rows: {report['location_mixed_format_rows']}")
     print(f"location_mixed_format_covered_pairs: {report['location_mixed_format_covered_pairs']}")
+    print(f"location_chat_log_rows: {report['location_chat_log_rows']}")
+    print(f"location_chat_log_covered_pairs: {report['location_chat_log_covered_pairs']}")
+    print(f"alias_chat_log_rows: {report['alias_chat_log_rows']}")
+    print(f"alias_chat_log_covered_pairs: {report['alias_chat_log_covered_pairs']}")
     print(f"alias_chat_rows: {report['alias_chat_rows']}")
     print(f"alias_slang_rows: {report['alias_slang_rows']}")
     print(f"alias_chat_unique: {report['alias_chat_unique']}")

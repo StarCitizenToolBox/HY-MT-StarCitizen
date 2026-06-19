@@ -694,6 +694,44 @@ def build_quant_focus_samples(
             "报点 marker 2在{zh}，不是@...后面的标签",
         ),
     ]
+    vehicle_chat_log_templates = [
+        (
+            "[Global][RedNine]: anyone near {location_en}?\n[Party][Me]: the {en} is in soft death at pad 03, hold fire\n[Voice][Kai]: mark it before boarding",
+            "[Global][RedNine]: {location_zh}附近有人吗？\n[Party][Me]: {zh}在pad 03 soft death了，先别开火\n[Voice][Kai]: 登船前先标记",
+        ),
+        (
+            "21:04 [Party] Mira: taking the {en} from {location_en} to {destination_en}\n21:05 [Party] Sol: cargo grid clear?\n21:05 [Party] Mira: clear, need escort",
+            "21:04 [Party] Mira: 从{location_zh}开{zh}去{destination_zh}\n21:05 [Party] Sol: cargo grid清了吗？\n21:05 [Party] Mira: 清了，需要escort",
+        ),
+        (
+            "[Local] UEE: service beacon accepted\n[Global] Fox: {en} near OM-1 is locking missiles @...\n[Party] Me: check marker, do not read the tag as the ship",
+            "[Local] UEE: service beacon已接\n[Global] Fox: OM-1附近{zh}在锁missile @...\n[Party] Me: 看标记，别把标签当船名",
+        ),
+    ]
+    location_chat_log_templates = [
+        (
+            "[Global][Ari]: status at {en}?\n[Party][Me]: elevator bug, keep the {ship_en} outside\n[Party][Ren]: copy, no landing yet",
+            "[Global][Ari]: {zh}什么情况？\n[Party][Me]: elevator bug，让{ship_zh}在外面等\n[Party][Ren]: 收到，先不landing",
+        ),
+        (
+            "20:11 [Team] Lyn: route {en} -> OM-1 has a med beacon\n20:12 [Team] Vox: bring {ship_en}?\n20:12 [Team] Lyn: yes, but wait for escort",
+            "20:11 [Team] Lyn: {zh}->OM-1 有med beacon\n20:12 [Team] Vox: 开{ship_zh}？\n20:12 [Team] Lyn: 对，但等escort",
+        ),
+        (
+            "[Voice] Kai: marker 2 is at {en}\n[Global] Nova: I only see > F7C-S Hornet Ghost\n[Voice] Kai: ignore that tag, follow marker 2",
+            "[Voice] Kai: marker 2在{zh}\n[Global] Nova: 我只看到>F7C-S Hornet Ghost\n[Voice] Kai: 忽略那个标签，跟marker 2",
+        ),
+    ]
+    alias_chat_log_templates = [
+        (
+            "[Global][RedNine]: anyone at {location_en}?\n[Party][Me]: {en} is in soft death, cargo still on board\n[Voice][Kai]: board after marker",
+            "[Global][RedNine]: {location_zh}有人吗？\n[Party][Me]: {zh}soft death了，货还在船上\n[Voice][Kai]: 标记后再boarding",
+        ),
+        (
+            "21:04 [Party] Mira: {en} from {location_en} is asking for escort\n21:05 [Party] Sol: target or friendly?\n21:05 [Party] Mira: friendly, do not shoot",
+            "21:04 [Party] Mira: {location_zh}那艘{zh}在喊escort\n21:05 [Party] Sol: 目标还是友军？\n21:05 [Party] Mira: 友军，别开火",
+        ),
+    ]
     alias_chat_slang_prefixes = [
         ("SC global: ", "sc全局 "),
         ("Party: ", "队伍 "),
@@ -955,6 +993,44 @@ def build_quant_focus_samples(
                             source="quant_focus",
                         )
                     )
+                for template_index, (en_template, zh_template) in enumerate(vehicle_chat_log_templates, start=1):
+                    location_en, location_zh = alias_chat_locations[
+                        (current_vehicle_index + template_index + repeat_index) % len(alias_chat_locations)
+                    ]
+                    destination_en, destination_zh = alias_chat_locations[
+                        (current_vehicle_index + template_index + repeat_index + 2) % len(alias_chat_locations)
+                    ]
+                    if destination_en == location_en:
+                        destination_en, destination_zh = alias_chat_locations[
+                            (current_vehicle_index + template_index + repeat_index + 3) % len(alias_chat_locations)
+                        ]
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"quant_focus_vehicle_chat_log:{entry.key}:{repeat_index + 1}:"
+                                f"{template_index}"
+                            ),
+                            en=en_template.format(
+                                en=entry.en,
+                                zh=entry.zh,
+                                location_en=location_en,
+                                location_zh=location_zh,
+                                destination_en=destination_en,
+                                destination_zh=destination_zh,
+                            ),
+                            zh=zh_template.format(
+                                en=entry.en,
+                                zh=entry.zh,
+                                location_en=location_en,
+                                location_zh=location_zh,
+                                destination_en=destination_en,
+                                destination_zh=destination_zh,
+                            ),
+                            category=entry.category,
+                            is_priority=True,
+                            source="quant_focus",
+                        )
+                    )
             if entry.category == "location":
                 current_location_index = formal_location_entries.index(entry) if entry in formal_location_entries else entry_index
                 if formal_location_entries:
@@ -1037,6 +1113,23 @@ def build_quant_focus_samples(
                         PairSample(
                             key=(
                                 f"quant_focus_location_mixed_format:{entry.key}:{repeat_index + 1}:"
+                                f"{template_index}"
+                            ),
+                            en=en_template.format(en=entry.en, zh=entry.zh, ship_en=ship_en, ship_zh=ship_zh),
+                            zh=zh_template.format(en=entry.en, zh=entry.zh, ship_en=ship_en, ship_zh=ship_zh),
+                            category=entry.category,
+                            is_priority=True,
+                            source="quant_focus",
+                        )
+                    )
+                for template_index, (en_template, zh_template) in enumerate(location_chat_log_templates, start=1):
+                    ship_en, ship_zh = location_comm_ships[
+                        (current_location_index + template_index + repeat_index + 2) % len(location_comm_ships)
+                    ]
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"quant_focus_location_chat_log:{entry.key}:{repeat_index + 1}:"
                                 f"{template_index}"
                             ),
                             en=en_template.format(en=entry.en, zh=entry.zh, ship_en=ship_en, ship_zh=ship_zh),
@@ -1199,6 +1292,30 @@ def build_quant_focus_samples(
                                 ),
                                 en=en_text,
                                 zh=slang_zh,
+                                category=entry.category,
+                                is_priority=True,
+                                source="quant_focus",
+                            )
+                        )
+                    for template_index, (en_template, zh_template) in enumerate(alias_chat_log_templates, start=1):
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"quant_focus_alias_chat_log:{entry.key}:{repeat_index + 1}:"
+                                    f"{location_index}:{template_index}"
+                                ),
+                                en=en_template.format(
+                                    en=entry.en,
+                                    zh=entry.zh,
+                                    location_en=location_en,
+                                    location_zh=location_zh,
+                                ),
+                                zh=zh_template.format(
+                                    en=entry.en,
+                                    zh=entry.zh,
+                                    location_en=location_en,
+                                    location_zh=location_zh,
+                                ),
                                 category=entry.category,
                                 is_priority=True,
                                 source="quant_focus",
