@@ -3968,6 +3968,48 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("split payment after the cargo is safe", "货物安全后再分报酬"),
         ("write the short version in party chat", "把简短情况发到队伍聊天里"),
     ]
+    player_area_report_topics = [
+        ("local activity report", "周边情况报点"),
+        ("ship movement report", "船只活动报点"),
+        ("pad safety warning", "停机坪安全提醒"),
+        ("hangar exit warning", "机库出口提醒"),
+        ("friendly identification check", "友军识别同步"),
+        ("unknown ship observation", "未知船只观察"),
+        ("firing direction report", "火力方向报告"),
+        ("approach delay notice", "接近暂缓说明"),
+        ("contact before approach", "接近前确认"),
+        ("crew extraction reminder", "队伍撤离提醒"),
+        ("combat distance warning", "交火距离提醒"),
+        ("wait and watch advice", "旁观等待建议"),
+    ]
+    player_area_report_states = [
+        ("a ship is firing around the station", "有艘船在空间站附近到处开火"),
+        ("a ship is circling the pads but has not fired at us", "有艘船绕着停机坪转，但还没朝我们开火"),
+        ("the hangar exit is crowded and the traffic is messy", "机库出口很挤，交通有点乱"),
+        ("an unknown pilot is watching the door area", "有个陌生驾驶一直盯着门口区域"),
+        ("our mission marker is close to a busy approach path", "任务标记离繁忙进近路线很近"),
+        ("local chat says there is fighting outside", "本地聊天说外面正在交火"),
+        ("friendly traffic is mixed with hostile movement", "友军船只和敌对动向混在一起"),
+        ("the target marker moved behind the station", "目标标记移动到空间站后面了"),
+        ("ground team has not cleared the doorway", "地面队伍还没确认门口安全"),
+        ("shields dropped once while passing the station", "路过空间站时护盾掉过一次"),
+        ("one ship is hovering over the outpost", "有艘船一直悬停在前哨上方"),
+        ("the area is quiet now but may change quickly", "现在区域很安静，但情况可能很快变化"),
+    ]
+    player_area_report_actions = [
+        ("stay outside weapons range and keep reporting", "先留在武器射程外继续报点"),
+        ("call the ship name clearly before anyone fires", "开火前先把船名说清楚"),
+        ("wait for confirmation before entering the hangar", "进机库前先等确认"),
+        ("keep distance and let the pilot check first", "先保持距离，让驾驶看一眼"),
+        ("regroup at the nearest safe point", "先到最近的安全位置集合"),
+        ("ask party chat before committing the whole team", "整队行动前先在队伍聊天里问一下"),
+        ("approach slowly and keep shields up", "慢慢靠近，护盾保持开启"),
+        ("move the crew before checking the cargo", "先把人撤出来，再看货物"),
+        ("hold the second ship until the first one lands", "第一艘落稳前，第二艘先等着"),
+        ("record the contact and continue only if it stays clear", "先记下接触情况，确认安全再继续"),
+        ("use voice updates until the area clears", "区域安全前都用语音更新"),
+        ("leave if the ship follows us", "如果那艘船跟上来就先离开"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -6586,6 +6628,78 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Party] Rescue: {location_zh}这边{rescue_topic_zh}，开{ship_zh}过去\n"
                             f"[Voice] Crew: {rescue_state_zh}\n"
                             f"[Team] Lead: {rescue_action_zh}；接人安全后报一下"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for report_index, (topic_en, topic_zh) in enumerate(player_area_report_topics, start=1):
+                    state_en, state_zh = player_area_report_states[
+                        (report_index - 1) % len(player_area_report_states)
+                    ]
+                    action_en, action_zh = player_area_report_actions[
+                        (report_index - 1) % len(player_area_report_actions)
+                    ]
+                    other_ship_en, other_ship_zh = pick_other_ship(ship_index, report_index + 59, ship_zh)
+                    channel_en, channel_zh = player_route_channels[
+                        (repeat_index + report_index + location_index + ship_index) % len(player_route_channels)
+                    ]
+                    report_en = (
+                        f"{channel_en}{topic_en} near {location_en}: I see the {ship_en}, "
+                        f"not the {other_ship_en}; {state_en}; {action_en}."
+                    )
+                    report_zh = (
+                        f"{channel_zh}{location_zh}附近{topic_zh}: 我看到的是{ship_zh}，不是{other_ship_zh}；"
+                        f"{state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_area_report_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{report_index}:standard"
+                            ),
+                            en=report_en,
+                            zh=report_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_area_report_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{report_index}:compact"
+                            ),
+                            en=report_en,
+                            zh=compact_chat_text(report_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                report_topic_en, report_topic_zh = player_area_report_topics[
+                    (repeat_index + location_index + ship_index) % len(player_area_report_topics)
+                ]
+                report_state_en, report_state_zh = player_area_report_states[
+                    (repeat_index + location_index + ship_index) % len(player_area_report_states)
+                ]
+                report_action_en, report_action_zh = player_area_report_actions[
+                    (repeat_index + location_index + ship_index) % len(player_area_report_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_area_report_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Party] Area report: {report_topic_en} near {location_en}; contact is the {ship_en}\n"
+                            f"[Voice] Scout: {report_state_en}\n"
+                            f"[Team] Lead: {report_action_en}; confirm before firing"
+                        ),
+                        zh=(
+                            f"[Party] Area report: {location_zh}附近{report_topic_zh}，接触目标是{ship_zh}\n"
+                            f"[Voice] Scout: {report_state_zh}\n"
+                            f"[Team] Lead: {report_action_zh}；开火前先确认"
                         ),
                         category="chat",
                         is_priority=True,
