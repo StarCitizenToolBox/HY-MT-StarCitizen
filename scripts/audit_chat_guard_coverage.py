@@ -167,7 +167,7 @@ SOURCE_PHRASES = {
         "transfer ID",
     ],
     "chat_style": [
-        "sc全局",
+        "全局",
         "队伍",
         "yy里",
         "来人",
@@ -326,6 +326,38 @@ SOURCE_PHRASES = {
     ],
 }
 
+UNNATURAL_MIXED_SOURCE_PATTERNS = [
+    "补油repair",
+    "先marker",
+    "为desync",
+    "带tractor beam",
+    "把cargo grid",
+    "等elevator",
+    "hangar door卡",
+    "bounty目标",
+    "med beacon",
+    "med rescue",
+    "去sell ore",
+    "fillq油",
+    "要q油",
+    "markerwreck",
+    "salvagewreck",
+    "share contract",
+    "service beacon报",
+    "refinery完成",
+    "打bounty",
+    "跑cargo",
+    "继续escort",
+    "soft death了",
+    " red了",
+    "turret位",
+    "锁missile",
+    "蹲hangar",
+    "需要repair",
+    "cargo grid上",
+]
+NOISE_TAG_GLUE_RE = re.compile(r">(?:F7C-S Hornet Ghost|Aegis Gladius|Drake Cutter)[\u3400-\u9fff]")
+
 
 def resolve_path(value: str) -> Path:
     path = Path(value)
@@ -451,6 +483,24 @@ def count_phrases(rows: list[dict[str, Any]], phrases: list[str], prefix: str | 
     return {phrase: sum(1 for row in selected if phrase in row.get("source", "")) for phrase in phrases}
 
 
+def find_unnatural_mixed_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    matches = []
+    for row in rows:
+        source = row.get("source", "")
+        hits = [pattern for pattern in UNNATURAL_MIXED_SOURCE_PATTERNS if pattern in source]
+        if NOISE_TAG_GLUE_RE.search(source):
+            hits.append("noise_tag_glue")
+        if hits:
+            matches.append(
+                {
+                    "key": row.get("key", ""),
+                    "hits": hits,
+                    "source": source,
+                }
+            )
+    return matches
+
+
 def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Path) -> dict[str, Any]:
     alias_pairs = load_alias_pairs(aliases_file)
     vehicle_pairs = load_term_pairs(terms_file, category_filter="vehicle")
@@ -496,6 +546,7 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     player_dialogue_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_dialogue_thread:")]
     player_fragment_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_fragment:")]
     target_cjk = [row for row in rows if re.search(r"[\u3400-\u9fff]", row.get("target", ""))]
+    unnatural_mixed_rows = find_unnatural_mixed_rows(rows)
     alias_chat_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat:")]
     alias_slang_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_slang:")]
     alias_social_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_social:")]
@@ -528,6 +579,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     return {
         "rows": len(rows),
         "target_cjk_count": len(target_cjk),
+        "unnatural_mixed_source_count": len(unnatural_mixed_rows),
+        "unnatural_mixed_source_examples": unnatural_mixed_rows[:20],
         "alias_file_rows": len(alias_pairs),
         "alias_file_unique_pairs": len(set(alias_pairs)),
         **count_alias_coverage(rows, alias_pairs),
@@ -634,6 +687,7 @@ def main() -> int:
 
     print(f"rows: {report['rows']}")
     print(f"target_cjk_count: {report['target_cjk_count']}")
+    print(f"unnatural_mixed_source_count: {report['unnatural_mixed_source_count']}")
     print(f"alias_file_rows: {report['alias_file_rows']}")
     print(f"alias_file_unique_pairs: {report['alias_file_unique_pairs']}")
     print(f"alias_file_covered_pairs: {report['alias_file_covered_pairs']}")
@@ -713,6 +767,10 @@ def main() -> int:
         print_section(f"phrase_counts.{group}:", values)
     for group, values in report["alias_phrase_counts"].items():
         print_section(f"alias_phrase_counts.{group}:", values)
+    if report["unnatural_mixed_source_examples"]:
+        print("unnatural_mixed_source_examples:")
+        for example in report["unnatural_mixed_source_examples"]:
+            print(f"  {example['key']}: {example['hits']} :: {example['source'][:180]}")
 
     if args.output:
         output_path = resolve_path(args.output)

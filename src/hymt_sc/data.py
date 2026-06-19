@@ -422,16 +422,16 @@ def build_quant_focus_samples(
         ("Voice chat: bring the {en} to {location_en}.", "语音里说：把{zh}开到{location_zh}。"),
         ("Warning, the {en} is camping the hangar at {location_en}.", "注意，{location_zh}有个{zh}在蹲机库。"),
         ("The target is a {en}, not a Hornet Ghost.", "目标是{zh}，不是大黄蜂幽灵。"),
-        ("The {en} at {location_en} is firing everywhere. > F7C-S Hornet Ghost", "{location_zh}有个{zh}到处开火。>F7C-S Hornet Ghost"),
+        ("The {en} at {location_en} is firing everywhere. > F7C-S Hornet Ghost", "{location_zh}有个{zh}到处开火。 >F7C-S Hornet Ghost"),
     ]
     alias_chat_noise_templates = [
         (
             "There is a {en} at {location_en} firing everywhere > F7C-S Hornet Ghost",
-            "{location_zh}有个{zh}到处开火>F7C-S Hornet Ghost",
+            "{location_zh}有个{zh}到处开火 >F7C-S Hornet Ghost",
         ),
         (
             "This feels bad; there is a {en} at {location_en} firing everywhere > F7C-S Hornet Ghost",
-            "感觉不太行 {location_zh}有个{zh}到处开火>F7C-S Hornet Ghost",
+            "感觉不太行 {location_zh}有个{zh}到处开火 >F7C-S Hornet Ghost",
         ),
         (
             "Global chat says there is a {en} at {location_en} shooting at players @...",
@@ -447,7 +447,7 @@ def build_quant_focus_samples(
         ),
         (
             "Do not read the trailing tag as the ship; the ship at {location_en} is a {en} > F7C-S Hornet Ghost",
-            "别把后面的标签当船名，{location_zh}那艘是{zh}>F7C-S Hornet Ghost",
+            "别把后面的标签当船名，{location_zh}那艘是{zh} >F7C-S Hornet Ghost",
         ),
     ]
     alias_chat_comm_templates = [
@@ -465,7 +465,7 @@ def build_quant_focus_samples(
         ),
         (
             "Quick callout: the {en} at {location_en} is our cargo ship, not the bounty target > F7C-S Hornet Ghost",
-            "报点 {location_zh}那艘{zh}是我们的货船，不是赏金目标>F7C-S Hornet Ghost",
+            "报点 {location_zh}那艘{zh}是我们的货船，不是赏金目标 >F7C-S Hornet Ghost",
         ),
         (
             "Voice chat: keep the {en} outside {location_en} while we clear the bunker and loot the boxes.",
@@ -485,7 +485,7 @@ def build_quant_focus_samples(
         ),
         (
             "SC global says the {en} at {location_en} is mining nearby; keep the escort on it until the refinery run.",
-            "sc全局说{location_zh}那艘{zh}在附近采矿，去精炼前继续护航。",
+            "全局说{location_zh}那艘{zh}在附近采矿，去精炼前继续护航。",
         ),
         (
             "If the {en} at {location_en} is doing salvage, mark the wreck and keep the cargo grid clear.",
@@ -523,7 +523,7 @@ def build_quant_focus_samples(
         ),
         (
             "SC global says the {en} near {location_en} is mining; keep escort until the refinery run.",
-            "sc全局说{location_zh}附近那艘{zh}在采矿，去精炼前继续护航。",
+            "全局说{location_zh}附近那艘{zh}在采矿，去精炼前继续护航。",
         ),
         (
             "If the {en} at {location_en} is doing salvage, mark the wreck and keep the cargo grid clear.",
@@ -543,7 +543,7 @@ def build_quant_focus_samples(
         ),
         (
             "Quick callout: the {en} at {location_en} is our ship, not the target after the tag > F7C-S Hornet Ghost",
-            "报点 {location_zh}那艘{zh}是我们的船，不是后面标签里的目标>F7C-S Hornet Ghost",
+            "报点 {location_zh}那艘{zh}是我们的船，不是后面标签里的目标 >F7C-S Hornet Ghost",
         ),
     ]
     vehicle_social_templates = [
@@ -625,7 +625,7 @@ def build_quant_focus_samples(
         ),
         (
             "SC global says {en} has heavy desync, so keep the {ship_en} away from the pad.",
-            "sc全局说{zh}同步很差，让{ship_zh}先离停机坪远点。",
+            "全局说{zh}同步很差，让{ship_zh}先离停机坪远点。",
         ),
         (
             "If the {ship_en} reaches {en}, refuel, repair, and restock before the next jump.",
@@ -633,7 +633,7 @@ def build_quant_focus_samples(
         ),
         (
             "Quick callout: the target marker is at {en}, not on the ship tag after the message > F7C-S Hornet Ghost",
-            "报点 目标标记在{zh}，不是消息后面那个船名标签>F7C-S Hornet Ghost",
+            "报点 目标标记在{zh}，不是消息后面那个船名标签 >F7C-S Hornet Ghost",
         ),
         (
             "The {ship_en} is mining near {en}; keep escort until the refinery job is ready.",
@@ -713,7 +713,7 @@ def build_quant_focus_samples(
         ),
         (
             "Quick callout: target marker is on the route from {origin_en} to {destination_en}, not after the ship tag > F7C-S Hornet Ghost",
-            "报点 目标标记在{origin_zh}到{destination_zh}的路线上，不是后面船名标签>F7C-S Hornet Ghost",
+            "报点 目标标记在{origin_zh}到{destination_zh}的路线上，不是后面船名标签 >F7C-S Hornet Ghost",
         ),
     ]
     vehicle_contrast_templates = [
@@ -739,25 +739,25 @@ def build_quant_focus_samples(
         ),
         (
             "Quick callout: {left_en} is our ship, {right_en} is just noise after the message > F7C-S Hornet Ghost",
-            "报点 {left_zh}是我们的船，{right_zh}只是消息后面的噪声>F7C-S Hornet Ghost",
+            "报点 {left_zh}是我们的船，{right_zh}只是消息后面的噪声 >F7C-S Hornet Ghost",
         ),
     ]
     vehicle_mixed_format_templates = [
         (
             "[party] @teammate The {en} at pad 03 in {location_en} is in soft death >>> hold fire.",
-            "[队伍] @队友 {location_zh} pad 03 有{zh} soft death了 >>> 别开火",
+            "[队伍] @队友 {location_zh} pad 03 有{zh}软死了 >>> 别开火",
         ),
         (
             "SC global: {en} from {location_en} to {destination_en} is hauling cargo; need escort?",
-            "sc全局: {zh}@{location_zh}->{destination_zh} 跑cargo，需要escort？",
+            "全局: {zh}@{location_zh}->{destination_zh} 跑货，需要护航？",
         ),
         (
             "Near OM-1, the {en} is locking missiles @... check marker.",
-            "OM-1附近 {zh}锁missile @... 看标记",
+            "OM-1附近 {zh}在锁导弹 @... 看标记",
         ),
         (
             "Voice: {en} needs refuel and repair at {location_en}; do not read > F7C-S Hornet Ghost as the ship.",
-            "yy {zh}在{location_zh}要refuel and repair，别把>F7C-S Hornet Ghost当船名",
+            "yy {zh}在{location_zh}要补油维修，别把 >F7C-S Hornet Ghost 当船名",
         ),
     ]
     location_mixed_format_templates = [
@@ -767,7 +767,7 @@ def build_quant_focus_samples(
         ),
         (
             "{en} to OM-1 has a medical beacon; can the {ship_en} take it?",
-            "{zh}->OM-1 有med beacon，{ship_zh}接吗？",
+            "{zh}->OM-1 有救援信标，{ship_zh}接吗？",
         ),
         (
             "Voice: elevator bug at {en}; do not land the {ship_en}.",
@@ -781,15 +781,15 @@ def build_quant_focus_samples(
     vehicle_chat_log_templates = [
         (
             "[Global][RedNine]: anyone near {location_en}?\n[Party][Me]: the {en} is in soft death at pad 03, hold fire\n[Voice][Kai]: mark it before boarding",
-            "[Global][RedNine]: {location_zh}附近有人吗？\n[Party][Me]: {zh}在pad 03 soft death了，先别开火\n[Voice][Kai]: 登船前先标记",
+            "[Global][RedNine]: {location_zh}附近有人吗？\n[Party][Me]: {zh}在pad 03软死了，先别开火\n[Voice][Kai]: 登船前先标记",
         ),
         (
             "21:04 [Party] Mira: taking the {en} from {location_en} to {destination_en}\n21:05 [Party] Sol: cargo grid clear?\n21:05 [Party] Mira: clear, need escort",
-            "21:04 [Party] Mira: 从{location_zh}开{zh}去{destination_zh}\n21:05 [Party] Sol: cargo grid清了吗？\n21:05 [Party] Mira: 清了，需要escort",
+            "21:04 [Party] Mira: 从{location_zh}开{zh}去{destination_zh}\n21:05 [Party] Sol: 货物网格清了吗？\n21:05 [Party] Mira: 清了，需要护航",
         ),
         (
             "[Local] UEE: service beacon accepted\n[Global] Fox: {en} near OM-1 is locking missiles @...\n[Party] Me: check marker, do not read the tag as the ship",
-            "[Local] UEE: service beacon已接\n[Global] Fox: OM-1附近{zh}在锁missile @...\n[Party] Me: 看标记，别把标签当船名",
+            "[Local] UEE: 服务信标已接\n[Global] Fox: OM-1附近{zh}在锁导弹 @...\n[Party] Me: 看标记，别把标签当船名",
         ),
     ]
     location_chat_log_templates = [
@@ -799,17 +799,17 @@ def build_quant_focus_samples(
         ),
         (
             "20:11 [Team] Lyn: route {en} -> OM-1 has a med beacon\n20:12 [Team] Vox: bring {ship_en}?\n20:12 [Team] Lyn: yes, but wait for escort",
-            "20:11 [Team] Lyn: {zh}->OM-1 有med beacon\n20:12 [Team] Vox: 开{ship_zh}？\n20:12 [Team] Lyn: 对，但等escort",
+            "20:11 [Team] Lyn: {zh}->OM-1 有救援信标\n20:12 [Team] Vox: 开{ship_zh}？\n20:12 [Team] Lyn: 对，但等护航",
         ),
         (
             "[Voice] Kai: marker 2 is at {en}\n[Global] Nova: I only see > F7C-S Hornet Ghost\n[Voice] Kai: ignore that tag, follow marker 2",
-            "[Voice] Kai: marker 2在{zh}\n[Global] Nova: 我只看到>F7C-S Hornet Ghost\n[Voice] Kai: 忽略那个标签，跟marker 2",
+            "[Voice] Kai: marker 2在{zh}\n[Global] Nova: 我只看到 >F7C-S Hornet Ghost\n[Voice] Kai: 忽略那个标签，跟marker 2",
         ),
     ]
     alias_chat_log_templates = [
         (
             "[Global][RedNine]: anyone at {location_en}?\n[Party][Me]: {en} is in soft death, cargo still on board\n[Voice][Kai]: board after marker",
-            "[Global][RedNine]: {location_zh}有人吗？\n[Party][Me]: {zh}soft death了，货还在船上\n[Voice][Kai]: 标记后再boarding",
+            "[Global][RedNine]: {location_zh}有人吗？\n[Party][Me]: {zh}软死了，货还在船上\n[Voice][Kai]: 标记后再登船",
         ),
         (
             "21:04 [Party] Mira: {en} from {location_en} is asking for escort\n21:05 [Party] Sol: target or friendly?\n21:05 [Party] Mira: friendly, do not shoot",
@@ -827,11 +827,11 @@ def build_quant_focus_samples(
         ),
         (
             "Quick callout: {en} on the {ship_en} at {location_en}; do not confuse it with > F7C-S Hornet Ghost.",
-            "报点 {location_zh}那艘{ship_zh}是{zh}，别和>F7C-S Hornet Ghost混了。",
+            "报点 {location_zh}那艘{ship_zh}是{zh}，别和 >F7C-S Hornet Ghost 混了。",
         ),
         (
             "Voice: if players say this term, use {en}; keep the party on voice and wait for escort.",
-            "yy 玩家说{zh}就用{en}，队伍保持语音并等escort。",
+            "yy 玩家说{zh}就用{en}，队伍保持语音并等护航。",
         ),
     ]
     gameplay_social_templates = [
@@ -861,7 +861,7 @@ def build_quant_focus_samples(
         ),
     ]
     alias_chat_slang_prefixes = [
-        ("SC global: ", "sc全局 "),
+        ("SC global: ", "全局 "),
         ("Party: ", "队伍 "),
         ("Voice: ", "yy里 "),
         ("Need help: ", "来人 "),
@@ -879,42 +879,20 @@ def build_quant_focus_samples(
         (" [voice]", " [语音]"),
     ]
     alias_chat_slang_replacements = [
-        ("打赏金", "打bounty"),
-        ("跑货", "跑cargo"),
-        ("护航", "escort"),
-        ("软死亡", "soft death"),
-        ("锁导弹", "锁missile"),
-        ("量子燃料", "q油"),
-        ("医疗信标", "med beacon"),
-        ("医疗救援", "med rescue"),
-        ("地堡任务", "bunker"),
-        ("申领时间", "claim timer"),
-        ("同步很差", "desync"),
-        ("炮塔位", "turret位"),
-        ("犯罪等级", "cs等级"),
-        ("红名", "red"),
-        ("赏金目标", "bounty目标"),
-        ("赏金合同", "bounty contract"),
-        ("合同", "contract"),
-        ("服务器", "server"),
-        ("医疗救援信标", "med rescue beacon"),
-        ("救援信标", "rescue beacon"),
-        ("服务信标", "service beacon"),
-        ("补油维修", "refuel and repair"),
-        ("补油", "refuel"),
-        ("维修", "repair"),
-        ("货船", "cargo ship"),
-        ("地堡", "bunker"),
-        ("采矿", "mining"),
-        ("精炼", "refinery"),
-        ("打捞", "salvage"),
-        ("残骸", "wreck"),
-        ("货物网格", "cargo grid"),
-        ("牵引光束", "tractor beam"),
-        ("机库", "hangar"),
-        ("电梯", "elevator"),
-        ("申领", "claim"),
-        ("登船", "boarding"),
+        ("打赏金", "刷赏金"),
+        ("软死亡", "软死"),
+        ("量子燃料", "量子油"),
+        ("医疗信标", "救援信标"),
+        ("医疗救援", "医疗救援"),
+        ("地堡任务", "地堡"),
+        ("申领时间", "申领倒计时"),
+        ("同步很差", "同步炸了"),
+        ("炮塔位", "炮塔位"),
+        ("犯罪等级", "罪等"),
+        ("赏金目标", "赏金目标"),
+        ("赏金合同", "赏金单"),
+        ("医疗救援信标", "救援信标"),
+        ("补油维修", "补油修船"),
     ]
 
     def compact_alias_chat(text: str) -> str:
@@ -2638,21 +2616,21 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ),
         (
             "Party: the {left_en} is in soft death; the {right_en} is red.",
-            "队伍 {left_zh} soft death了 {right_zh} red了",
+            "队伍 {left_zh}软死了 {right_zh}红名了",
         ),
         (
             "SC global: take the {left_en} for bounty missions; keep escort on the {right_en}.",
-            "sc全局 开{left_zh}打bounty {right_zh}继续escort",
+            "全局 开{left_zh}刷赏金 {right_zh}继续护航",
         ),
     ]
     ship_noise_templates = [
         (
             "There is a {ship_en} at {location_en} firing everywhere > F7C-S Hornet Ghost",
-            "{location_zh}有个{ship_zh}到处开火>F7C-S Hornet Ghost",
+            "{location_zh}有个{ship_zh}到处开火 >F7C-S Hornet Ghost",
         ),
         (
             "This feels bad; there is a {ship_en} at {location_en} firing everywhere > F7C-S Hornet Ghost",
-            "感觉不太行 {location_zh}有个{ship_zh}到处开火>F7C-S Hornet Ghost",
+            "感觉不太行 {location_zh}有个{ship_zh}到处开火 >F7C-S Hornet Ghost",
         ),
         (
             "Global chat says there is a {ship_en} at {location_en} shooting at players @...",
@@ -2668,12 +2646,12 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ),
         (
             "Do not read the trailing tag as the ship; the ship at {location_en} is a {ship_en} > F7C-S Hornet Ghost",
-            "别把后面的标签当船名，{location_zh}那艘是{ship_zh}>F7C-S Hornet Ghost",
+            "别把后面的标签当船名，{location_zh}那艘是{ship_zh} >F7C-S Hornet Ghost",
         ),
     ]
     player_comm_channels = [
         ("", ""),
-        ("SC global: ", "sc全局 "),
+        ("SC global: ", "全局 "),
         ("Party chat: ", "队伍 "),
         ("Voice: ", "yy里 "),
         ("Need help: ", "来人 "),
@@ -2687,12 +2665,12 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
     player_session_channels = player_comm_channels[:-1]
     player_comm_noise_pairs = [
         ("", ""),
-        (" > F7C-S Hornet Ghost", ">F7C-S Hornet Ghost"),
+        (" > F7C-S Hornet Ghost", " >F7C-S Hornet Ghost"),
         (" @...", "@..."),
         (" [global]", "[全局]"),
         (" [voice]", "[语音]"),
-        (" > Drake Cutter", ">Drake Cutter"),
-        (" > Aegis Gladius", ">Aegis Gladius"),
+        (" > Drake Cutter", " >Drake Cutter"),
+        (" > Aegis Gladius", " >Aegis Gladius"),
         (". Check marker.", " 看标记"),
     ]
     player_comm_state_templates = [
@@ -3008,7 +2986,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("cargo grid is full", "货物网格满了"),
         ("RMC boxes are loose", "RMC箱子散了"),
         ("CM crates need sorting", "CM箱子要整理"),
-        ("tractor beam is desynced", "tractor beam同步异常"),
+        ("tractor beam is desynced", "牵引光束同步异常"),
         ("sell terminal is bugged", "卖货终端出问题"),
         ("pirates are camping the sale route", "卖货路线上有海盗蹲点"),
         ("scan says the rock is inert", "扫描说矿石惰性"),
@@ -3057,7 +3035,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("do not shoot the red player until we scan", "扫描前别打红名玩家"),
         ("drag the body to the ramp", "把尸体拖到跳板"),
         ("clear the crime stat before landing", "降落前先清犯罪等级"),
-        ("bring a med gun and tractor beam", "带med gun和tractor beam"),
+        ("bring a med gun and tractor beam", "带医疗枪和牵引光束"),
         ("keep the ship outside armistice", "让船停在armistice外"),
         ("share the body marker in party chat", "在队伍里共享尸体标记 body marker"),
         ("tell global this is rescue, not bounty", "去全局说明这是救援不是赏金"),
@@ -3120,7 +3098,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
     ]
     player_meta_states = [
         ("shard feels unstable after the patch", "补丁后shard不太稳定"),
-        ("server meshing test is desyncing markers", "server meshing测试把标记同步乱了"),
+        ("server meshing test is desyncing markers", "服务器网格测试把标记同步乱了"),
         ("launcher is stuck on verifying files", "launcher卡在校验文件"),
         ("PTU build has a known hangar bug", "PTU版本有已知机库bug"),
         ("live build changed the claim timer", "正式服改了claim timer"),
@@ -3172,7 +3150,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("Vehicle Manager did not apply the loadout", "Vehicle Manager没应用配置"),
         ("ATC assigned the wrong hangar", "ATC分错机库"),
         ("docking collar will not line up", "docking collar对不上"),
-        ("paint reset after the claim", "申领后paint重置了"),
+        ("paint reset after the claim", "申领后涂装重置了"),
     ]
     player_service_actions = [
         ("screenshot the ASOP page before claiming", "申领前先截图ASOP页面"),
@@ -3181,10 +3159,10 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("save the loadout in Vehicle Manager again", "再去Vehicle Manager保存一次配置"),
         ("check NikNax before buying another component", "买新组件前先查NikNax"),
         ("call ATC only after the party is onboard", "队伍上船后再呼叫ATC"),
-        ("repair before rearming if missiles are missing", "missile没补上就先维修再补弹"),
+        ("repair before rearming if missiles are missing", "导弹没补上就先维修再补弹"),
         ("keep the docking collar callout separate from the ship name", "把docking collar报点和船名分开"),
         ("swap the quantum drive after landing", "落地后再换quantum drive"),
-        ("record the paint reset before filing the report", "反馈前先录下paint重置"),
+        ("record the paint reset before filing the report", "反馈前先录下涂装重置"),
     ]
     player_mission_topics = [
         ("courier contract", "快递合同"),
@@ -3207,7 +3185,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("investigation body is missing", "调查目标尸体不见了"),
         ("cave marker points to the wrong tunnel", "洞穴标记指向错洞"),
         ("hostile NPCs respawned behind us", "敌对NPC在身后刷新了"),
-        ("checkpoint did not register the lap", "checkpoint没记录圈速"),
+        ("checkpoint did not register the lap", "检查点没记录圈速"),
         ("beacon timer is about to expire", "beacon计时快结束"),
         ("reputation payout is delayed", "声望奖励延迟到账"),
         ("faction rep went to the wrong player", "阵营声望给错人"),
@@ -3232,7 +3210,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("weapon attachment check", "武器配件检查"),
         ("ammo count", "弹药数量"),
         ("medpen restock", "medpen补给"),
-        ("tractor tool pickup", "tractor tool拾取"),
+        ("tractor tool pickup", "牵引工具拾取"),
         ("multi-tool battery", "multi-tool电池"),
         ("backpack loot split", "背包战利品分配"),
         ("personal inventory cleanup", "个人仓库清理"),
@@ -3242,13 +3220,13 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
     ]
     player_gear_states = [
         ("heavy armor is slowing the runner", "重甲拖慢跑腿"),
-        ("undersuit is missing after death", "死后undersuit没了"),
-        ("helmet is still in local inventory", "头盔还在local inventory"),
+        ("undersuit is missing after death", "死后内衬没了"),
+        ("helmet is still in local inventory", "头盔还在本地仓库"),
         ("P4-AR has no ammo loaded", "P4-AR没上弹"),
         ("FS-9 magazines are mixed with loot", "FS-9弹匣混在战利品里"),
         ("Coda pistol is on the body marker", "Coda手枪在尸体标记那"),
         ("medpen count is low", "medpen数量不够"),
-        ("tractor tool battery is empty", "tractor tool电池空了"),
+        ("tractor tool battery is empty", "牵引工具电池空了"),
         ("multi-tool attachment is missing", "multi-tool配件丢了"),
         ("backpack is full of gems", "背包装满gem了"),
         ("loot crate despawn timer is short", "战利品箱despawn计时很短"),
@@ -3260,16 +3238,16 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("split medpens before entering the bunker", "进地堡前先分medpen"),
         ("mark the body bag before looting", "摸包前先标记尸体背包"),
         ("drop heavy armor if the route needs sprinting", "路线要冲刺就丢重甲"),
-        ("keep local inventory separate from ship inventory", "把local inventory和船仓库分开"),
+        ("keep local inventory separate from ship inventory", "把本地仓库和船仓库分开"),
         ("check the attachment before buying another gun", "买新枪前先查配件"),
         ("call the loot crate location in party chat", "在队伍里报战利品箱位置"),
-        ("save one tractor tool for body recovery", "留一个tractor tool回收尸体"),
-        ("record the missing undersuit before relogging", "重登前先录undersuit丢失"),
+        ("save one tractor tool for body recovery", "留一个牵引工具回收尸体"),
+        ("record the missing undersuit before relogging", "重登前先录内衬丢失"),
     ]
     player_economy_topics = [
         ("crew payout split", "船员分账"),
         ("beacon payment check", "信标报酬确认"),
-        ("escrow trade", "escrow交易"),
+        ("escrow trade", "担保交易"),
         ("deposit handoff", "押金交接"),
         ("rental fee", "租船费用"),
         ("refund request", "退款请求"),
@@ -3283,14 +3261,14 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
     player_economy_states = [
         ("aUEC transfer is pending", "aUEC转账还在pending"),
         ("UEC balance did not update", "UEC余额没更新"),
-        ("beacon payment shows the wrong amount", "beacon payment金额不对"),
-        ("escrow holder is not in party", "escrow保管人不在队伍里"),
+        ("beacon payment shows the wrong amount", "信标报酬金额不对"),
+        ("escrow holder is not in party", "担保人不在队伍里"),
         ("deposit was paid to the wrong player", "押金付给错人"),
         ("rental fee is higher than agreed", "租船费用比说好的高"),
         ("refund ticket needs a screenshot", "退款单要截图"),
         ("service fee should be split after landing", "服务费落地后再分"),
         ("cargo value changed after the scan", "扫描后货值变了"),
-        ("bounty payout is delayed by desync", "赏金报酬因为desync延迟"),
+        ("bounty payout is delayed by desync", "赏金报酬因为同步问题延迟"),
         ("profit share is missing the escort cut", "收益分配漏了护航那份"),
         ("tip transfer went through twice", "小费转了两次"),
     ]
@@ -3299,9 +3277,9 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("do not translate the payment term as a ship name", "别把付款术语翻成船名"),
         ("split payout only after the cargo is sold", "卖完货后再分账"),
         ("hold the deposit until both sides confirm", "双方确认前先压着押金"),
-        ("use party chat for the escrow name", "用队伍聊天确认escrow名字"),
+        ("use party chat for the escrow name", "用队伍聊天确认担保人名字"),
         ("refund the rental fee if the ship claim fails", "申领失败就退租船费用"),
-        ("screenshot the beacon payment before accepting", "接信标前先截图beacon payment"),
+        ("screenshot the beacon payment before accepting", "接信标前先截图信标报酬"),
         ("keep the service fee separate from the cargo value", "把服务费和货值分开算"),
         ("send tip after the rescue is complete", "救援完成后再给小费"),
         ("record the transfer ID before relogging", "重登前先录transfer ID"),
@@ -3495,7 +3473,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         )
 
     slang_prefixes = [
-        ("SC global: ", "sc全局 "),
+        ("SC global: ", "全局 "),
         ("Party: ", "队伍 "),
         ("Voice: ", "yy里 "),
         ("Need help: ", "来人 "),
@@ -3511,38 +3489,19 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         (" I need backup.", " 缺支援"),
     ]
     slang_replacements = [
-        ("打赏金", "打bounty"),
-        ("跑货", "跑cargo"),
-        ("护航", "escort"),
-        ("软死亡", "soft death"),
-        ("锁导弹", "锁missile"),
-        ("量子燃料", "q油"),
-        ("犯罪等级", "cs等级"),
-        ("炮塔位", "turret位"),
-        ("医疗信标", "med beacon"),
-        ("赏金目标", "bounty目标"),
-        ("医疗救援", "med rescue"),
-        ("地堡任务", "bunker"),
-        ("申领时间", "claim timer"),
-        ("同步很差", "desync"),
-        ("服务信标", "service beacon"),
-        ("合同标记", "contract marker"),
-        ("共享合同", "share contract"),
-        ("合同", "contract"),
-        ("采矿", "mining"),
-        ("精炼", "refinery"),
-        ("卖矿", "sell ore"),
-        ("打捞", "salvage"),
-        ("残骸", "wreck"),
-        ("维修", "repair"),
-        ("补满", "fill"),
-        ("货物网格", "cargo grid"),
-        ("牵引光束", "tractor beam"),
-        ("机库门", "hangar door"),
-        ("机库", "hangar"),
-        ("电梯", "elevator"),
-        ("标记", "marker"),
-        ("量子燃料", "q油"),
+        ("打赏金", "刷赏金"),
+        ("软死亡", "软死"),
+        ("量子燃料", "量子油"),
+        ("犯罪等级", "罪等"),
+        ("医疗信标", "救援信标"),
+        ("地堡任务", "地堡"),
+        ("申领时间", "申领倒计时"),
+        ("同步很差", "同步炸了"),
+        ("合同标记", "合同点"),
+        ("重新共享合同", "重新发合同"),
+        ("共享合同", "发合同"),
+        ("开火前先标记一下", "开火前先标一下"),
+        ("队伍标记", "队伍点"),
     ]
 
     def slangify_player_chat(text: str) -> str:
@@ -3553,15 +3512,6 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             reverse=True,
         ):
             slang_text = slang_text.replace(source_phrase, replacement)
-        slang_text = slang_text.replace("quantaniummining", "quantanium mining")
-        slang_text = slang_text.replace("ROCmining", "ROC mining")
-        slang_text = slang_text.replace("hangarbug", "hangar bug")
-        slang_text = slang_text.replace("servermeshing", "server meshing")
-        slang_text = slang_text.replace("crashlog", "crash log")
-        slang_text = slang_text.replace("share contract前", "共享合同前")
-        slang_text = slang_text.replace("share contract后", "共享合同后")
-        slang_text = slang_text.replace("hangar外", "机库外")
-        slang_text = slang_text.replace("hangar门", "机库门")
         return slang_text
 
     def pick_other_ship(ship_index: int, salt: int, current_zh: str) -> tuple[str, str]:
@@ -3570,6 +3520,15 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             if candidate_zh != current_zh:
                 return candidate_en, candidate_zh
         return ships[(ship_index + salt) % len(ships)]
+
+    def append_zh_segment(text: str, suffix: str) -> str:
+        if not suffix:
+            return text
+        if not text:
+            return suffix.lstrip()
+        if re.search(r"[A-Za-z0-9>]$", text) and not suffix.startswith((" ", "\n", "。", "，", "？", "！", "；")):
+            return f"{text} {suffix}"
+        return f"{text}{suffix}"
 
     samples: list[PairSample] = []
     for repeat_index in range(max(1, repeat)):
@@ -5349,7 +5308,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                 PairSample(
                     key=f"{sample.key}:suffix:{wrapper_index + 1}",
                     en=f"{sample.en}{en_suffix}",
-                    zh=f"{sample.zh}{zh_suffix}",
+                    zh=append_zh_segment(sample.zh, zh_suffix),
                     category="chat",
                     is_priority=True,
                     source="chat_guard",
@@ -5362,7 +5321,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                 PairSample(
                     key=f"{sample.key}:noise:{wrapper_index + 1}",
                     en=f"{sample.en}{en_noise}",
-                    zh=f"{sample.zh}{zh_noise}",
+                    zh=append_zh_segment(sample.zh, zh_noise),
                     category="chat",
                     is_priority=True,
                     source="chat_guard",
