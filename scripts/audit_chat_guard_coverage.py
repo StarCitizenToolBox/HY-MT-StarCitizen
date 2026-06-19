@@ -173,7 +173,7 @@ SOURCE_PHRASES = {
         "来人",
         "萌新注意",
         "报点",
-        "感觉不太行",
+        "情况不太对",
         "完成后分账",
         "成功后给报酬",
         "货款分成",
@@ -312,6 +312,22 @@ SOURCE_PHRASES = {
         "满员了",
         "先别走",
         "接人的船",
+        "集合路线",
+        "接人路线",
+        "补油停靠",
+        "交货路线",
+        "赏金集合",
+        "救援接人",
+        "换服后集合",
+        "护航转场",
+        "绕路维修",
+        "出发安排",
+        "下客安排",
+        "备用集合点",
+        "目的地标记",
+        "路线标记",
+        "路线报点",
+        "接人标记",
         "引擎离线",
         "报点和船名",
         "量子矿",
@@ -545,6 +561,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     player_newbie_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_newbie_log:")]
     player_dialogue_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_dialogue_thread:")]
     player_fragment_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_fragment:")]
+    player_route_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_route_status:")]
+    player_route_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_route_log:")]
     target_cjk = [row for row in rows if re.search(r"[\u3400-\u9fff]", row.get("target", ""))]
     unnatural_mixed_rows = find_unnatural_mixed_rows(rows)
     alias_chat_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat:")]
@@ -659,6 +677,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "player_newbie_log_rows": len(player_newbie_log_rows),
         "player_dialogue_rows": len(player_dialogue_rows),
         "player_fragment_rows": len(player_fragment_rows),
+        "player_route_rows": len(player_route_rows),
+        "player_route_log_rows": len(player_route_log_rows),
         "alias_chat_rows": len(alias_chat_rows),
         "alias_slang_rows": len(alias_slang_rows),
         "alias_chat_unique": len(alias_chat_keys - {""}),
@@ -757,6 +777,8 @@ def main() -> int:
     print(f"player_newbie_log_rows: {report['player_newbie_log_rows']}")
     print(f"player_dialogue_rows: {report['player_dialogue_rows']}")
     print(f"player_fragment_rows: {report['player_fragment_rows']}")
+    print(f"player_route_rows: {report['player_route_rows']}")
+    print(f"player_route_log_rows: {report['player_route_log_rows']}")
     print(f"alias_chat_rows: {report['alias_chat_rows']}")
     print(f"alias_slang_rows: {report['alias_slang_rows']}")
     print(f"alias_chat_unique: {report['alias_chat_unique']}")

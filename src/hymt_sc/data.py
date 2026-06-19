@@ -431,7 +431,7 @@ def build_quant_focus_samples(
         ),
         (
             "This feels bad; there is a {en} at {location_en} firing everywhere > F7C-S Hornet Ghost",
-            "感觉不太行 {location_zh}有个{zh}到处开火 >F7C-S Hornet Ghost",
+            "情况不太对，{location_zh}有个{zh}到处开火 >F7C-S Hornet Ghost",
         ),
         (
             "Global chat says there is a {en} at {location_en} shooting at players @...",
@@ -865,7 +865,7 @@ def build_quant_focus_samples(
         ("Party: ", "队伍 "),
         ("Voice: ", "yy里 "),
         ("Need help: ", "来人 "),
-        ("This feels bad; ", "感觉不太行 "),
+        ("This feels bad; ", "情况不太对 "),
         ("Newbie warning: ", "萌新注意 "),
         ("Quick callout: ", "报点 "),
     ]
@@ -1951,7 +1951,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("Someone in party chat said: ", "队伍频道有人说："),
         ("Help, ", "救命，"),
         ("Warning, ", "注意，"),
-        ("This feels bad; ", "感觉不太行，"),
+        ("This feels bad; ", "情况不太对，"),
         ("Can someone confirm this? ", "谁确认一下，"),
         ("I just logged in and saw this: ", "我刚上线看到，"),
         ("Do not panic, but ", "先别慌，"),
@@ -2457,7 +2457,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("Requesting help: ", "求支援："),
         ("For new players: ", "给新手说一下："),
         ("Can someone confirm this? ", "谁确认一下："),
-        ("This feels bad; ", "感觉不太行，"),
+        ("This feels bad; ", "情况不太对，"),
     ]
     structured_chat_followups = [
         (" Anyone want to join?", "有没有一起的？"),
@@ -2630,7 +2630,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ),
         (
             "This feels bad; there is a {ship_en} at {location_en} firing everywhere > F7C-S Hornet Ghost",
-            "感觉不太行 {location_zh}有个{ship_zh}到处开火 >F7C-S Hornet Ghost",
+            "情况不太对，{location_zh}有个{ship_zh}到处开火 >F7C-S Hornet Ghost",
         ),
         (
             "Global chat says there is a {ship_en} at {location_en} shooting at players @...",
@@ -2657,12 +2657,22 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("Need help: ", "来人 "),
         ("New player note: ", "萌新注意 "),
         ("Quick callout: ", "报点 "),
-        ("This feels bad; ", "感觉不太行 "),
+        ("This feels bad; ", "情况不太对 "),
         ("[Org] ", "[Org] "),
         ("[Team] ", "[Team] "),
         ("[Trade] ", "[Trade] "),
     ]
     player_session_channels = player_comm_channels[:-1]
+    player_route_channels = [
+        ("", ""),
+        ("Party chat: ", "队伍 "),
+        ("Voice: ", "yy里 "),
+        ("Need help: ", "来人 "),
+        ("New player note: ", "萌新注意 "),
+        ("Quick callout: ", "报点 "),
+        ("[Org] ", "[Org] "),
+        ("[Team] ", "[Team] "),
+    ]
     player_comm_noise_pairs = [
         ("", ""),
         (" > F7C-S Hornet Ghost", " >F7C-S Hornet Ghost"),
@@ -3456,6 +3466,46 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("The target is near {location_en}, not inside the {ship_en}.", "目标在{location_zh}附近，不在{ship_zh}里面。"),
         ("Ping the {ship_en} again; I lost the marker.", "再ping一下{ship_zh}，我看不到标记了。"),
     ]
+    player_route_topics = [
+        ("meetup route", "集合路线"),
+        ("pickup route", "接人路线"),
+        ("refuel stop", "补油停靠"),
+        ("cargo handoff", "交货路线"),
+        ("bounty staging", "赏金集合"),
+        ("rescue pickup", "救援接人"),
+        ("server hop regroup", "换服后集合"),
+        ("escort transfer", "护航转场"),
+        ("repair detour", "绕路维修"),
+        ("departure plan", "出发安排"),
+        ("drop-off plan", "下客安排"),
+        ("fallback meetup", "备用集合点"),
+    ]
+    player_route_states = [
+        ("destination marker has not been shared yet", "目的地标记还没共享"),
+        ("one crew member is still at the old station", "还有一个船员在旧空间站"),
+        ("cargo needs to be sold before the jump", "跳走前货要先卖掉"),
+        ("quantum fuel is low before the next leg", "下一段前量子燃料不够"),
+        ("escort is waiting at the midpoint", "护航在中途点等"),
+        ("pickup player is outside armistice", "要接的人在停火区外"),
+        ("repair stop will delay the route", "绕去维修会晚一点"),
+        ("new player cannot see the route marker", "萌新看不到路线标记"),
+        ("target moved away from the original meetup", "目标离开原来的集合点了"),
+        ("party marker points to the wrong hangar", "队伍标记指到错机库"),
+        ("drop-off point changed after the contract update", "合同更新后下客点变了"),
+        ("server feels unstable before departure", "出发前服务器不太稳"),
+    ]
+    player_route_actions = [
+        ("share the destination marker before takeoff", "起飞前先共享目的地标记"),
+        ("wait for escort before leaving the station", "离站前等护航到位"),
+        ("refuel before taking the cargo route", "跑货路线前先补油"),
+        ("pick up the late player before quantum jump", "量子跳跃前先接晚到的人"),
+        ("keep the ship outside until everyone boards", "所有人上船前先把船停在外面"),
+        ("use the backup meetup if the marker breaks", "标记坏了就用备用集合点"),
+        ("sell cargo before switching server", "换服前先把货卖掉"),
+        ("call the route in party chat and voice", "队伍聊天和语音都报一下路线"),
+        ("keep destination and ship name separate in chat", "聊天里把目的地和船名分开说"),
+        ("move the pickup marker after the contract updates", "合同更新后重新放接人标记"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -3520,6 +3570,19 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             if candidate_zh != current_zh:
                 return candidate_en, candidate_zh
         return ships[(ship_index + salt) % len(ships)]
+
+    def pick_other_location(location_index: int, salt: int, current_en: str, current_zh: str) -> tuple[str, str]:
+        for offset in range(len(locations)):
+            candidate_en, candidate_zh = locations[(location_index + salt + offset) % len(locations)]
+            is_same_place = (
+                candidate_en == current_en
+                or candidate_zh == current_zh
+                or candidate_zh in current_zh
+                or current_zh in candidate_zh
+            )
+            if not is_same_place:
+                return candidate_en, candidate_zh
+        return locations[(location_index + salt) % len(locations)]
 
     def append_zh_segment(text: str, suffix: str) -> str:
         if not suffix:
@@ -5202,6 +5265,86 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             source="chat_guard",
                         )
                     )
+                for route_index, (topic_en, topic_zh) in enumerate(player_route_topics, start=1):
+                    destination_en, destination_zh = pick_other_location(
+                        location_index,
+                        route_index + ship_index + repeat_index,
+                        location_en,
+                        location_zh,
+                    )
+                    state_en, state_zh = player_route_states[
+                        (repeat_index + location_index + ship_index + route_index) % len(player_route_states)
+                    ]
+                    action_en, action_zh = player_route_actions[
+                        (repeat_index + ship_index + route_index) % len(player_route_actions)
+                    ]
+                    channel_en, channel_zh = player_route_channels[
+                        (repeat_index + route_index + location_index + ship_index) % len(player_route_channels)
+                    ]
+                    route_en = (
+                        f"{channel_en}{topic_en} from {location_en} to {destination_en}: "
+                        f"{ship_en} is assigned; {state_en}; {action_en}."
+                    )
+                    route_zh = (
+                        f"{channel_zh}从{location_zh}到{destination_zh}的{topic_zh}: "
+                        f"{ship_zh}负责；{state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_route_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{route_index}:standard"
+                            ),
+                            en=route_en,
+                            zh=route_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_route_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{route_index}:compact"
+                            ),
+                            en=route_en,
+                            zh=compact_chat_text(route_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                destination_en, destination_zh = pick_other_location(
+                    location_index,
+                    ship_index + repeat_index + 7,
+                    location_en,
+                    location_zh,
+                )
+                route_state_en, route_state_zh = player_route_states[
+                    (repeat_index + location_index + ship_index + 3) % len(player_route_states)
+                ]
+                route_action_en, route_action_zh = player_route_actions[
+                    (repeat_index + location_index + ship_index + 5) % len(player_route_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_route_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Party] Nav: route from {location_en} to {destination_en}, {route_state_en}\n"
+                            f"[Voice] Pilot: the {ship_en} is assigned for pickup and transfer\n"
+                            f"[Team] Crew: {route_action_en}; route callout is not the ship name"
+                        ),
+                        zh=(
+                            f"[Party] Nav: 从{location_zh}到{destination_zh}，{route_state_zh}\n"
+                            f"[Voice] Pilot: {ship_zh}负责接人和转场\n"
+                            f"[Team] Crew: {route_action_zh}；路线报点不是船名"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
             for ship_index, (ship_en, ship_zh, literal_en, _literal_zh) in enumerate(ambiguous_ships, start=1):
                 for template_index, (en_template, zh_template) in enumerate(ambiguous_ship_chat_templates, start=1):
                     samples.append(
