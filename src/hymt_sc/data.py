@@ -546,6 +546,66 @@ def build_quant_focus_samples(
             "报点 {location_zh}那艘{zh}是我们的船，不是后面标签里的目标>F7C-S Hornet Ghost",
         ),
     ]
+    location_comm_ships = [
+        ("Cutter", "小刀"),
+        ("Razor", "剃刀"),
+        ("Corsair", "海盗船"),
+        ("Polaris", "北极星"),
+        ("Perseus", "英仙座"),
+        ("Scorpius", "天蝎座"),
+        ("Prospector", "勘探者"),
+        ("Vulture", "秃鹫"),
+    ]
+    location_comm_templates = [
+        (
+            "Meet at {en}; I am bringing the {ship_en} for a bounty contract.",
+            "{zh}集合，我开{ship_zh}去打赏金合同。",
+        ),
+        (
+            "Do not land at {en} yet; a {ship_en} is camping the hangar.",
+            "先别降落{zh}，有艘{ship_zh}在蹲机库。",
+        ),
+        (
+            "The cargo run from {en} needs escort, and the {ship_en} is already loaded.",
+            "从{zh}出发的跑货需要护航，{ship_zh}已经装好货了。",
+        ),
+        (
+            "Medical rescue is needed near {en}; the {ship_en} can pick up the beacon.",
+            "{zh}附近需要医疗救援，{ship_zh}可以接信标。",
+        ),
+        (
+            "SC global says {en} has heavy desync, so keep the {ship_en} away from the pad.",
+            "sc全局说{zh}同步很差，让{ship_zh}先离停机坪远点。",
+        ),
+        (
+            "If the {ship_en} reaches {en}, refuel, repair, and restock before the next jump.",
+            "如果{ship_zh}到{zh}了，下一跳前先补油、维修和补弹药。",
+        ),
+        (
+            "Quick callout: the target marker is at {en}, not on the ship tag after the message > F7C-S Hornet Ghost",
+            "报点 目标标记在{zh}，不是消息后面那个船名标签>F7C-S Hornet Ghost",
+        ),
+        (
+            "The {ship_en} is mining near {en}; keep escort until the refinery job is ready.",
+            "{ship_zh}在{zh}附近采矿，精炼任务准备好前继续护航。",
+        ),
+        (
+            "The {ship_en} is doing salvage near {en}; mark the wreck and keep the cargo grid clear.",
+            "{ship_zh}在{zh}附近打捞，标记残骸并把货物网格空出来。",
+        ),
+        (
+            "A service beacon at {en} looks risky; bring the {ship_en} only after the party accepts.",
+            "{zh}的服务信标看起来有风险，队伍接了以后再开{ship_zh}过去。",
+        ),
+        (
+            "The elevator at {en} is bugged; keep the {ship_en} outside until the crew gets out.",
+            "{zh}的电梯出问题了，让{ship_zh}在外面等到船员出来。",
+        ),
+        (
+            "Bring a tractor beam to {en}; the {ship_en} has loose cargo boxes on the grid.",
+            "带牵引光束来{zh}，{ship_zh}货物网格上有散货箱。",
+        ),
+    ]
     alias_chat_slang_prefixes = [
         ("SC global: ", "sc全局 "),
         ("Party: ", "队伍 "),
@@ -682,6 +742,44 @@ def build_quant_focus_samples(
                                 key=(
                                     f"quant_focus_vehicle_comm:{entry.key}:{repeat_index + 1}:"
                                     f"{location_index}:{template_index}:slang"
+                                ),
+                                en=en_text,
+                                zh=slang_zh,
+                                category=entry.category,
+                                is_priority=True,
+                                source="quant_focus",
+                            )
+                        )
+            if entry.category == "location":
+                for ship_index, (ship_en, ship_zh) in enumerate(location_comm_ships, start=1):
+                    for template_index, (en_template, zh_template) in enumerate(location_comm_templates, start=1):
+                        en_text = en_template.format(en=entry.en, zh=entry.zh, ship_en=ship_en, ship_zh=ship_zh)
+                        zh_text = zh_template.format(en=entry.en, zh=entry.zh, ship_en=ship_en, ship_zh=ship_zh)
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"quant_focus_location_comm:{entry.key}:{repeat_index + 1}:"
+                                    f"{ship_index}:{template_index}:standard"
+                                ),
+                                en=en_text,
+                                zh=zh_text,
+                                category=entry.category,
+                                is_priority=True,
+                                source="quant_focus",
+                            )
+                        )
+                        slang_zh = compact_alias_chat(zh_text)
+                        for source_phrase, replacement in sorted(
+                            alias_chat_slang_replacements,
+                            key=lambda item: len(item[0]),
+                            reverse=True,
+                        ):
+                            slang_zh = slang_zh.replace(source_phrase, replacement)
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"quant_focus_location_comm:{entry.key}:{repeat_index + 1}:"
+                                    f"{ship_index}:{template_index}:slang"
                                 ),
                                 en=en_text,
                                 zh=slang_zh,
