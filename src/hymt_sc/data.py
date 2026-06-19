@@ -3025,6 +3025,44 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("check the sale route before loading the ship", "装船前先看卖货路线"),
         ("keep the ship name separate from the cargo callout", "把船名和货物报点分开"),
     ]
+    player_medical_scenarios = [
+        ("medical rescue", "医疗救援"),
+        ("rescue beacon pickup", "救援信标接人"),
+        ("body recovery", "尸体回收"),
+        ("crime stat cleanup", "犯罪等级清除"),
+        ("security scan", "安保扫描"),
+        ("Klescher escape pickup", "克莱舍接人"),
+        ("bunker revival", "地堡救人"),
+        ("red player check", "红名玩家确认"),
+        ("surrender handoff", "投降交接"),
+        ("armistice zone extraction", "停火区撤离"),
+    ]
+    player_medical_states = [
+        ("tier 3 injury, still conscious", "T3伤但还醒着"),
+        ("incapacitated in the hangar", "倒在机库里"),
+        ("medical beacon is up", "医疗信标已经发了"),
+        ("rescue beacon payment looks right", "救援信标报酬合适"),
+        ("crime stat two after friendly fire", "友伤后犯罪等级2"),
+        ("CS3 near security", "安保附近CS3"),
+        ("Klescher route is clear", "Klescher路线安全"),
+        ("surrender marker is bugged", "投降标记出问题"),
+        ("body marker is missing", "尸体标记 body marker丢了"),
+        ("med gun is empty", "med gun没药了"),
+        ("armistice rules are blocking the pickup", "armistice规则挡住接人"),
+        ("security is scanning the wrong ship", "安保在扫错船"),
+    ]
+    player_medical_actions = [
+        ("accept the rescue beacon only after party confirms", "队伍确认后再接救援信标"),
+        ("do not shoot the red player until we scan", "扫描前别打红名玩家"),
+        ("drag the body to the ramp", "把尸体拖到跳板"),
+        ("clear the crime stat before landing", "降落前先清犯罪等级"),
+        ("bring a med gun and tractor beam", "带med gun和tractor beam"),
+        ("keep the ship outside armistice", "让船停在armistice外"),
+        ("share the body marker in party chat", "在队伍里共享尸体标记 body marker"),
+        ("tell global this is rescue, not bounty", "去全局说明这是救援不是赏金"),
+        ("wait for the security scan before opening fire", "等安保扫描后再开火"),
+        ("do not confuse Klescher with a ship name", "别把Klescher当船名"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -4058,6 +4096,76 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Trade] Miner: {location_zh}附近{job_zh}，{state_zh}\n"
                             f"[Party] Pilot: {ship_zh}已经装货在等\n"
                             f"[Voice] Lead: {action_zh}；货物报点不是船名"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for medical_index, (scenario_en, scenario_zh) in enumerate(player_medical_scenarios, start=1):
+                    state_en, state_zh = player_medical_states[
+                        (repeat_index + location_index + ship_index + medical_index) % len(player_medical_states)
+                    ]
+                    action_en, action_zh = player_medical_actions[
+                        (repeat_index + ship_index + medical_index) % len(player_medical_actions)
+                    ]
+                    channel_en, channel_zh = player_comm_channels[
+                        (repeat_index + medical_index + ship_index) % len(player_comm_channels)
+                    ]
+                    medical_en_text = (
+                        f"{channel_en}{scenario_en} near {location_en}: {ship_en} is holding; {state_en}; "
+                        f"{action_en}."
+                    )
+                    medical_zh_text = (
+                        f"{channel_zh}{location_zh}附近{scenario_zh}: {ship_zh}先停着；{state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_medical_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{medical_index}:standard"
+                            ),
+                            en=medical_en_text,
+                            zh=medical_zh_text,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_medical_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{medical_index}:compact"
+                            ),
+                            en=medical_en_text,
+                            zh=slangify_player_chat(medical_zh_text),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                scenario_en, scenario_zh = player_medical_scenarios[
+                    (repeat_index + location_index + ship_index) % len(player_medical_scenarios)
+                ]
+                state_en, state_zh = player_medical_states[
+                    (repeat_index + location_index + ship_index + 5) % len(player_medical_states)
+                ]
+                action_en, action_zh = player_medical_actions[
+                    (repeat_index + location_index + ship_index + 7) % len(player_medical_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_medical_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Global] Rescue: {scenario_en} near {location_en}, {state_en}\n"
+                            f"[Party] Pilot: the {ship_en} is parked outside armistice\n"
+                            f"[Voice] Medic: {action_en}; rescue callout is not a ship name"
+                        ),
+                        zh=(
+                            f"[Global] Rescue: {location_zh}附近{scenario_zh}，{state_zh}\n"
+                            f"[Party] Pilot: {ship_zh}停在armistice外\n"
+                            f"[Voice] Medic: {action_zh}；救援报点不是船名"
                         ),
                         category="chat",
                         is_priority=True,
