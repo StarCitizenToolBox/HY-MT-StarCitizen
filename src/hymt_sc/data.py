@@ -3103,6 +3103,46 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("mark the railgun team before the flyover", "低空飞过前先标记railgun队伍"),
         ("extract the team before the next wave", "下一波前先把队伍撤出来"),
     ]
+    player_meta_topics = [
+        ("server shard check", "服务器分片检查"),
+        ("PTU patch test", "PTU补丁测试"),
+        ("live build workaround", "正式服绕路办法"),
+        ("org event signup", "组织活动报名"),
+        ("voice channel setup", "语音频道设置"),
+        ("screenshot evidence", "截图取证"),
+        ("bug report draft", "bug反馈草稿"),
+        ("relog coordination", "重登协调"),
+        ("party invite cleanup", "队伍邀请清理"),
+        ("hangar instance reset", "机库实例重置"),
+        ("claim timer planning", "申领时间安排"),
+        ("launcher update wait", "启动器更新等待"),
+    ]
+    player_meta_states = [
+        ("shard feels unstable after the patch", "补丁后shard不太稳定"),
+        ("server meshing test is desyncing markers", "server meshing测试把标记同步乱了"),
+        ("launcher is stuck on verifying files", "launcher卡在校验文件"),
+        ("PTU build has a known hangar bug", "PTU版本有已知机库bug"),
+        ("live build changed the claim timer", "正式服改了claim timer"),
+        ("party invite went to the wrong account", "队伍邀请发到错账号"),
+        ("voice channel permissions are locked", "语音频道权限锁住了"),
+        ("screenshot misses the contract marker", "截图没拍到合同标记"),
+        ("crash log is ready to upload", "crash log可以上传了"),
+        ("IC report needs reproduction steps", "IC report还缺复现步骤"),
+        ("hangar instance ate the ship again", "机库实例又吞船了"),
+        ("org roster has two duplicate names", "组织名单有两个重名"),
+    ]
+    player_meta_actions = [
+        ("post the shard ID before everyone relogs", "大家重登前先发shard ID"),
+        ("keep the workaround separate from the ship callout", "把绕路办法和船名报点分开"),
+        ("paste the patch number with the screenshot", "截图一起贴补丁号"),
+        ("move late players to the backup voice channel", "把迟到的人拉到备用语音频道"),
+        ("do not translate launcher or PTU as ship names", "别把launcher或PTU翻成船名"),
+        ("record the reproduction steps before resetting", "重置前先录复现步骤"),
+        ("confirm the org role before sharing the contract", "共享合同前先确认组织权限"),
+        ("wait for file verification before joining the server", "等文件校验完再进服务器"),
+        ("pin the workaround in party chat", "把绕路办法置顶到队伍聊天"),
+        ("attach the crash log after the session", "这局结束后附上crash log"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -3180,6 +3220,9 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             slang_text = slang_text.replace(source_phrase, replacement)
         slang_text = slang_text.replace("quantaniummining", "quantanium mining")
         slang_text = slang_text.replace("ROCmining", "ROC mining")
+        slang_text = slang_text.replace("hangarbug", "hangar bug")
+        slang_text = slang_text.replace("servermeshing", "server meshing")
+        slang_text = slang_text.replace("crashlog", "crash log")
         return slang_text
 
     samples: list[PairSample] = []
@@ -4276,6 +4319,76 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Org] Lead: {location_zh}{scenario_zh}，{ship_zh}负责\n"
                             f"[Team] Ground: {state_zh}\n"
                             f"[Voice] Flight: {action_zh}；行动报点不是船名"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for meta_index, (topic_en, topic_zh) in enumerate(player_meta_topics, start=1):
+                    state_en, state_zh = player_meta_states[
+                        (repeat_index + location_index + ship_index + meta_index) % len(player_meta_states)
+                    ]
+                    action_en, action_zh = player_meta_actions[
+                        (repeat_index + location_index + meta_index) % len(player_meta_actions)
+                    ]
+                    channel_en, channel_zh = player_comm_channels[
+                        (repeat_index + meta_index + ship_index) % len(player_comm_channels)
+                    ]
+                    meta_en_text = (
+                        f"{channel_en}{topic_en} near {location_en}: {ship_en} stays assigned; {state_en}; "
+                        f"{action_en}."
+                    )
+                    meta_zh_text = (
+                        f"{channel_zh}{location_zh}附近{topic_zh}: {ship_zh}继续负责；{state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_meta_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{meta_index}:standard"
+                            ),
+                            en=meta_en_text,
+                            zh=meta_zh_text,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_meta_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{meta_index}:compact"
+                            ),
+                            en=meta_en_text,
+                            zh=slangify_player_chat(meta_zh_text),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                topic_en, topic_zh = player_meta_topics[
+                    (repeat_index + location_index + ship_index) % len(player_meta_topics)
+                ]
+                state_en, state_zh = player_meta_states[
+                    (repeat_index + location_index + ship_index + 6) % len(player_meta_states)
+                ]
+                action_en, action_zh = player_meta_actions[
+                    (repeat_index + location_index + ship_index + 8) % len(player_meta_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_meta_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Local] Helper: {topic_en} near {location_en}, {state_en}\n"
+                            f"[Party] Pilot: the {ship_en} stays assigned for now\n"
+                            f"[Org] Admin: {action_en}; support callout is not the ship name"
+                        ),
+                        zh=(
+                            f"[Local] Helper: {location_zh}附近{topic_zh}，{state_zh}\n"
+                            f"[Party] Pilot: {ship_zh}暂时继续负责\n"
+                            f"[Org] Admin: {action_zh}；支持报点不是船名"
                         ),
                         category="chat",
                         is_priority=True,
