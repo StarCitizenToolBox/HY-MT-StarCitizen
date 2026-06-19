@@ -368,6 +368,19 @@ SOURCE_PHRASES = {
         "萌新重新集合",
         "空间站转场等人",
         "出发前再确认一次",
+        "出发前排障",
+        "队伍同步检查",
+        "船只状态确认",
+        "机库和终端确认",
+        "货物找回确认",
+        "出发阻塞检查",
+        "机库门在驾驶员那边开了",
+        "ASOP显示船存在另一个空间站",
+        "队伍标记还跟着旧船",
+        "共享后合同标记指到错卫星",
+        "找回的船回来后货箱不见了",
+        "重登后驾驶员能看见船",
+        "出发前说一下结果",
         "引擎离线",
         "报点和船名",
         "量子矿",
@@ -609,6 +622,12 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     player_role_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_role_log:")]
     player_meetup_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_meetup_status:")]
     player_meetup_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_meetup_log:")]
+    player_troubleshoot_rows = [
+        row for row in rows if row.get("key", "").startswith("chat_guard:player_troubleshoot_status:")
+    ]
+    player_troubleshoot_log_rows = [
+        row for row in rows if row.get("key", "").startswith("chat_guard:player_troubleshoot_log:")
+    ]
     target_cjk = [row for row in rows if re.search(r"[\u3400-\u9fff]", row.get("target", ""))]
     unnatural_mixed_rows = find_unnatural_mixed_rows(rows)
     alias_chat_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat:")]
@@ -731,6 +750,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "player_role_log_rows": len(player_role_log_rows),
         "player_meetup_rows": len(player_meetup_rows),
         "player_meetup_log_rows": len(player_meetup_log_rows),
+        "player_troubleshoot_rows": len(player_troubleshoot_rows),
+        "player_troubleshoot_log_rows": len(player_troubleshoot_log_rows),
         "alias_chat_rows": len(alias_chat_rows),
         "alias_slang_rows": len(alias_slang_rows),
         "alias_chat_unique": len(alias_chat_keys - {""}),
@@ -837,6 +858,8 @@ def main() -> int:
     print(f"player_role_log_rows: {report['player_role_log_rows']}")
     print(f"player_meetup_rows: {report['player_meetup_rows']}")
     print(f"player_meetup_log_rows: {report['player_meetup_log_rows']}")
+    print(f"player_troubleshoot_rows: {report['player_troubleshoot_rows']}")
+    print(f"player_troubleshoot_log_rows: {report['player_troubleshoot_log_rows']}")
     print(f"alias_chat_rows: {report['alias_chat_rows']}")
     print(f"alias_slang_rows: {report['alias_slang_rows']}")
     print(f"alias_chat_unique: {report['alias_chat_unique']}")

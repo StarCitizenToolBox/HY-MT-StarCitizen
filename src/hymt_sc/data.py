@@ -3632,6 +3632,48 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("finish selling cargo before calling departure", "卖完货再喊出发"),
         ("tell escort to hold position until boarding is done", "让护航先原地等到登船结束"),
     ]
+    player_troubleshoot_topics = [
+        ("pre-flight troubleshooting", "出发前排障"),
+        ("party sync check", "队伍同步检查"),
+        ("ship state check", "船只状态确认"),
+        ("marker cleanup", "标记整理"),
+        ("relog recovery plan", "重登恢复安排"),
+        ("hangar and terminal check", "机库和终端确认"),
+        ("cargo recovery check", "货物找回确认"),
+        ("crew visibility check", "船员可见性检查"),
+        ("route reset check", "路线重置确认"),
+        ("inventory refresh check", "仓库刷新确认"),
+        ("voice and chat check", "语音和聊天确认"),
+        ("departure blocker check", "出发阻塞检查"),
+    ]
+    player_troubleshoot_states = [
+        ("the hangar doors opened for the pilot but not for the crew", "机库门在驾驶员那边开了，但船员这边没开"),
+        ("ASOP shows the ship as stored at another station", "ASOP显示船存在另一个空间站"),
+        ("party marker follows the old ship instead of the current ship", "队伍标记还跟着旧船，不在当前船上"),
+        ("contract marker points to the wrong moon after sharing", "共享后合同标记指到错卫星"),
+        ("recovered ship came back without the cargo boxes", "找回的船回来后货箱不见了"),
+        ("claim terminal lists the right ship name but wrong hangar", "申领终端船名是对的，但机库不对"),
+        ("elevator brings half the crew to a different lobby", "电梯把一半船员送到另一个大厅"),
+        ("one player is still loading while the ship is already spawned", "有人还在加载，但船已经刷出来了"),
+        ("after relogging the pilot can see the ship but the gunner cannot", "重登后驾驶员能看见船，炮手看不见"),
+        ("local inventory updated but ship inventory did not", "本地仓库更新了，但船仓库没同步"),
+        ("voice callouts arrive several seconds late", "语音报点会晚几秒才听到"),
+        ("quantum route clears itself when the pilot opens the map", "驾驶员打开地图后量子路线会自己消失"),
+    ]
+    player_troubleshoot_actions = [
+        ("keep one person on the ship and have the pilot request the hangar again", "留一个人在船上，让驾驶员重新呼叫机库"),
+        ("screenshot the terminal before claiming another ship", "申领别的船之前先截图终端"),
+        ("remove the old marker and ping the current ship again", "删掉旧标记，再重新ping当前船"),
+        ("share the contract again after everyone accepts the first one", "所有人接完第一遍后再重新共享合同"),
+        ("do not store the ship until cargo recovery is confirmed", "确认货物找回前先别存船"),
+        ("read the hangar number in party chat before leaving the terminal", "离开终端前把机库号发到队伍聊天"),
+        ("wait by the elevator and bring the missing crew member back", "在电梯旁等，把走散的船员带回来"),
+        ("hold launch until the loading player types ready", "等加载的人打准备好了再起飞"),
+        ("ask the gunner to relog only after the pilot keeps the ship active", "驾驶员保持船在线后再让炮手重登"),
+        ("move items only after both inventories refresh", "两个仓库都刷新后再搬东西"),
+        ("repeat important callouts in party chat", "重要报点在队伍聊天里再发一遍"),
+        ("clear the route and set the destination again before jumping", "清掉路线后重新设目的地再跳"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -5681,6 +5723,79 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Party] Lead: {location_zh}这边{meetup_topic_zh}，在{ship_zh}集合\n"
                             f"[Voice] Crew: {meetup_state_zh}\n"
                             f"[Team] Lead: {meetup_action_zh}；出发前再确认一次"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for troubleshoot_index, (topic_en, topic_zh) in enumerate(player_troubleshoot_topics, start=1):
+                    state_en, state_zh = player_troubleshoot_states[
+                        (repeat_index + location_index + ship_index + troubleshoot_index)
+                        % len(player_troubleshoot_states)
+                    ]
+                    action_en, action_zh = player_troubleshoot_actions[
+                        (repeat_index + ship_index + troubleshoot_index) % len(player_troubleshoot_actions)
+                    ]
+                    other_ship_en, other_ship_zh = pick_other_ship(ship_index, troubleshoot_index + 17, ship_zh)
+                    channel_en, channel_zh = player_route_channels[
+                        (repeat_index + troubleshoot_index + location_index) % len(player_route_channels)
+                    ]
+                    troubleshoot_en = (
+                        f"{channel_en}{topic_en} at {location_en}: keep the {ship_en} active, "
+                        f"not the {other_ship_en}; {state_en}; {action_en}."
+                    )
+                    troubleshoot_zh = (
+                        f"{channel_zh}{location_zh}这边{topic_zh}: 先保留{ship_zh}，"
+                        f"不是{other_ship_zh}；{state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_troubleshoot_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{troubleshoot_index}:standard"
+                            ),
+                            en=troubleshoot_en,
+                            zh=troubleshoot_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_troubleshoot_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{troubleshoot_index}:compact"
+                            ),
+                            en=troubleshoot_en,
+                            zh=compact_chat_text(troubleshoot_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                troubleshoot_topic_en, troubleshoot_topic_zh = player_troubleshoot_topics[
+                    (repeat_index + location_index + ship_index) % len(player_troubleshoot_topics)
+                ]
+                troubleshoot_state_en, troubleshoot_state_zh = player_troubleshoot_states[
+                    (repeat_index + location_index + ship_index + 4) % len(player_troubleshoot_states)
+                ]
+                troubleshoot_action_en, troubleshoot_action_zh = player_troubleshoot_actions[
+                    (repeat_index + location_index + ship_index + 6) % len(player_troubleshoot_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_troubleshoot_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Party] Pilot: {troubleshoot_topic_en} at {location_en}; keep the {ship_en} spawned\n"
+                            f"[Voice] Crew: {troubleshoot_state_en}\n"
+                            f"[Team] Lead: {troubleshoot_action_en}; report the result before departure"
+                        ),
+                        zh=(
+                            f"[Party] Pilot: {location_zh}这边{troubleshoot_topic_zh}，先让{ship_zh}保持刷出状态\n"
+                            f"[Voice] Crew: {troubleshoot_state_zh}\n"
+                            f"[Team] Lead: {troubleshoot_action_zh}；出发前说一下结果"
                         ),
                         category="chat",
                         is_priority=True,
