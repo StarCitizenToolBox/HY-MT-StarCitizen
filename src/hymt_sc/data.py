@@ -3185,6 +3185,46 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("swap the quantum drive after landing", "落地后再换quantum drive"),
         ("record the paint reset before filing the report", "反馈前先录下paint重置"),
     ]
+    player_mission_topics = [
+        ("courier contract", "快递合同"),
+        ("investigation mission", "调查任务"),
+        ("cave FPS route", "洞穴FPS路线"),
+        ("missing person search", "失踪人员搜索"),
+        ("box delivery chain", "箱子递送链"),
+        ("racing checkpoint", "竞速检查点"),
+        ("exploration beacon", "探索信标"),
+        ("reputation grind", "声望刷取"),
+        ("faction mission split", "阵营任务分工"),
+        ("illegal delivery", "非法递送"),
+        ("legal salvage contract", "合法打捞合同"),
+        ("outpost scanning pass", "前哨扫描航线"),
+    ]
+    player_mission_states = [
+        ("contract marker is under terrain", "合同标记在地形下面"),
+        ("delivery locker will not accept the box", "递送柜不收箱子"),
+        ("package marker moved to the wrong outpost", "包裹标记跳到错前哨"),
+        ("investigation body is missing", "调查目标尸体不见了"),
+        ("cave marker points to the wrong tunnel", "洞穴标记指向错洞"),
+        ("hostile NPCs respawned behind us", "敌对NPC在身后刷新了"),
+        ("checkpoint did not register the lap", "checkpoint没记录圈速"),
+        ("beacon timer is about to expire", "beacon计时快结束"),
+        ("reputation payout is delayed", "声望奖励延迟到账"),
+        ("faction rep went to the wrong player", "阵营声望给错人"),
+        ("illegal cargo is still marked stolen", "非法货物还标着stolen"),
+        ("mission objective did not update", "任务目标没有更新"),
+    ]
+    player_mission_actions = [
+        ("share the contract again before entering the cave", "进洞前再共享一次合同"),
+        ("do not translate the mission type as a ship name", "别把任务类型翻成船名"),
+        ("scan the outpost before dropping the box", "放箱子前先扫描前哨"),
+        ("wait for the reputation tick before leaving", "等声望跳了再走"),
+        ("call the checkpoint number in party chat", "在队伍里报checkpoint编号"),
+        ("mark the body before looting", "摸东西前先标记尸体"),
+        ("keep legal and illegal cargo in separate ships", "合法和非法货分开放船"),
+        ("record the objective before abandoning the contract", "放弃合同前先录任务目标"),
+        ("let the runner take the box while escort covers", "让跑腿拿箱子护航负责掩护"),
+        ("use the beacon timer instead of the ship marker", "按beacon计时走不要看船标"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -4501,6 +4541,76 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Local] Mechanic: {location_zh}{topic_zh}，{state_zh}\n"
                             f"[Party] Pilot: {ship_zh}留在机库\n"
                             f"[Voice] Crew: {action_zh}；整备报点不是船名"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for mission_index, (topic_en, topic_zh) in enumerate(player_mission_topics, start=1):
+                    state_en, state_zh = player_mission_states[
+                        (repeat_index + location_index + ship_index + mission_index) % len(player_mission_states)
+                    ]
+                    action_en, action_zh = player_mission_actions[
+                        (repeat_index + location_index + mission_index) % len(player_mission_actions)
+                    ]
+                    channel_en, channel_zh = player_comm_channels[
+                        (repeat_index + mission_index + ship_index) % len(player_comm_channels)
+                    ]
+                    mission_en_text = (
+                        f"{channel_en}{topic_en} at {location_en}: {ship_en} is assigned; {state_en}; "
+                        f"{action_en}."
+                    )
+                    mission_zh_text = (
+                        f"{channel_zh}{location_zh}{topic_zh}: {ship_zh}负责；{state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_mission_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{mission_index}:standard"
+                            ),
+                            en=mission_en_text,
+                            zh=mission_zh_text,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_mission_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{mission_index}:compact"
+                            ),
+                            en=mission_en_text,
+                            zh=slangify_player_chat(mission_zh_text),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                topic_en, topic_zh = player_mission_topics[
+                    (repeat_index + location_index + ship_index) % len(player_mission_topics)
+                ]
+                state_en, state_zh = player_mission_states[
+                    (repeat_index + location_index + ship_index + 7) % len(player_mission_states)
+                ]
+                action_en, action_zh = player_mission_actions[
+                    (repeat_index + location_index + ship_index + 9) % len(player_mission_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_mission_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Party] Runner: {topic_en} at {location_en}, {state_en}\n"
+                            f"[Team] Pilot: the {ship_en} is assigned to the mission\n"
+                            f"[Voice] Lead: {action_en}; mission callout is not the ship name"
+                        ),
+                        zh=(
+                            f"[Party] Runner: {location_zh}{topic_zh}，{state_zh}\n"
+                            f"[Team] Pilot: {ship_zh}负责这个任务\n"
+                            f"[Voice] Lead: {action_zh}；任务报点不是船名"
                         ),
                         category="chat",
                         is_priority=True,
