@@ -3716,6 +3716,48 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("surrender only after cargo value is confirmed", "确认货值以后再决定要不要投降"),
         ("record the crime stat change before relogging", "重登前先录下犯罪等级变化"),
     ]
+    player_access_topics = [
+        ("crew access coordination", "船员权限协调"),
+        ("shared ship permission check", "共享船权限确认"),
+        ("party access check", "队伍权限确认"),
+        ("boarding access check", "登船权限确认"),
+        ("cargo and seat access check", "货舱和座位权限确认"),
+        ("medical and turret access check", "医疗和炮塔权限确认"),
+        ("leadership transfer check", "队长转移确认"),
+        ("hangar and docking access check", "机库和对接权限确认"),
+        ("storage access check", "仓库访问确认"),
+        ("friend and party invite check", "好友和队伍邀请确认"),
+        ("org crew permission check", "组织船员权限确认"),
+        ("launch access confirmation", "起飞前权限确认"),
+    ]
+    player_access_states = [
+        ("owner is offline but the ship is still spawned", "船主离线了，但船还刷在外面"),
+        ("borrowed ship is locked for new party members", "借来的船对新进队的人还是锁着"),
+        ("ramp opens for the pilot but not for the cargo crew", "舱门驾驶员能开，搬货的人开不了"),
+        ("cargo hold access changed after the party invite", "组队后货舱权限变了"),
+        ("turret seat is reserved for someone joining late", "炮塔位留给晚点进队的人"),
+        ("medical bed is set to the wrong permissions", "医疗床权限设错了"),
+        ("party lead needs to share the contract first", "队长要先共享合同"),
+        ("hangar access only works for the ship owner", "机库权限只有船主能用"),
+        ("docking request belongs to another ship", "对接请求挂到另一艘船上了"),
+        ("shared storage is visible but items cannot be moved", "共享仓库能看到，但东西搬不动"),
+        ("friend list invite did not add ship access", "好友邀请没有带上船只权限"),
+        ("org permission is missing for the new crew member", "新船员缺组织权限"),
+    ]
+    player_access_actions = [
+        ("ask the owner before storing the ship", "存船前先问一下船主"),
+        ("reinvite the new member before opening the ramp", "开舱门前先重新拉新队员进队"),
+        ("let the pilot open the ramp for cargo loading", "搬货时先让驾驶员开舱门"),
+        ("confirm cargo access before selling the boxes", "卖箱子前先确认货舱权限"),
+        ("keep the turret seat empty until the reserved player joins", "预留的人进队前先空着炮塔位"),
+        ("reset medical bed access after landing", "落地后重新设医疗床权限"),
+        ("transfer party lead before sharing the contract", "共享合同前先转队长"),
+        ("wait at the hangar until the owner confirms access", "在机库等船主确认权限"),
+        ("cancel the wrong docking request and call it again", "取消错的对接请求后重新呼叫"),
+        ("move items only after storage access refreshes", "共享仓库刷新后再搬东西"),
+        ("send a party invite instead of only a friend invite", "不要只发好友邀请，要拉进队伍"),
+        ("ask an org officer to update the permission", "找组织管理员改一下权限"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -5910,6 +5952,78 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Party] Lead: {location_zh}这边{security_topic_zh}，{ship_zh}负责处理\n"
                             f"[Voice] Crew: {security_state_zh}\n"
                             f"[Team] Lead: {security_action_zh}；动手前先确认"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for access_index, (topic_en, topic_zh) in enumerate(player_access_topics, start=1):
+                    state_en, state_zh = player_access_states[
+                        (repeat_index + location_index + ship_index + access_index) % len(player_access_states)
+                    ]
+                    action_en, action_zh = player_access_actions[
+                        (repeat_index + ship_index + access_index) % len(player_access_actions)
+                    ]
+                    other_ship_en, other_ship_zh = pick_other_ship(ship_index, access_index + 23, ship_zh)
+                    channel_en, channel_zh = player_route_channels[
+                        (repeat_index + access_index + location_index + ship_index) % len(player_route_channels)
+                    ]
+                    access_en = (
+                        f"{channel_en}{topic_en} at {location_en}: use the {ship_en}, "
+                        f"not the {other_ship_en}; {state_en}; {action_en}."
+                    )
+                    access_zh = (
+                        f"{channel_zh}{location_zh}这边{topic_zh}: 用{ship_zh}，不是{other_ship_zh}；"
+                        f"{state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_access_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{access_index}:standard"
+                            ),
+                            en=access_en,
+                            zh=access_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_access_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{access_index}:compact"
+                            ),
+                            en=access_en,
+                            zh=compact_chat_text(access_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                access_topic_en, access_topic_zh = player_access_topics[
+                    (repeat_index + location_index + ship_index) % len(player_access_topics)
+                ]
+                access_state_en, access_state_zh = player_access_states[
+                    (repeat_index + location_index + ship_index + 6) % len(player_access_states)
+                ]
+                access_action_en, access_action_zh = player_access_actions[
+                    (repeat_index + location_index + ship_index + 8) % len(player_access_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_access_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Party] Lead: {access_topic_en} at {location_en}; use the {ship_en}\n"
+                            f"[Voice] Crew: {access_state_en}\n"
+                            f"[Team] Lead: {access_action_en}; confirm access before launch"
+                        ),
+                        zh=(
+                            f"[Party] Lead: {location_zh}这边{access_topic_zh}，用{ship_zh}\n"
+                            f"[Voice] Crew: {access_state_zh}\n"
+                            f"[Team] Lead: {access_action_zh}；起飞前确认权限"
                         ),
                         category="chat",
                         is_priority=True,
