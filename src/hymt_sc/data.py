@@ -2949,6 +2949,44 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("clear the hangar before bringing cargo in", "带货进来前先清机库"),
         ("share the contract marker again", "再共享一次合同标记"),
     ]
+    player_combat_states = [
+        ("front shields low", "前盾低"),
+        ("rear shields down", "后盾掉了"),
+        ("left side taking ballistic fire", "左侧在吃实弹"),
+        ("right side taking laser fire", "右侧在吃激光"),
+        ("missile lock from above", "上方有missile lock"),
+        ("EMP hit the cockpit", "EMP打到驾驶舱"),
+        ("distortion damage on weapons", "武器被distortion打了"),
+        ("friendly fire on the marker", "标记上有friendly fire"),
+        ("ramming attempt near the pad", "停机坪附近有人撞船"),
+        ("boarding contact on the ramp", "跳板上有人登船"),
+        ("soft death warning", "软死亡警告"),
+        ("hostile target is red", "敌对目标红名"),
+    ]
+    player_system_states = [
+        ("weapons offline", "武器离线"),
+        ("engines offline", "引擎离线"),
+        ("quantum drive offline", "量子驱动离线"),
+        ("coolers overheating", "冷却器过热"),
+        ("power triangle on weapons", "能量三角给武器"),
+        ("power triangle on shields", "能量三角给护盾"),
+        ("capacitor empty", "capacitor空了"),
+        ("MFD is bugged", "MFD出问题"),
+        ("turret seat desynced", "炮塔位同步异常"),
+        ("shields recharging", "护盾回充中"),
+    ]
+    player_combat_actions = [
+        ("break lock and flare", "脱锁并放热诱"),
+        ("hold fire until the marker is confirmed", "确认标记前先别开火"),
+        ("call friendly fire in party chat", "在队伍里报友伤"),
+        ("roll left and keep shields forward", "左滚并把前盾顶住"),
+        ("power to shields before the next pass", "下一轮前把能量给护盾"),
+        ("board only after soft death", "软死亡后再登船"),
+        ("scan before firing missiles", "发导弹前先扫描"),
+        ("repair engines before chasing", "追击前先修引擎"),
+        ("keep the turret on the red target", "炮塔盯红名目标"),
+        ("do not confuse the damage callout with a ship name", "别把伤害报点当船名"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -3848,6 +3886,69 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Team] Nav: {location_zh} {nav_zh}，{ship_zh}{nav_state_zh}\n"
                             f"[Party] Me: {nav_action_zh}\n"
                             f"[Voice] Kai: 船是{ship_zh}，导航点是{nav_zh}"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for combat_index, (combat_en, combat_zh) in enumerate(player_combat_states, start=1):
+                    system_en, system_zh = player_system_states[
+                        (repeat_index + location_index + ship_index + combat_index) % len(player_system_states)
+                    ]
+                    action_en, action_zh = player_combat_actions[
+                        (repeat_index + ship_index + combat_index) % len(player_combat_actions)
+                    ]
+                    channel_en, channel_zh = player_comm_channels[
+                        (repeat_index + combat_index + ship_index) % len(player_comm_channels)
+                    ]
+                    combat_text_en = (
+                        f"{channel_en}{ship_en} at {location_en}: {combat_en}; {system_en}; {action_en}."
+                    )
+                    combat_text_zh = (
+                        f"{channel_zh}{location_zh}那艘{ship_zh}: {combat_zh}；{system_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=f"chat_guard:player_combat_status:{location_index}:{ship_index}:{repeat_index + 1}:{combat_index}:standard",
+                            en=combat_text_en,
+                            zh=combat_text_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=f"chat_guard:player_combat_status:{location_index}:{ship_index}:{repeat_index + 1}:{combat_index}:compact",
+                            en=combat_text_en,
+                            zh=slangify_player_chat(combat_text_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                combat_en, combat_zh = player_combat_states[
+                    (repeat_index + location_index + ship_index + 4) % len(player_combat_states)
+                ]
+                system_en, system_zh = player_system_states[
+                    (repeat_index + location_index + ship_index + 6) % len(player_system_states)
+                ]
+                action_en, action_zh = player_combat_actions[
+                    (repeat_index + location_index + ship_index + 8) % len(player_combat_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_combat_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Voice] Gunner: {ship_en} at {location_en}, {combat_en}\n"
+                            f"[Party] Pilot: {system_en}\n"
+                            f"[Team] Lead: {action_en}; keep the callout separate from the ship name"
+                        ),
+                        zh=(
+                            f"[Voice] Gunner: {location_zh}那艘{ship_zh}，{combat_zh}\n"
+                            f"[Party] Pilot: {system_zh}\n"
+                            f"[Team] Lead: {action_zh}；把报点和船名分开"
                         ),
                         category="chat",
                         is_priority=True,

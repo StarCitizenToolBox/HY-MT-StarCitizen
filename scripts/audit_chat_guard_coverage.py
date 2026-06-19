@@ -105,6 +105,12 @@ SOURCE_PHRASES = {
         "comm array",
         "party marker",
         "route marker",
+        "EMP",
+        "distortion",
+        "MFD",
+        "capacitor",
+        "missile lock",
+        "friendly fire",
     ],
     "chat_style": [
         "sc全局",
@@ -138,6 +144,13 @@ SOURCE_PHRASES = {
         "队伍标记",
         "量子预热",
         "停机坪编号",
+        "前盾",
+        "后盾",
+        "友伤",
+        "能量三角",
+        "武器离线",
+        "引擎离线",
+        "报点和船名",
     ],
 }
 
@@ -282,6 +295,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     player_qa_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_qa_thread:")]
     player_nav_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_nav_status:")]
     player_nav_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_nav_log:")]
+    player_combat_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_combat_status:")]
+    player_combat_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_combat_log:")]
     target_cjk = [row for row in rows if re.search(r"[\u3400-\u9fff]", row.get("target", ""))]
     alias_chat_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat:")]
     alias_slang_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_slang:")]
@@ -369,6 +384,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "player_qa_rows": len(player_qa_rows),
         "player_nav_rows": len(player_nav_rows),
         "player_nav_log_rows": len(player_nav_log_rows),
+        "player_combat_rows": len(player_combat_rows),
+        "player_combat_log_rows": len(player_combat_log_rows),
         "alias_chat_rows": len(alias_chat_rows),
         "alias_slang_rows": len(alias_slang_rows),
         "alias_chat_unique": len(alias_chat_keys - {""}),
@@ -442,6 +459,8 @@ def main() -> int:
     print(f"player_qa_rows: {report['player_qa_rows']}")
     print(f"player_nav_rows: {report['player_nav_rows']}")
     print(f"player_nav_log_rows: {report['player_nav_log_rows']}")
+    print(f"player_combat_rows: {report['player_combat_rows']}")
+    print(f"player_combat_log_rows: {report['player_combat_log_rows']}")
     print(f"alias_chat_rows: {report['alias_chat_rows']}")
     print(f"alias_slang_rows: {report['alias_slang_rows']}")
     print(f"alias_chat_unique: {report['alias_chat_unique']}")
