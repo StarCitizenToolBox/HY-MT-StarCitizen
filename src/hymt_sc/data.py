@@ -3265,6 +3265,46 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("save one tractor tool for body recovery", "留一个tractor tool回收尸体"),
         ("record the missing undersuit before relogging", "重登前先录undersuit丢失"),
     ]
+    player_economy_topics = [
+        ("crew payout split", "船员分账"),
+        ("beacon payment check", "信标报酬确认"),
+        ("escrow trade", "escrow交易"),
+        ("deposit handoff", "押金交接"),
+        ("rental fee", "租船费用"),
+        ("refund request", "退款请求"),
+        ("service fee", "服务费"),
+        ("cargo value estimate", "货值估算"),
+        ("bounty payout delay", "赏金到账延迟"),
+        ("salvage profit share", "打捞收益分配"),
+        ("mining yield split", "采矿收益分配"),
+        ("tip transfer", "小费转账"),
+    ]
+    player_economy_states = [
+        ("aUEC transfer is pending", "aUEC转账还在pending"),
+        ("UEC balance did not update", "UEC余额没更新"),
+        ("beacon payment shows the wrong amount", "beacon payment金额不对"),
+        ("escrow holder is not in party", "escrow保管人不在队伍里"),
+        ("deposit was paid to the wrong player", "押金付给错人"),
+        ("rental fee is higher than agreed", "租船费用比说好的高"),
+        ("refund ticket needs a screenshot", "退款单要截图"),
+        ("service fee should be split after landing", "服务费落地后再分"),
+        ("cargo value changed after the scan", "扫描后货值变了"),
+        ("bounty payout is delayed by desync", "赏金报酬因为desync延迟"),
+        ("profit share is missing the escort cut", "收益分配漏了护航那份"),
+        ("tip transfer went through twice", "小费转了两次"),
+    ]
+    player_economy_actions = [
+        ("post the amount before anyone transfers", "转账前先把金额发出来"),
+        ("do not translate the payment term as a ship name", "别把付款术语翻成船名"),
+        ("split payout only after the cargo is sold", "卖完货后再分账"),
+        ("hold the deposit until both sides confirm", "双方确认前先压着押金"),
+        ("use party chat for the escrow name", "用队伍聊天确认escrow名字"),
+        ("refund the rental fee if the ship claim fails", "申领失败就退租船费用"),
+        ("screenshot the beacon payment before accepting", "接信标前先截图beacon payment"),
+        ("keep the service fee separate from the cargo value", "把服务费和货值分开算"),
+        ("send tip after the rescue is complete", "救援完成后再给小费"),
+        ("record the transfer ID before relogging", "重登前先录transfer ID"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -4721,6 +4761,76 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Team] Gear: {location_zh}{topic_zh}，{state_zh}\n"
                             f"[Party] Pilot: {ship_zh}在外面等\n"
                             f"[Voice] Runner: {action_zh}；装备报点不是船名"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for economy_index, (topic_en, topic_zh) in enumerate(player_economy_topics, start=1):
+                    state_en, state_zh = player_economy_states[
+                        (repeat_index + location_index + ship_index + economy_index) % len(player_economy_states)
+                    ]
+                    action_en, action_zh = player_economy_actions[
+                        (repeat_index + location_index + economy_index) % len(player_economy_actions)
+                    ]
+                    channel_en, channel_zh = player_comm_channels[
+                        (repeat_index + economy_index + ship_index) % len(player_comm_channels)
+                    ]
+                    economy_en_text = (
+                        f"{channel_en}{topic_en} at {location_en}: {ship_en} is waiting; {state_en}; "
+                        f"{action_en}."
+                    )
+                    economy_zh_text = (
+                        f"{channel_zh}{location_zh}{topic_zh}: {ship_zh}在等；{state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_economy_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{economy_index}:standard"
+                            ),
+                            en=economy_en_text,
+                            zh=economy_zh_text,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_economy_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{economy_index}:compact"
+                            ),
+                            en=economy_en_text,
+                            zh=slangify_player_chat(economy_zh_text),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                topic_en, topic_zh = player_economy_topics[
+                    (repeat_index + location_index + ship_index) % len(player_economy_topics)
+                ]
+                state_en, state_zh = player_economy_states[
+                    (repeat_index + location_index + ship_index + 7) % len(player_economy_states)
+                ]
+                action_en, action_zh = player_economy_actions[
+                    (repeat_index + location_index + ship_index + 9) % len(player_economy_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_economy_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Trade] Broker: {topic_en} at {location_en}, {state_en}\n"
+                            f"[Party] Pilot: the {ship_en} is waiting for payout\n"
+                            f"[Voice] Lead: {action_en}; payment callout is not the ship name"
+                        ),
+                        zh=(
+                            f"[Trade] Broker: {location_zh}{topic_zh}，{state_zh}\n"
+                            f"[Party] Pilot: {ship_zh}在等付款\n"
+                            f"[Voice] Lead: {action_zh}；付款报点不是船名"
                         ),
                         category="chat",
                         is_priority=True,
