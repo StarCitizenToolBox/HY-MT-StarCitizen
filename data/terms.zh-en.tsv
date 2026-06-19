@@ -10,3 +10,19 @@ location.lorville	location	Lorville	罗威尔
 location.lorville_alt	location	Lorville	洛维尔
 location.seraphim_station	location	Seraphim Station	炽天使空间站
 location.seraphim	location	Seraphim	炽天使
+gameplay.soft_death	gameplay	soft death	软死亡
+gameplay.crime_stat	gameplay	crime stat	犯罪等级
+gameplay.red_hostile	gameplay	red	红名
+gameplay.bounty_missions	gameplay	bounty missions	打赏金
+gameplay.bounty_target	gameplay	bounty target	赏金目标
+gameplay.cargo_hauling	gameplay	cargo hauling	跑货
+gameplay.escort	gameplay	escort	护航
+gameplay.medical_beacon	gameplay	medical beacon	医疗信标
+gameplay.medical_rescue	gameplay	medical rescue	医疗救援
+gameplay.boarding	gameplay	boarding	登船
+gameplay.bunker_mission	gameplay	bunker mission	地堡任务
+gameplay.quantum_fuel	gameplay	quantum fuel	量子燃料
+gameplay.claim_timer	gameplay	claim timer	申领时间
+gameplay.turret_seat	gameplay	turret seat	炮塔位
+gameplay.missile_lock	gameplay	missile lock	锁导弹
+gameplay.desync	gameplay	desync	同步很差
