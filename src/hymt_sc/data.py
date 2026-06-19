@@ -4213,6 +4213,202 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("use voice updates until the area clears", "区域安全前都用语音更新"),
         ("leave if the ship follows us", "如果那艘船跟上来就先离开"),
     ]
+    player_general_scenarios = [
+        (
+            "ready check",
+            "准备确认",
+            "the ship is ready but the crew has not confirmed",
+            "船准备好了，但船员还没确认",
+            "wait two minutes and type ready in party chat",
+            "等两分钟，并在队伍聊天里打准备好了",
+        ),
+        (
+            "regroup call",
+            "重新集合",
+            "two players are still loading into the shard",
+            "还有两个人正在进分片",
+            "pick one marker and keep voice open until everyone arrives",
+            "只留一个标记，并保持语音直到大家到齐",
+        ),
+        (
+            "departure hold",
+            "暂缓出发",
+            "the route looks clear but local chat reports fighting",
+            "路线看起来安全，但本地聊天说外面在打",
+            "send one scout first and keep the ship back",
+            "先派一个侦察，船留在后面",
+        ),
+        (
+            "role handoff",
+            "岗位交接",
+            "one person needs to log off after this stop",
+            "有个人到这一站后要下线",
+            "handoff the turret seat before the next jump",
+            "下一跳前先交接炮塔位",
+        ),
+        (
+            "route confirmation",
+            "路线确认",
+            "the party marker moved after the contract share",
+            "共享合同后队伍标记跳了",
+            "share the contract again after everyone regroups",
+            "大家重新集合后再共享一次合同",
+        ),
+        (
+            "combat caution",
+            "交火前确认",
+            "the pilot can see the marker but the gunner cannot",
+            "驾驶看得到标记，但炮手看不到",
+            "repeat the target and hold fire until both seats confirm",
+            "重新报目标，两个座位都确认前先别开火",
+        ),
+        (
+            "rescue decision",
+            "救援决定",
+            "the rescue beacon is close enough to reach before the timer ends",
+            "救援信标距离不远，计时结束前能赶到",
+            "accept the beacon after the pilot confirms the route",
+            "驾驶确认路线后再接信标",
+        ),
+        (
+            "cargo handoff",
+            "货物交接",
+            "cargo is loaded and the buyer is asking for timing",
+            "货已经装好，买家在问时间",
+            "confirm the price and then move the boxes",
+            "先确认价格，再开始搬箱子",
+        ),
+        (
+            "server switch",
+            "换服安排",
+            "the current shard is stuttering after every jump",
+            "当前分片每次跳跃后都在卡",
+            "sell or store anything important before switching",
+            "换服前先卖掉或存好重要物品",
+        ),
+        (
+            "crew availability",
+            "船员在线确认",
+            "one crew member is still finding the hangar",
+            "还有一个船员在找机库",
+            "keep the ship powered until everyone boards",
+            "所有人上船前先让船保持通电",
+        ),
+        (
+            "new player guidance",
+            "萌新带路",
+            "the new player is following the wrong elevator marker",
+            "萌新跟到错误的电梯标记了",
+            "walk the new player back to the correct elevator",
+            "把萌新带回正确的电梯",
+        ),
+        (
+            "post-run recap",
+            "任务后复盘",
+            "the previous run finished but nobody has split the payout",
+            "上一趟结束了，但还没人分账",
+            "split payout after landing and before the next contract",
+            "落地后、接下一单前先分账",
+        ),
+        (
+            "backup ship prep",
+            "备用船准备",
+            "the backup ship is spawned but not fueled",
+            "备用船刷出来了，但还没补油",
+            "refuel the backup ship before switching crews",
+            "换船员前先给备用船补油",
+        ),
+        (
+            "hangar pickup",
+            "机库接人",
+            "the passenger is at the right lobby but cannot find the hangar",
+            "乘客到对的大厅了，但找不到机库",
+            "repeat the hangar number and wait by the elevator",
+            "再报一遍机库号，并在电梯旁边等",
+        ),
+        (
+            "mission share",
+            "合同共享",
+            "one teammate accepted the old contract instead of the shared one",
+            "有个队友接成旧合同了，不是队伍共享的那单",
+            "cancel the old contract and accept the shared one before launch",
+            "出发前先取消旧合同，改接共享的那单",
+        ),
+        (
+            "repair stop",
+            "维修停靠",
+            "the ship can still fly but one engine is damaged",
+            "船还能飞，但有一个引擎受损",
+            "repair at the next station before taking another fight",
+            "到下一个空间站先维修，再考虑继续打",
+        ),
+    ]
+    player_general_thread_templates = [
+        (
+            "[Party] Lead: {intent_en} near {location_en}; {state_en}.\n"
+            "[Voice] Pilot: the {ship_en} can hold here; {action_en}.\n"
+            "[Team] Crew: copy, I will stay on voice.",
+            "[Party] Lead: {location_zh}附近{intent_zh}；{state_zh}。\n"
+            "[Voice] Pilot: {ship_zh}可以先停这里；{action_zh}。\n"
+            "[Team] Crew: 收到，我保持语音在线。",
+        ),
+        (
+            "[Voice] Scout: before we move the {ship_en}, quick update: {state_en}.\n"
+            "[Party] Lead: understood; {action_en}.\n"
+            "[Party] Crew: after that, do we still leave from {location_en}?",
+            "[Voice] Scout: {ship_zh}移动前先报一下：{state_zh}。\n"
+            "[Party] Lead: 明白；{action_zh}。\n"
+            "[Party] Crew: 那之后还是从{location_zh}出发吗？",
+        ),
+        (
+            "[Team] Crew: I can cover {intent_en}, but I need a clear plan.\n"
+            "[Voice] Lead: meet at {location_en}, board the {ship_en}, then {action_en}.\n"
+            "[Party] Crew: good, I will wait for the marker.",
+            "[Team] Crew: 我可以配合{intent_zh}，但需要先说清楚安排。\n"
+            "[Voice] Lead: 在{location_zh}集合，上{ship_zh}，然后{action_zh}。\n"
+            "[Party] Crew: 好，我等标记。",
+        ),
+        (
+            "[Party] Pilot: the {ship_en} is ready at {location_en}, but {state_en}.\n"
+            "[Voice] Lead: no rush; {action_en}.\n"
+            "[Team] Crew: I will tell the late player.",
+            "[Party] Pilot: {ship_zh}在{location_zh}准备好了，但{state_zh}。\n"
+            "[Voice] Lead: 不急；{action_zh}。\n"
+            "[Team] Crew: 我去通知晚到的人。",
+        ),
+        (
+            "[Global] Helper: anyone need help around {location_en}?\n"
+            "[Party] Me: yes, we are doing {intent_en}; {state_en}.\n"
+            "[Voice] Pilot: bring them to the {ship_en} after we confirm.",
+            "[Global] Helper: {location_zh}附近有人需要帮忙吗？\n"
+            "[Party] Me: 有，我们在处理{intent_zh}；{state_zh}。\n"
+            "[Voice] Pilot: 确认后把人带到{ship_zh}这边。",
+        ),
+        (
+            "[Party] Lead: if {state_en}, we pause the {intent_en} plan.\n"
+            "[Voice] Pilot: agreed, the {ship_en} stays near {location_en}.\n"
+            "[Team] Crew: then we {action_en}.",
+            "[Party] Lead: 如果{state_zh}，这次{intent_zh}先暂停。\n"
+            "[Voice] Pilot: 同意，{ship_zh}先留在{location_zh}附近。\n"
+            "[Team] Crew: 那我们{action_zh}。",
+        ),
+        (
+            "[Voice] Lead: long version: {state_en}, the {ship_en} is still usable, and we are near {location_en}.\n"
+            "[Party] Crew: short version?\n"
+            "[Voice] Lead: {action_en}.",
+            "[Voice] Lead: 详细说就是：{state_zh}，{ship_zh}还能用，我们在{location_zh}附近。\n"
+            "[Party] Crew: 简短版呢？\n"
+            "[Voice] Lead: {action_zh}。",
+        ),
+        (
+            "[Party] Crew: after we handle {intent_en}, are we switching ships or staying on the {ship_en}?\n"
+            "[Voice] Pilot: staying for now; {state_en}, so {action_en}.\n"
+            "[Team] Crew: copy, no one leaves yet.",
+            "[Party] Crew: 处理完{intent_zh}以后换船，还是继续用{ship_zh}？\n"
+            "[Voice] Pilot: 暂时不换；{state_zh}，所以{action_zh}。\n"
+            "[Team] Crew: 收到，大家先别离队。",
+        ),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -7094,6 +7290,63 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                         source="chat_guard",
                     )
                 )
+                for general_index, (en_template, zh_template) in enumerate(
+                    player_general_thread_templates,
+                    start=1,
+                ):
+                    intent_en, intent_zh, state_en, state_zh, action_en, action_zh = player_general_scenarios[
+                        (repeat_index + location_index + ship_index + general_index) % len(player_general_scenarios)
+                    ]
+                    general_en = en_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                        intent_en=intent_en,
+                        intent_zh=intent_zh,
+                        state_en=state_en,
+                        state_zh=state_zh,
+                        action_en=action_en,
+                        action_zh=action_zh,
+                    )
+                    general_zh = zh_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                        intent_en=intent_en,
+                        intent_zh=intent_zh,
+                        state_en=state_en,
+                        state_zh=state_zh,
+                        action_en=action_en,
+                        action_zh=action_zh,
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_general_thread:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{general_index}:standard"
+                            ),
+                            en=general_en,
+                            zh=general_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_general_thread:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{general_index}:compact"
+                            ),
+                            en=general_en,
+                            zh=compact_chat_text(general_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
             for ship_index, (ship_en, ship_zh, literal_en, _literal_zh) in enumerate(ambiguous_ships, start=1):
                 for template_index, (en_template, zh_template) in enumerate(ambiguous_ship_chat_templates, start=1):
                     samples.append(
