@@ -3548,6 +3548,48 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("change contract if the marker stays wrong", "标记一直不对就换合同"),
         ("abandon the run only after cargo recovery fails", "找不回货再放弃这趟"),
     ]
+    player_role_topics = [
+        ("pilot handoff", "驾驶交接"),
+        ("turret assignment", "炮塔分配"),
+        ("copilot task", "副驾驶任务"),
+        ("medical seat", "医疗位安排"),
+        ("cargo loading", "装货分工"),
+        ("scanner duty", "扫描分工"),
+        ("escort lead", "护航带队"),
+        ("new player guide", "萌新带路"),
+        ("boarding lead", "登船指挥"),
+        ("salvage operator", "打捞位安排"),
+        ("route caller", "路线报点"),
+        ("security watch", "警戒分工"),
+    ]
+    player_role_states = [
+        ("assigned player is not on voice yet", "负责的人还没进语音"),
+        ("party marker is not clear enough", "队伍标记还不够清楚"),
+        ("crew list changed after boarding", "上船后船员名单变了"),
+        ("one person is still at the terminal", "还有一个人在终端那边"),
+        ("current role holder may need to leave soon", "当前负责的人可能要暂离"),
+        ("new player is waiting for instructions", "萌新还在等指挥"),
+        ("ship is not ready to launch yet", "船还没准备好出发"),
+        ("contract marker moved after sharing", "共享后合同标记跳了"),
+        ("voice channel has two people talking over each other", "语音里有两个人同时报点"),
+        ("backup crew is on a different ship", "备用船员在另一艘船上"),
+        ("station elevator delayed one crew member", "空间站电梯卡住了一个船员"),
+        ("target callout is still being confirmed", "目标报点还在确认"),
+    ]
+    player_role_actions = [
+        ("confirm the role in voice before launch", "出发前先在语音里确认岗位"),
+        ("write the role assignment in party chat", "把岗位分配发到队伍聊天里"),
+        ("keep this role on the same ship until landing", "落地前这个岗位先留在同一艘船上"),
+        ("wait for the assigned player before opening the ramp", "等负责的人到位再开舱门"),
+        ("move backup crew only after the lead confirms", "带队确认后再调备用船员"),
+        ("repeat the callout if the marker changes", "标记变了就重新报一遍"),
+        ("do not swap roles during combat", "交火时先别临时换岗位"),
+        ("assign one person to explain it to the new player", "安排一个人给萌新解释一下"),
+        ("keep the role until the next station stop", "到下一个空间站前先保持这个岗位"),
+        ("ask the crew to type ready before launch", "出发前让船员都打一声准备好了"),
+        ("confirm the ship name before moving the role", "调整岗位前先确认船名"),
+        ("leave the final call to the party lead", "最后决定交给队长"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -5453,6 +5495,78 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Party] Lead: {location_zh}这边决定一下：{decision_topic_zh}\n"
                             f"[Voice] Pilot: {ship_zh}负责，但{decision_state_zh}\n"
                             f"[Team] Crew: {decision_action_zh}；换船前先确认"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for role_index, (topic_en, topic_zh) in enumerate(player_role_topics, start=1):
+                    state_en, state_zh = player_role_states[
+                        (repeat_index + location_index + ship_index + role_index) % len(player_role_states)
+                    ]
+                    action_en, action_zh = player_role_actions[
+                        (repeat_index + ship_index + role_index) % len(player_role_actions)
+                    ]
+                    other_ship_en, other_ship_zh = pick_other_ship(ship_index, role_index + 9, ship_zh)
+                    channel_en, channel_zh = player_route_channels[
+                        (repeat_index + role_index + location_index) % len(player_route_channels)
+                    ]
+                    role_en = (
+                        f"{channel_en}{topic_en} on the {ship_en} at {location_en}: "
+                        f"{state_en}; {action_en}; do not move this role to the {other_ship_en}."
+                    )
+                    role_zh = (
+                        f"{channel_zh}{location_zh}这边{ship_zh}的{topic_zh}: "
+                        f"{state_zh}；{action_zh}；这个岗位别换到{other_ship_zh}上。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_role_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{role_index}:standard"
+                            ),
+                            en=role_en,
+                            zh=role_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_role_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{role_index}:compact"
+                            ),
+                            en=role_en,
+                            zh=compact_chat_text(role_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                role_topic_en, role_topic_zh = player_role_topics[
+                    (repeat_index + location_index + ship_index) % len(player_role_topics)
+                ]
+                role_state_en, role_state_zh = player_role_states[
+                    (repeat_index + location_index + ship_index + 4) % len(player_role_states)
+                ]
+                role_action_en, role_action_zh = player_role_actions[
+                    (repeat_index + location_index + ship_index + 6) % len(player_role_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_role_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Party] Lead: {role_topic_en} for the {ship_en} at {location_en}\n"
+                            f"[Voice] Crew: {role_state_en}\n"
+                            f"[Team] Lead: {role_action_en}; confirm roles before launch"
+                        ),
+                        zh=(
+                            f"[Party] Lead: {location_zh}这边{ship_zh}的{role_topic_zh}\n"
+                            f"[Voice] Crew: {role_state_zh}\n"
+                            f"[Team] Lead: {role_action_zh}；出发前先确认岗位"
                         ),
                         category="chat",
                         is_priority=True,

@@ -342,6 +342,19 @@ SOURCE_PHRASES = {
         "找回货物还是放弃这趟",
         "队伍聊天里问一下大家意见",
         "换船前先确认",
+        "驾驶交接",
+        "炮塔分配",
+        "副驾驶任务",
+        "医疗位安排",
+        "装货分工",
+        "扫描分工",
+        "护航带队",
+        "萌新带路",
+        "登船指挥",
+        "打捞位安排",
+        "路线报点",
+        "警戒分工",
+        "出发前先确认岗位",
         "引擎离线",
         "报点和船名",
         "量子矿",
@@ -579,6 +592,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     player_route_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_route_log:")]
     player_decision_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_decision_status:")]
     player_decision_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_decision_log:")]
+    player_role_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_role_status:")]
+    player_role_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_role_log:")]
     target_cjk = [row for row in rows if re.search(r"[\u3400-\u9fff]", row.get("target", ""))]
     unnatural_mixed_rows = find_unnatural_mixed_rows(rows)
     alias_chat_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat:")]
@@ -697,6 +712,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "player_route_log_rows": len(player_route_log_rows),
         "player_decision_rows": len(player_decision_rows),
         "player_decision_log_rows": len(player_decision_log_rows),
+        "player_role_rows": len(player_role_rows),
+        "player_role_log_rows": len(player_role_log_rows),
         "alias_chat_rows": len(alias_chat_rows),
         "alias_slang_rows": len(alias_slang_rows),
         "alias_chat_unique": len(alias_chat_keys - {""}),
@@ -799,6 +816,8 @@ def main() -> int:
     print(f"player_route_log_rows: {report['player_route_log_rows']}")
     print(f"player_decision_rows: {report['player_decision_rows']}")
     print(f"player_decision_log_rows: {report['player_decision_log_rows']}")
+    print(f"player_role_rows: {report['player_role_rows']}")
+    print(f"player_role_log_rows: {report['player_role_log_rows']}")
     print(f"alias_chat_rows: {report['alias_chat_rows']}")
     print(f"alias_slang_rows: {report['alias_slang_rows']}")
     print(f"alias_chat_unique: {report['alias_chat_unique']}")
