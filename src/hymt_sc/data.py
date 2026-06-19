@@ -3063,6 +3063,46 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("wait for the security scan before opening fire", "等安保扫描后再开火"),
         ("do not confuse Klescher with a ship name", "别把Klescher当船名"),
     ]
+    player_ops_scenarios = [
+        ("fleet rally", "舰队集结"),
+        ("ground team insertion", "地面队突入"),
+        ("boarding attempt", "登船尝试"),
+        ("distribution center run", "配送中心任务"),
+        ("dynamic event wave", "动态事件波次"),
+        ("Jumptown pickup", "Jumptown提货"),
+        ("XenoThreat escort", "XenoThreat护航"),
+        ("bunker clear", "地堡清场"),
+        ("airlock breach", "空锁突破"),
+        ("evacuation route", "撤离路线"),
+        ("sniper overwatch", "狙击手掩护"),
+        ("drop ship landing", "登陆艇落地"),
+    ]
+    player_ops_states = [
+        ("ground team is pinned", "地面队被压住"),
+        ("drop ship is on final approach", "drop ship正在最后进近"),
+        ("airlock is cycling slowly", "airlock开得很慢"),
+        ("sniper has eyes on the ramp", "狙击手盯着跳板"),
+        ("railgun team is holding the ridge", "railgun队伍守着山脊"),
+        ("distribution center elevator is stuck", "配送中心电梯卡住"),
+        ("mission marker is under the wrong building", "任务标记在错楼下面"),
+        ("party marker and contract marker disagree", "队伍标记和合同标记不一致"),
+        ("boarding team is at the hatch", "登船队到舱门了"),
+        ("evac point is hot", "撤离点正在交火"),
+        ("loot boxes are blocking the corridor", "战利品箱子堵住走廊"),
+        ("friendly marker disappeared in the smoke", "友军标记在烟里消失了"),
+    ]
+    player_ops_actions = [
+        ("hold the fleet until the ground team confirms", "等地面队确认后舰队再动"),
+        ("land the drop ship nose out", "登陆艇机头朝外落地"),
+        ("call the airlock timer in party chat", "在队伍里报airlock计时"),
+        ("keep the sniper callout separate from the ship name", "把狙击手报点和船名分开"),
+        ("do not translate Jumptown as a location nickname", "别把Jumptown翻成地点外号"),
+        ("escort the cargo only after the marker updates", "标记更新后再护送货物"),
+        ("clear the corridor before looting", "摸箱子前先清走廊"),
+        ("wait for the contract share before pushing", "共享合同后再推进"),
+        ("mark the railgun team before the flyover", "低空飞过前先标记railgun队伍"),
+        ("extract the team before the next wave", "下一波前先把队伍撤出来"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -4166,6 +4206,76 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Global] Rescue: {location_zh}附近{scenario_zh}，{state_zh}\n"
                             f"[Party] Pilot: {ship_zh}停在armistice外\n"
                             f"[Voice] Medic: {action_zh}；救援报点不是船名"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for ops_index, (scenario_en, scenario_zh) in enumerate(player_ops_scenarios, start=1):
+                    state_en, state_zh = player_ops_states[
+                        (repeat_index + location_index + ship_index + ops_index) % len(player_ops_states)
+                    ]
+                    action_en, action_zh = player_ops_actions[
+                        (repeat_index + ship_index + ops_index) % len(player_ops_actions)
+                    ]
+                    channel_en, channel_zh = player_comm_channels[
+                        (repeat_index + ops_index + location_index + ship_index) % len(player_comm_channels)
+                    ]
+                    ops_en_text = (
+                        f"{channel_en}{scenario_en} at {location_en}: {ship_en} is assigned; {state_en}; "
+                        f"{action_en}."
+                    )
+                    ops_zh_text = (
+                        f"{channel_zh}{location_zh}{scenario_zh}: {ship_zh}负责；{state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_ops_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{ops_index}:standard"
+                            ),
+                            en=ops_en_text,
+                            zh=ops_zh_text,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_ops_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{ops_index}:compact"
+                            ),
+                            en=ops_en_text,
+                            zh=slangify_player_chat(ops_zh_text),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                scenario_en, scenario_zh = player_ops_scenarios[
+                    (repeat_index + location_index + ship_index) % len(player_ops_scenarios)
+                ]
+                state_en, state_zh = player_ops_states[
+                    (repeat_index + location_index + ship_index + 6) % len(player_ops_states)
+                ]
+                action_en, action_zh = player_ops_actions[
+                    (repeat_index + location_index + ship_index + 8) % len(player_ops_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_ops_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Org] Lead: {scenario_en} at {location_en}, {ship_en} is assigned\n"
+                            f"[Team] Ground: {state_en}\n"
+                            f"[Voice] Flight: {action_en}; operation callout is not the ship name"
+                        ),
+                        zh=(
+                            f"[Org] Lead: {location_zh}{scenario_zh}，{ship_zh}负责\n"
+                            f"[Team] Ground: {state_zh}\n"
+                            f"[Voice] Flight: {action_zh}；行动报点不是船名"
                         ),
                         category="chat",
                         is_priority=True,

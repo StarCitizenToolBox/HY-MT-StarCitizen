@@ -123,6 +123,11 @@ SOURCE_PHRASES = {
         "armistice",
         "Klescher",
         "rescue beacon",
+        "drop ship",
+        "airlock",
+        "railgun",
+        "Jumptown",
+        "XenoThreat",
     ],
     "chat_style": [
         "sc全局",
@@ -171,6 +176,15 @@ SOURCE_PHRASES = {
         "安保",
         "医疗救援",
         "救援报点",
+        "舰队",
+        "地面队",
+        "登陆艇",
+        "空锁",
+        "狙击手",
+        "配送中心",
+        "登船",
+        "撤离点",
+        "行动报点",
         "引擎离线",
         "报点和船名",
         "量子矿",
@@ -336,6 +350,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     ]
     player_medical_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_medical_status:")]
     player_medical_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_medical_log:")]
+    player_ops_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_ops_status:")]
+    player_ops_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_ops_log:")]
     target_cjk = [row for row in rows if re.search(r"[\u3400-\u9fff]", row.get("target", ""))]
     alias_chat_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat:")]
     alias_slang_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_slang:")]
@@ -429,6 +445,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "player_industrial_log_rows": len(player_industrial_log_rows),
         "player_medical_rows": len(player_medical_rows),
         "player_medical_log_rows": len(player_medical_log_rows),
+        "player_ops_rows": len(player_ops_rows),
+        "player_ops_log_rows": len(player_ops_log_rows),
         "alias_chat_rows": len(alias_chat_rows),
         "alias_slang_rows": len(alias_slang_rows),
         "alias_chat_unique": len(alias_chat_keys - {""}),
@@ -508,6 +526,8 @@ def main() -> int:
     print(f"player_industrial_log_rows: {report['player_industrial_log_rows']}")
     print(f"player_medical_rows: {report['player_medical_rows']}")
     print(f"player_medical_log_rows: {report['player_medical_log_rows']}")
+    print(f"player_ops_rows: {report['player_ops_rows']}")
+    print(f"player_ops_log_rows: {report['player_ops_log_rows']}")
     print(f"alias_chat_rows: {report['alias_chat_rows']}")
     print(f"alias_slang_rows: {report['alias_slang_rows']}")
     print(f"alias_chat_unique: {report['alias_chat_unique']}")
