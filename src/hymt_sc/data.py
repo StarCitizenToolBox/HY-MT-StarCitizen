@@ -1325,6 +1325,84 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             "{location_zh}同步很差，{ship_zh}可能会来回瞬移。",
         ),
     ]
+    structured_chat_openers = [
+        ("Global chat: ", "全局频道："),
+        ("Party chat: ", "队伍频道："),
+        ("Voice chat: ", "语音里说："),
+        ("Warning: ", "警告："),
+        ("Requesting help: ", "求支援："),
+        ("For new players: ", "给新手说一下："),
+        ("Can someone confirm this? ", "谁确认一下："),
+        ("This feels bad; ", "感觉不太行，"),
+    ]
+    structured_chat_followups = [
+        (" Anyone want to join?", "有没有一起的？"),
+        (" Can someone help?", "有人能帮忙吗？"),
+        (" Do not shoot until we identify it.", "确认身份前先别开火。"),
+        (" Mark it for the party.", "给队伍标记一下。"),
+        (" Stay away from the pad.", "先离停机坪远点。"),
+        (" Tell the new players in global chat.", "在全局频道提醒一下新手。"),
+        (" I am not sure if it is friendly.", "我不确定是不是友军。"),
+        (" Do not confuse the ship name.", "别把船名认错。"),
+    ]
+    structured_chat_events = [
+        (
+            "the {ship_en} at {location_en} is firing everywhere",
+            "{location_zh}有个{ship_zh}到处开火",
+        ),
+        (
+            "the {ship_en} near {location_en} is camping the hangar",
+            "{location_zh}附近有个{ship_zh}在蹲机库",
+        ),
+        (
+            "I am taking the {ship_en} from {location_en} for bounty missions",
+            "我从{location_zh}开{ship_zh}打赏金",
+        ),
+        (
+            "I am cargo hauling in the {ship_en} from {location_en}",
+            "我从{location_zh}开{ship_zh}跑货",
+        ),
+        (
+            "the {ship_en} at {location_en} is in soft death",
+            "{location_zh}那艘{ship_zh}软死亡了",
+        ),
+        (
+            "the {ship_en} at {location_en} has a bounty target on board",
+            "{location_zh}那艘{ship_zh}上有赏金目标",
+        ),
+        (
+            "the {ship_en} near {location_en} is locking missiles",
+            "{location_zh}附近那艘{ship_zh}在锁导弹",
+        ),
+        (
+            "the {ship_en} at {location_en} needs a gunner and a turret seat",
+            "{location_zh}那艘{ship_zh}缺炮手和炮塔位",
+        ),
+        (
+            "the {ship_en} at {location_en} needs quantum fuel before we jump",
+            "{location_zh}那艘{ship_zh}跳跃前需要量子燃料",
+        ),
+        (
+            "the {ship_en} at {location_en} is not a Hornet Ghost",
+            "{location_zh}那艘{ship_zh}不是大黄蜂幽灵",
+        ),
+    ]
+    structured_server_events = [
+        (
+            "On the {server_en}, {event_en}",
+            "{server_zh}{event_zh}",
+        ),
+        (
+            "Reported on the {server_en}: {event_en}",
+            "{server_zh}这边{event_zh}",
+        ),
+    ]
+    structured_noise_pairs = [
+        ("", ""),
+        (" > F7C-S Hornet Ghost", ">F7C-S Hornet Ghost"),
+        (" @...", "@..."),
+        (" [global]", "[全局]"),
+    ]
 
     samples: list[PairSample] = []
     for repeat_index in range(max(1, repeat)):
@@ -1506,6 +1584,71 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             source="chat_guard",
                         )
                     )
+                for event_index, (event_en_template, event_zh_template) in enumerate(structured_chat_events, start=1):
+                    event_en = event_en_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                    )
+                    event_zh = event_zh_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                    )
+                    opener_index = (repeat_index + location_index + ship_index + event_index) % len(structured_chat_openers)
+                    followup_index = (location_index + ship_index + event_index) % len(structured_chat_followups)
+                    noise_index = (repeat_index + event_index) % len(structured_noise_pairs)
+                    opener_en, opener_zh = structured_chat_openers[opener_index]
+                    followup_en, followup_zh = structured_chat_followups[followup_index]
+                    noise_en, noise_zh = structured_noise_pairs[noise_index]
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:structured_event:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{event_index}:direct"
+                            ),
+                            en=f"{opener_en}{event_en}.{followup_en}{noise_en}",
+                            zh=f"{opener_zh}{event_zh}。{followup_zh}{noise_zh}",
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    for server_template_index, (server_en_template, server_zh_template) in enumerate(
+                        structured_server_events,
+                        start=1,
+                    ):
+                        if (event_index + server_template_index + ship_index) % 3 != 0:
+                            continue
+                        server_index = (location_index + ship_index + event_index + server_template_index) % len(servers)
+                        server_en, server_zh = servers[server_index]
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"chat_guard:structured_event:{location_index}:{ship_index}:"
+                                    f"{repeat_index + 1}:{event_index}:server:{server_template_index}"
+                                ),
+                                en=server_en_template.format(
+                                    server_en=server_en,
+                                    server_zh=server_zh,
+                                    event_en=event_en,
+                                    event_zh=event_zh,
+                                )
+                                + ".",
+                                zh=server_zh_template.format(
+                                    server_en=server_en,
+                                    server_zh=server_zh,
+                                    event_en=event_en,
+                                    event_zh=event_zh,
+                                )
+                                + "。",
+                                category="chat",
+                                is_priority=True,
+                                source="chat_guard",
+                            )
+                        )
                 for spot_index, (spot_en_template, spot_zh_template) in enumerate(location_spots, start=1):
                     spot_en = spot_en_template.format(location_en=location_en, location_zh=location_zh)
                     spot_zh = spot_zh_template.format(location_en=location_en, location_zh=location_zh)
