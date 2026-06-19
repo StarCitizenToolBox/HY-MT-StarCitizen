@@ -450,6 +450,60 @@ def build_quant_focus_samples(
             "别把后面的标签当船名，{location_zh}那艘是{zh}>F7C-S Hornet Ghost",
         ),
     ]
+    alias_chat_comm_templates = [
+        (
+            "We are taking the {en} from {location_en} for a bounty contract, then switching to cargo if the server stays stable.",
+            "我们从{location_zh}开{zh}打赏金合同，如果服务器稳定就转去跑货。",
+        ),
+        (
+            "The {en} near {location_en} is waiting for a medical rescue beacon; bring escort and do not shoot first.",
+            "{location_zh}附近那艘{zh}在等医疗救援信标，带护航过来，先别开火。",
+        ),
+        (
+            "Party chat says the {en} at {location_en} needs refuel, repair, and a turret seat before the next contract.",
+            "队伍说{location_zh}那艘{zh}下一单合同前需要补油、维修和炮塔位。",
+        ),
+        (
+            "Quick callout: the {en} at {location_en} is our cargo ship, not the bounty target > F7C-S Hornet Ghost",
+            "报点 {location_zh}那艘{zh}是我们的货船，不是赏金目标>F7C-S Hornet Ghost",
+        ),
+        (
+            "Voice chat: keep the {en} outside {location_en} while we clear the bunker and loot the boxes.",
+            "yy里说 我们清地堡和摸箱子的时候，让{zh}停在{location_zh}外面。",
+        ),
+        (
+            "Need help at {location_en}; the {en} is in soft death, cargo is still on board, and pirates are boarding.",
+            "{location_zh}需要支援，{zh}软死亡了，货还在船上，海盗正在登船。",
+        ),
+        (
+            "Do not confuse the tag after the message; the ship asking for escort at {location_en} is the {en} @...",
+            "别把消息后面的标签认成船名，在{location_zh}喊护航的是{zh}@...",
+        ),
+        (
+            "New player note: if the {en} claim timer is long at {location_en}, ask for a pickup instead of buying a random ship.",
+            "萌新注意 如果{zh}在{location_zh}的申领时间很长，就叫人接你，不要乱买船。",
+        ),
+        (
+            "SC global says the {en} at {location_en} is mining nearby; keep the escort on it until the refinery run.",
+            "sc全局说{location_zh}那艘{zh}在附近采矿，去精炼前继续护航。",
+        ),
+        (
+            "If the {en} at {location_en} is doing salvage, mark the wreck and keep the cargo grid clear.",
+            "如果{location_zh}那艘{zh}在打捞，标记残骸并把货物网格空出来。",
+        ),
+        (
+            "Take the service beacon at {location_en} only if the {en} has escort and the payment looks right.",
+            "{location_zh}的服务信标只有{zh}有护航而且报酬合适时才接。",
+        ),
+        (
+            "The {en} crew is stuck by the elevator at {location_en}; keep the hangar clear until they get out.",
+            "{zh}的船员卡在{location_zh}电梯旁边，出来前保持机库畅通。",
+        ),
+        (
+            "Bring a tractor beam to {location_en}; the {en} has loose boxes on the cargo grid.",
+            "带牵引光束来{location_zh}，{zh}的货物网格上有散货。",
+        ),
+    ]
     alias_chat_slang_prefixes = [
         ("SC global: ", "sc全局 "),
         ("Party: ", "队伍 "),
@@ -484,6 +538,26 @@ def build_quant_focus_samples(
         ("犯罪等级", "cs等级"),
         ("红名", "red"),
         ("赏金目标", "bounty目标"),
+        ("赏金合同", "bounty contract"),
+        ("合同", "contract"),
+        ("服务器", "server"),
+        ("医疗救援信标", "med rescue beacon"),
+        ("救援信标", "rescue beacon"),
+        ("服务信标", "service beacon"),
+        ("补油", "refuel"),
+        ("维修", "repair"),
+        ("货船", "cargo ship"),
+        ("地堡", "bunker"),
+        ("采矿", "mining"),
+        ("精炼", "refinery"),
+        ("打捞", "salvage"),
+        ("残骸", "wreck"),
+        ("货物网格", "cargo grid"),
+        ("牵引光束", "tractor beam"),
+        ("机库", "hangar"),
+        ("电梯", "elevator"),
+        ("申领", "claim"),
+        ("登船", "boarding"),
     ]
 
     def compact_alias_chat(text: str) -> str:
@@ -557,7 +631,11 @@ def build_quant_focus_samples(
                             (entry_index + location_index + template_index) % len(alias_chat_slang_suffixes)
                         ]
                         slang_zh = compact_alias_chat(zh_text)
-                        for source_phrase, replacement in alias_chat_slang_replacements:
+                        for source_phrase, replacement in sorted(
+                            alias_chat_slang_replacements,
+                            key=lambda item: len(item[0]),
+                            reverse=True,
+                        ):
                             slang_zh = slang_zh.replace(source_phrase, replacement)
                         samples.append(
                             PairSample(
@@ -592,6 +670,52 @@ def build_quant_focus_samples(
                                     location_en=location_en,
                                     location_zh=location_zh,
                                 ),
+                                category=entry.category,
+                                is_priority=True,
+                                source="quant_focus",
+                            )
+                        )
+                    for template_index, (en_template, zh_template) in enumerate(alias_chat_comm_templates, start=1):
+                        en_text = en_template.format(
+                            en=entry.en,
+                            zh=entry.zh,
+                            location_en=location_en,
+                            location_zh=location_zh,
+                        )
+                        zh_text = zh_template.format(
+                            en=entry.en,
+                            zh=entry.zh,
+                            location_en=location_en,
+                            location_zh=location_zh,
+                        )
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"quant_focus_alias_comm:{entry.key}:{repeat_index + 1}:"
+                                    f"{location_index}:{template_index}:standard"
+                                ),
+                                en=en_text,
+                                zh=zh_text,
+                                category=entry.category,
+                                is_priority=True,
+                                source="quant_focus",
+                            )
+                        )
+                        slang_zh = compact_alias_chat(zh_text)
+                        for source_phrase, replacement in sorted(
+                            alias_chat_slang_replacements,
+                            key=lambda item: len(item[0]),
+                            reverse=True,
+                        ):
+                            slang_zh = slang_zh.replace(source_phrase, replacement)
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"quant_focus_alias_comm:{entry.key}:{repeat_index + 1}:"
+                                    f"{location_index}:{template_index}:slang"
+                                ),
+                                en=en_text,
+                                zh=slang_zh,
                                 category=entry.category,
                                 is_priority=True,
                                 source="quant_focus",
@@ -1699,6 +1823,14 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("the {ship_en} claim timer at {location_en} is almost done", "{ship_zh}在{location_zh}的申领时间快好了"),
         ("the {ship_en} near {location_en} is being boarded", "{location_zh}附近那艘{ship_zh}正在被登船"),
         ("the {ship_en} at {location_en} is rubber-banding from desync", "{location_zh}那艘{ship_zh}因为同步很差在瞬移"),
+        ("the {ship_en} near {location_en} is mining and needs an escort", "{location_zh}附近那艘{ship_zh}在采矿，需要护航"),
+        ("the {ship_en} at {location_en} is doing salvage on a wreck", "{location_zh}那艘{ship_zh}正在打捞残骸"),
+        ("the {ship_en} at {location_en} needs repair before it can jump", "{location_zh}那艘{ship_zh}跳跃前需要维修"),
+        ("the {ship_en} at {location_en} is waiting on a service beacon", "{location_zh}那艘{ship_zh}在等服务信标"),
+        ("the {ship_en} at {location_en} has cargo loose on the cargo grid", "{location_zh}那艘{ship_zh}货物网格上货散了"),
+        ("the {ship_en} at {location_en} cannot leave because the hangar doors are stuck", "{location_zh}那艘{ship_zh}因为机库门卡住出不去"),
+        ("the {ship_en} crew at {location_en} is stuck at the elevator", "{location_zh}那艘{ship_zh}的船员卡在电梯那里"),
+        ("the {ship_en} at {location_en} is trying to share a contract marker", "{location_zh}那艘{ship_zh}想共享合同标记"),
     ]
     player_comm_action_templates = [
         ("please mark it before anyone opens fire", "开火前先标记一下"),
@@ -1717,6 +1849,14 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("hold fire and check the marker again", "先停火再看一眼标记"),
         ("pick me up if the ship explodes", "船炸了就来接我"),
         ("switch server if the desync gets worse", "同步更差就换服"),
+        ("share the contract and wait for everyone to accept it", "共享合同并等所有人接了再走"),
+        ("bring a tractor beam and keep the cargo grid clear", "带牵引光束并把货物网格清出来"),
+        ("sell the ore after the refinery job finishes", "精炼完成后再去卖矿"),
+        ("strip the wreck only after the party marks it", "队伍标记残骸后再开始打捞"),
+        ("take the service beacon only if the payment looks right", "服务信标报酬合适再接"),
+        ("repair the engines and refill quantum fuel first", "先修引擎并补满量子燃料"),
+        ("wait outside the hangar until the elevator bug clears", "在机库外等电梯问题恢复"),
+        ("ping the marker again because the party cannot see it", "再 ping 一次标记，队伍看不到"),
     ]
 
     def sentence_start(text: str) -> str:
@@ -1765,6 +1905,24 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("地堡任务", "bunker"),
         ("申领时间", "claim timer"),
         ("同步很差", "desync"),
+        ("服务信标", "service beacon"),
+        ("合同标记", "contract marker"),
+        ("共享合同", "share contract"),
+        ("合同", "contract"),
+        ("采矿", "mining"),
+        ("精炼", "refinery"),
+        ("卖矿", "sell ore"),
+        ("打捞", "salvage"),
+        ("残骸", "wreck"),
+        ("维修", "repair"),
+        ("补满", "fill"),
+        ("货物网格", "cargo grid"),
+        ("牵引光束", "tractor beam"),
+        ("机库门", "hangar door"),
+        ("机库", "hangar"),
+        ("电梯", "elevator"),
+        ("标记", "marker"),
+        ("量子燃料", "q油"),
     ]
 
     samples: list[PairSample] = []
@@ -2067,7 +2225,11 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                     ]
                     slang_event_zh = compact_chat_text(event_zh)
                     slang_action_zh = compact_chat_text(action_zh)
-                    for source_phrase, replacement in slang_replacements:
+                    for source_phrase, replacement in sorted(
+                        slang_replacements,
+                        key=lambda item: len(item[0]),
+                        reverse=True,
+                    ):
                         slang_event_zh = slang_event_zh.replace(source_phrase, replacement)
                         slang_action_zh = slang_action_zh.replace(source_phrase, replacement)
                     samples.append(
@@ -2279,7 +2441,11 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                         compact_action_zh = compact_chat_text(action_zh)
                         slang_state_zh = compact_state_zh
                         slang_action_zh = compact_action_zh
-                        for source_phrase, replacement in slang_replacements:
+                        for source_phrase, replacement in sorted(
+                            slang_replacements,
+                            key=lambda item: len(item[0]),
+                            reverse=True,
+                        ):
                             slang_state_zh = slang_state_zh.replace(source_phrase, replacement)
                             slang_action_zh = slang_action_zh.replace(source_phrase, replacement)
                         samples.append(
