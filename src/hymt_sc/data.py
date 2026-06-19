@@ -3225,6 +3225,46 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("let the runner take the box while escort covers", "让跑腿拿箱子护航负责掩护"),
         ("use the beacon timer instead of the ship marker", "按beacon计时走不要看船标"),
     ]
+    player_gear_topics = [
+        ("FPS kit check", "FPS装备检查"),
+        ("armor swap", "护甲更换"),
+        ("weapon attachment check", "武器配件检查"),
+        ("ammo count", "弹药数量"),
+        ("medpen restock", "medpen补给"),
+        ("tractor tool pickup", "tractor tool拾取"),
+        ("multi-tool battery", "multi-tool电池"),
+        ("backpack loot split", "背包战利品分配"),
+        ("personal inventory cleanup", "个人仓库清理"),
+        ("body bag recovery", "尸体背包回收"),
+        ("loot crate sweep", "战利品箱清理"),
+        ("prison shiv warning", "监狱刀警告"),
+    ]
+    player_gear_states = [
+        ("heavy armor is slowing the runner", "重甲拖慢跑腿"),
+        ("undersuit is missing after death", "死后undersuit没了"),
+        ("helmet is still in local inventory", "头盔还在local inventory"),
+        ("P4-AR has no ammo loaded", "P4-AR没上弹"),
+        ("FS-9 magazines are mixed with loot", "FS-9弹匣混在战利品里"),
+        ("Coda pistol is on the body marker", "Coda手枪在尸体标记那"),
+        ("medpen count is low", "medpen数量不够"),
+        ("tractor tool battery is empty", "tractor tool电池空了"),
+        ("multi-tool attachment is missing", "multi-tool配件丢了"),
+        ("backpack is full of gems", "背包装满gem了"),
+        ("loot crate despawn timer is short", "战利品箱despawn计时很短"),
+        ("prison shiv is not a ship name", "prison shiv不是船名"),
+    ]
+    player_gear_actions = [
+        ("move ammo to the runner before pushing", "推进前先把弹药给跑腿"),
+        ("do not translate the weapon name as a ship", "别把武器名翻成船"),
+        ("split medpens before entering the bunker", "进地堡前先分medpen"),
+        ("mark the body bag before looting", "摸包前先标记尸体背包"),
+        ("drop heavy armor if the route needs sprinting", "路线要冲刺就丢重甲"),
+        ("keep local inventory separate from ship inventory", "把local inventory和船仓库分开"),
+        ("check the attachment before buying another gun", "买新枪前先查配件"),
+        ("call the loot crate location in party chat", "在队伍里报战利品箱位置"),
+        ("save one tractor tool for body recovery", "留一个tractor tool回收尸体"),
+        ("record the missing undersuit before relogging", "重登前先录undersuit丢失"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -4611,6 +4651,76 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Party] Runner: {location_zh}{topic_zh}，{state_zh}\n"
                             f"[Team] Pilot: {ship_zh}负责这个任务\n"
                             f"[Voice] Lead: {action_zh}；任务报点不是船名"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for gear_index, (topic_en, topic_zh) in enumerate(player_gear_topics, start=1):
+                    state_en, state_zh = player_gear_states[
+                        (repeat_index + location_index + ship_index + gear_index) % len(player_gear_states)
+                    ]
+                    action_en, action_zh = player_gear_actions[
+                        (repeat_index + ship_index + gear_index) % len(player_gear_actions)
+                    ]
+                    channel_en, channel_zh = player_comm_channels[
+                        (repeat_index + gear_index + location_index) % len(player_comm_channels)
+                    ]
+                    gear_en_text = (
+                        f"{channel_en}{topic_en} at {location_en}: {ship_en} is holding; {state_en}; "
+                        f"{action_en}."
+                    )
+                    gear_zh_text = (
+                        f"{channel_zh}{location_zh}{topic_zh}: {ship_zh}先等；{state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_gear_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{gear_index}:standard"
+                            ),
+                            en=gear_en_text,
+                            zh=gear_zh_text,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_gear_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{gear_index}:compact"
+                            ),
+                            en=gear_en_text,
+                            zh=slangify_player_chat(gear_zh_text),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                topic_en, topic_zh = player_gear_topics[
+                    (repeat_index + location_index + ship_index) % len(player_gear_topics)
+                ]
+                state_en, state_zh = player_gear_states[
+                    (repeat_index + location_index + ship_index + 7) % len(player_gear_states)
+                ]
+                action_en, action_zh = player_gear_actions[
+                    (repeat_index + location_index + ship_index + 9) % len(player_gear_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_gear_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Team] Gear: {topic_en} at {location_en}, {state_en}\n"
+                            f"[Party] Pilot: the {ship_en} is holding outside\n"
+                            f"[Voice] Runner: {action_en}; gear callout is not the ship name"
+                        ),
+                        zh=(
+                            f"[Team] Gear: {location_zh}{topic_zh}，{state_zh}\n"
+                            f"[Party] Pilot: {ship_zh}在外面等\n"
+                            f"[Voice] Runner: {action_zh}；装备报点不是船名"
                         ),
                         category="chat",
                         is_priority=True,
