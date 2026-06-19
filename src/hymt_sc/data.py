@@ -606,6 +606,58 @@ def build_quant_focus_samples(
             "带牵引光束来{zh}，{ship_zh}货物网格上有散货箱。",
         ),
     ]
+    location_route_templates = [
+        (
+            "Route from {origin_en} to {destination_en}; bring the {ship_en} and keep escort on the cargo.",
+            "从{origin_zh}去{destination_zh}，开{ship_zh}并继续护航货物。",
+        ),
+        (
+            "Do not quantum from {origin_en} to {destination_en} until the {ship_en} refuels and repairs.",
+            "{ship_zh}补油维修前，先别从{origin_zh}量子跳到{destination_zh}。",
+        ),
+        (
+            "If {destination_en} has heavy desync, hold the {ship_en} at {origin_en} and ask in global chat.",
+            "如果{destination_zh}同步很差，让{ship_zh}停在{origin_zh}并去全局问一下。",
+        ),
+        (
+            "Medical rescue between {origin_en} and {destination_en}; the {ship_en} can take the service beacon.",
+            "{origin_zh}到{destination_zh}之间有医疗救援，{ship_zh}可以接服务信标。",
+        ),
+        (
+            "Move the salvage boxes from {origin_en} to {destination_en}; keep the {ship_en} cargo grid clear.",
+            "把打捞箱子从{origin_zh}运到{destination_zh}，保持{ship_zh}货物网格清空。",
+        ),
+        (
+            "Quick callout: target marker is on the route from {origin_en} to {destination_en}, not after the ship tag > F7C-S Hornet Ghost",
+            "报点 目标标记在{origin_zh}到{destination_zh}的路线上，不是后面船名标签>F7C-S Hornet Ghost",
+        ),
+    ]
+    vehicle_contrast_templates = [
+        (
+            "I said {left_en}, not {right_en}; the ship at {location_en} is the one asking for escort.",
+            "我说的是{left_zh}，不是{right_zh}；在{location_zh}喊护航的是它。",
+        ),
+        (
+            "The bounty target is in the {left_en}, not the {right_en}; check the marker before firing.",
+            "赏金目标在{left_zh}上，不在{right_zh}上，开火前看标记。",
+        ),
+        (
+            "Use the {left_en} for this cargo run and keep the {right_en} parked at {location_en}.",
+            "这趟跑货用{left_zh}，让{right_zh}停在{location_zh}。",
+        ),
+        (
+            "Voice chat: the {left_en} needs refuel and repair, while the {right_en} needs a turret seat.",
+            "yy里说 {left_zh}需要补油维修，{right_zh}缺炮塔位。",
+        ),
+        (
+            "If the {left_en} goes into soft death near {location_en}, do not blame the {right_en} tag after the message.",
+            "如果{left_zh}在{location_zh}附近软死亡了，别怪消息后面的{right_zh}标签。",
+        ),
+        (
+            "Quick callout: {left_en} is our ship, {right_en} is just noise after the message > F7C-S Hornet Ghost",
+            "报点 {left_zh}是我们的船，{right_zh}只是消息后面的噪声>F7C-S Hornet Ghost",
+        ),
+    ]
     alias_chat_slang_prefixes = [
         ("SC global: ", "sc全局 "),
         ("Party: ", "队伍 "),
@@ -646,6 +698,7 @@ def build_quant_focus_samples(
         ("医疗救援信标", "med rescue beacon"),
         ("救援信标", "rescue beacon"),
         ("服务信标", "service beacon"),
+        ("补油维修", "refuel and repair"),
         ("补油", "refuel"),
         ("维修", "repair"),
         ("货船", "cargo ship"),
@@ -677,7 +730,11 @@ def build_quant_focus_samples(
     def strip_final_punctuation(text: str) -> str:
         return text.rstrip().rstrip(".?!")
 
-    entries = list(term_entries) + list(alias_entries)
+    term_entry_list = list(term_entries)
+    alias_entry_list = list(alias_entries)
+    formal_vehicle_entries = [entry for entry in term_entry_list if entry.category == "vehicle"]
+    formal_location_entries = [entry for entry in term_entry_list if entry.category == "location"]
+    entries = term_entry_list + alias_entry_list
     seen_entries: set[tuple[str, str, str]] = set()
     for entry_index, entry in enumerate(entries, start=1):
         dedupe_key = (entry.category, entry.zh, entry.en.casefold())
@@ -750,7 +807,153 @@ def build_quant_focus_samples(
                                 source="quant_focus",
                             )
                         )
+                if formal_vehicle_entries:
+                    current_vehicle_index = formal_vehicle_entries.index(entry)
+                    contrast_offsets = (1, 7)
+                    for contrast_index, offset in enumerate(contrast_offsets, start=1):
+                        right_index = (current_vehicle_index + offset) % len(formal_vehicle_entries)
+                        right_entry = formal_vehicle_entries[right_index]
+                        attempts = 0
+                        while (
+                            (
+                                right_entry == entry
+                                or right_entry.en.casefold() == entry.en.casefold()
+                                or right_entry.zh == entry.zh
+                            )
+                            and attempts < len(formal_vehicle_entries)
+                        ):
+                            right_index = (right_index + 1) % len(formal_vehicle_entries)
+                            right_entry = formal_vehicle_entries[right_index]
+                            attempts += 1
+                        if right_entry == entry or right_entry.en.casefold() == entry.en.casefold():
+                            continue
+                        location_en, location_zh = alias_chat_locations[
+                            (current_vehicle_index + contrast_index + repeat_index) % len(alias_chat_locations)
+                        ]
+                        for template_index, (en_template, zh_template) in enumerate(vehicle_contrast_templates, start=1):
+                            en_text = en_template.format(
+                                left_en=entry.en,
+                                left_zh=entry.zh,
+                                right_en=right_entry.en,
+                                right_zh=right_entry.zh,
+                                location_en=location_en,
+                                location_zh=location_zh,
+                            )
+                            zh_text = zh_template.format(
+                                left_en=entry.en,
+                                left_zh=entry.zh,
+                                right_en=right_entry.en,
+                                right_zh=right_entry.zh,
+                                location_en=location_en,
+                                location_zh=location_zh,
+                            )
+                            samples.append(
+                                PairSample(
+                                    key=(
+                                        f"quant_focus_vehicle_contrast:{entry.key}:{repeat_index + 1}:"
+                                        f"{contrast_index}:{template_index}:standard"
+                                    ),
+                                    en=en_text,
+                                    zh=zh_text,
+                                    category=entry.category,
+                                    is_priority=True,
+                                    source="quant_focus",
+                                )
+                            )
+                            slang_zh = compact_alias_chat(zh_text)
+                            for source_phrase, replacement in sorted(
+                                alias_chat_slang_replacements,
+                                key=lambda item: len(item[0]),
+                                reverse=True,
+                            ):
+                                slang_zh = slang_zh.replace(source_phrase, replacement)
+                            samples.append(
+                                PairSample(
+                                    key=(
+                                        f"quant_focus_vehicle_contrast:{entry.key}:{repeat_index + 1}:"
+                                        f"{contrast_index}:{template_index}:slang"
+                                    ),
+                                    en=en_text,
+                                    zh=slang_zh,
+                                    category=entry.category,
+                                    is_priority=True,
+                                    source="quant_focus",
+                                )
+                            )
             if entry.category == "location":
+                if formal_location_entries:
+                    current_location_index = formal_location_entries.index(entry)
+                    route_offsets = (1, 9, 31)
+                    for route_index, offset in enumerate(route_offsets, start=1):
+                        destination_index = (current_location_index + offset) % len(formal_location_entries)
+                        destination_entry = formal_location_entries[destination_index]
+                        attempts = 0
+                        while (
+                            (
+                                destination_entry == entry
+                                or destination_entry.en.casefold() == entry.en.casefold()
+                                or destination_entry.zh == entry.zh
+                            )
+                            and attempts < len(formal_location_entries)
+                        ):
+                            destination_index = (destination_index + 1) % len(formal_location_entries)
+                            destination_entry = formal_location_entries[destination_index]
+                            attempts += 1
+                        if destination_entry == entry or destination_entry.en.casefold() == entry.en.casefold():
+                            continue
+                        ship_en, ship_zh = location_comm_ships[
+                            (current_location_index + route_index + repeat_index) % len(location_comm_ships)
+                        ]
+                        for template_index, (en_template, zh_template) in enumerate(location_route_templates, start=1):
+                            en_text = en_template.format(
+                                origin_en=entry.en,
+                                origin_zh=entry.zh,
+                                destination_en=destination_entry.en,
+                                destination_zh=destination_entry.zh,
+                                ship_en=ship_en,
+                                ship_zh=ship_zh,
+                            )
+                            zh_text = zh_template.format(
+                                origin_en=entry.en,
+                                origin_zh=entry.zh,
+                                destination_en=destination_entry.en,
+                                destination_zh=destination_entry.zh,
+                                ship_en=ship_en,
+                                ship_zh=ship_zh,
+                            )
+                            samples.append(
+                                PairSample(
+                                    key=(
+                                        f"quant_focus_location_route:{entry.key}:{repeat_index + 1}:"
+                                        f"{route_index}:{template_index}:standard"
+                                    ),
+                                    en=en_text,
+                                    zh=zh_text,
+                                    category=entry.category,
+                                    is_priority=True,
+                                    source="quant_focus",
+                                )
+                            )
+                            slang_zh = compact_alias_chat(zh_text)
+                            for source_phrase, replacement in sorted(
+                                alias_chat_slang_replacements,
+                                key=lambda item: len(item[0]),
+                                reverse=True,
+                            ):
+                                slang_zh = slang_zh.replace(source_phrase, replacement)
+                            samples.append(
+                                PairSample(
+                                    key=(
+                                        f"quant_focus_location_route:{entry.key}:{repeat_index + 1}:"
+                                        f"{route_index}:{template_index}:slang"
+                                    ),
+                                    en=en_text,
+                                    zh=slang_zh,
+                                    category=entry.category,
+                                    is_priority=True,
+                                    source="quant_focus",
+                                )
+                            )
                 for ship_index, (ship_en, ship_zh) in enumerate(location_comm_ships, start=1):
                     for template_index, (en_template, zh_template) in enumerate(location_comm_templates, start=1):
                         en_text = en_template.format(en=entry.en, zh=entry.zh, ship_en=ship_en, ship_zh=ship_zh)
