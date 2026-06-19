@@ -3674,6 +3674,48 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("repeat important callouts in party chat", "重要报点在队伍聊天里再发一遍"),
         ("clear the route and set the destination again before jumping", "清掉路线后重新设目的地再跳"),
     ]
+    player_security_topics = [
+        ("security coordination", "安保协调"),
+        ("wanted status check", "红名状态确认"),
+        ("armistice action check", "停火区行动确认"),
+        ("target identity check", "目标身份确认"),
+        ("illegal status handling", "非法状态处理"),
+        ("bounty and party marker check", "赏金和队伍标记确认"),
+        ("restricted area coordination", "禁区行动协调"),
+        ("surrender or retreat decision", "投降或撤离决定"),
+        ("fine and prison planning", "罚金和监狱安排"),
+        ("Klescher pickup coordination", "Klescher接人协调"),
+        ("security scan preparation", "安检前准备"),
+        ("guard response coordination", "安保反应协调"),
+    ]
+    player_security_states = [
+        ("one teammate has CrimeStat after friendly fire", "有个队友友伤后出了犯罪等级"),
+        ("station security is scanning ships at the gate", "空间站安保正在门口扫描船"),
+        ("target marker is red but may still be friendly", "目标标记是红的，但可能还是友军"),
+        ("contraband box is still in the cargo hold", "非法货箱还在货舱里"),
+        ("bounty marker is mixed with a party marker", "赏金标记和队伍标记混在一起了"),
+        ("armistice zone ends just outside the hangar", "机库外面不远就出停火区了"),
+        ("new player walked into a restricted area", "萌新走进禁区了"),
+        ("pilot wants to surrender instead of fighting security", "驾驶员想投降，不想和安保打"),
+        ("fine terminal is closer than the prison route", "罚金终端比去监狱路线近"),
+        ("Klescher release timer is almost done", "Klescher出狱时间快到了"),
+        ("security scan may flag the stolen cargo", "安检可能会扫出被盗货物"),
+        ("NPC guards are responding near the landing pad", "NPC安保正在停机坪附近反应"),
+    ]
+    player_security_actions = [
+        ("hold fire until the target is confirmed", "确认目标前先别开火"),
+        ("move the clean ship away from the wanted player", "把干净的船先挪开，别贴着红名队友"),
+        ("drop illegal cargo before entering the armistice zone", "进停火区前先把非法货物处理掉"),
+        ("call the bounty target name in party chat", "在队伍聊天里报清楚赏金目标名字"),
+        ("wait outside the restricted area and guide the new player back", "在禁区外等，把萌新带回来"),
+        ("pay the fine before boarding the shared ship", "上公共船前先把罚金交掉"),
+        ("keep the rescue ship outside while the prisoner exits", "犯人出来前救援船先停在外面"),
+        ("let security finish scanning before opening the cargo hold", "等安检扫完再开货舱"),
+        ("do not shoot NPC guards unless the lead calls it", "带队没喊之前别打NPC安保"),
+        ("separate party marker and bounty marker in chat", "聊天里把队伍标记和赏金标记分开说"),
+        ("surrender only after cargo value is confirmed", "确认货值以后再决定要不要投降"),
+        ("record the crime stat change before relogging", "重登前先录下犯罪等级变化"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -5796,6 +5838,78 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Party] Pilot: {location_zh}这边{troubleshoot_topic_zh}，先让{ship_zh}保持刷出状态\n"
                             f"[Voice] Crew: {troubleshoot_state_zh}\n"
                             f"[Team] Lead: {troubleshoot_action_zh}；出发前说一下结果"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for security_index, (topic_en, topic_zh) in enumerate(player_security_topics, start=1):
+                    state_en, state_zh = player_security_states[
+                        (repeat_index + location_index + ship_index + security_index) % len(player_security_states)
+                    ]
+                    action_en, action_zh = player_security_actions[
+                        (repeat_index + location_index + security_index) % len(player_security_actions)
+                    ]
+                    other_ship_en, other_ship_zh = pick_other_ship(ship_index, security_index + 19, ship_zh)
+                    channel_en, channel_zh = player_route_channels[
+                        (repeat_index + security_index + location_index + ship_index) % len(player_route_channels)
+                    ]
+                    security_en = (
+                        f"{channel_en}{topic_en} at {location_en}: the {ship_en} is assigned, "
+                        f"not the {other_ship_en}; {state_en}; {action_en}."
+                    )
+                    security_zh = (
+                        f"{channel_zh}{location_zh}这边{topic_zh}: {ship_zh}负责，不是{other_ship_zh}；"
+                        f"{state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_security_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{security_index}:standard"
+                            ),
+                            en=security_en,
+                            zh=security_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_security_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{security_index}:compact"
+                            ),
+                            en=security_en,
+                            zh=compact_chat_text(security_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                security_topic_en, security_topic_zh = player_security_topics[
+                    (repeat_index + location_index + ship_index) % len(player_security_topics)
+                ]
+                security_state_en, security_state_zh = player_security_states[
+                    (repeat_index + location_index + ship_index + 5) % len(player_security_states)
+                ]
+                security_action_en, security_action_zh = player_security_actions[
+                    (repeat_index + location_index + ship_index + 7) % len(player_security_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_security_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Party] Lead: {security_topic_en} at {location_en}; the {ship_en} handles it\n"
+                            f"[Voice] Crew: {security_state_en}\n"
+                            f"[Team] Lead: {security_action_en}; confirm before engaging"
+                        ),
+                        zh=(
+                            f"[Party] Lead: {location_zh}这边{security_topic_zh}，{ship_zh}负责处理\n"
+                            f"[Voice] Crew: {security_state_zh}\n"
+                            f"[Team] Lead: {security_action_zh}；动手前先确认"
                         ),
                         category="chat",
                         is_priority=True,
