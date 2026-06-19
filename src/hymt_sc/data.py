@@ -428,12 +428,18 @@ def build_quant_focus_samples(
         ("Party: ", "队伍 "),
         ("Voice: ", "yy里 "),
         ("Need help: ", "来人 "),
+        ("This feels bad; ", "感觉不太行 "),
+        ("Newbie warning: ", "萌新注意 "),
+        ("Quick callout: ", "报点 "),
     ]
     alias_chat_slang_suffixes = [
         (" ASAP.", " 速来"),
         (" Anyone up?", " 有人吗"),
         (" Check marker.", " 看标记"),
         (" Stay on voice.", " 进语音"),
+        (" @...", " @..."),
+        (" [global]", " [全局]"),
+        (" [voice]", " [语音]"),
     ]
     alias_chat_slang_replacements = [
         ("打赏金", "打bounty"),

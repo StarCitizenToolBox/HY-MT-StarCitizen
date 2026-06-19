@@ -68,9 +68,12 @@ def slug(text: str) -> str:
 
 def alias_id(text: str) -> str:
     value = slug(text)
+    digest = hashlib.sha1(text.encode("utf-8")).hexdigest()[:10]
+    if contains_cjk(text):
+        return f"{value}_{digest}" if value != "ship" else digest
     if value != "ship":
         return value
-    return hashlib.sha1(text.encode("utf-8")).hexdigest()[:10]
+    return digest
 
 
 def extract_aliases(source: str, source_url: str) -> tuple[list[ShipAlias], dict[str, int]]:
