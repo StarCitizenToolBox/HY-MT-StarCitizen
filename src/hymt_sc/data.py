@@ -1403,6 +1403,37 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         (" @...", "@..."),
         (" [global]", "[全局]"),
     ]
+    structured_compound_actions = [
+        ("I will bring the {ship_en} and engage first", "我开{ship_zh}先上"),
+        ("wait for the party before opening fire", "等队伍到了再开火"),
+        ("mark the target and stay on voice", "标记目标并保持语音"),
+        ("do not board until we confirm it is in soft death", "确认软死亡前先别登船"),
+        ("clear your crime stat before regrouping", "重新集合前先清犯罪等级"),
+        ("refuel and repair before the next bounty mission", "下一单赏金前先补油维修"),
+        ("keep escort on the cargo ship until it reaches the station", "货船到站前继续护航"),
+        ("tell new players not to confuse the ship name", "提醒新手别把船名认错"),
+    ]
+    structured_compound_templates = [
+        (
+            "{event_sentence_en}; {action_en}. {followup_en}",
+            "{event_zh}；{action_zh}。{followup_zh}",
+        ),
+        (
+            "{opener_en}{event_en}; also, {secondary_event_en}. {action_sentence_en}.",
+            "{opener_zh}{event_zh}；另外，{secondary_event_zh}。{action_zh}。",
+        ),
+        (
+            "If {event_en}, {action_en}; {secondary_event_en}.",
+            "如果{event_zh}，{action_zh}；{secondary_event_zh}。",
+        ),
+        (
+            "{opener_en}{event_en}. {secondary_event_sentence_en}; {followup_en}",
+            "{opener_zh}{event_zh}。{secondary_event_zh}；{followup_zh}",
+        ),
+    ]
+
+    def sentence_start(text: str) -> str:
+        return text[:1].upper() + text[1:] if text else text
 
     samples: list[PairSample] = []
     for repeat_index in range(max(1, repeat)):
@@ -1611,6 +1642,86 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             ),
                             en=f"{opener_en}{event_en}.{followup_en}{noise_en}",
                             zh=f"{opener_zh}{event_zh}。{followup_zh}{noise_zh}",
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    secondary_template_index = (event_index + ship_index + location_index) % len(structured_chat_events)
+                    secondary_en_template, secondary_zh_template = structured_chat_events[secondary_template_index]
+                    secondary_event_en = secondary_en_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                    )
+                    secondary_event_zh = secondary_zh_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                    )
+                    action_index = (repeat_index + location_index + ship_index + event_index) % len(
+                        structured_compound_actions
+                    )
+                    action_en_template, action_zh_template = structured_compound_actions[action_index]
+                    action_en = action_en_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                    )
+                    action_zh = action_zh_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                    )
+                    event_sentence_en = sentence_start(event_en)
+                    secondary_event_sentence_en = sentence_start(secondary_event_en)
+                    action_sentence_en = sentence_start(action_en)
+                    compound_template_index = (repeat_index + event_index + ship_index) % len(
+                        structured_compound_templates
+                    )
+                    compound_en_template, compound_zh_template = structured_compound_templates[compound_template_index]
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:structured_compound:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{event_index}:{compound_template_index + 1}"
+                            ),
+                            en=compound_en_template.format(
+                                opener_en=opener_en,
+                                opener_zh=opener_zh,
+                                event_en=event_en,
+                                event_sentence_en=event_sentence_en,
+                                event_zh=event_zh,
+                                secondary_event_en=secondary_event_en,
+                                secondary_event_sentence_en=secondary_event_sentence_en,
+                                secondary_event_zh=secondary_event_zh,
+                                action_en=action_en,
+                                action_sentence_en=action_sentence_en,
+                                action_zh=action_zh,
+                                followup_en=followup_en.strip(),
+                                followup_zh=followup_zh,
+                            )
+                            + noise_en,
+                            zh=compound_zh_template.format(
+                                opener_en=opener_en,
+                                opener_zh=opener_zh,
+                                event_en=event_en,
+                                event_sentence_en=event_sentence_en,
+                                event_zh=event_zh,
+                                secondary_event_en=secondary_event_en,
+                                secondary_event_sentence_en=secondary_event_sentence_en,
+                                secondary_event_zh=secondary_event_zh,
+                                action_en=action_en,
+                                action_sentence_en=action_sentence_en,
+                                action_zh=action_zh,
+                                followup_en=followup_en.strip(),
+                                followup_zh=followup_zh,
+                            )
+                            + noise_zh,
                             category="chat",
                             is_priority=True,
                             source="chat_guard",
