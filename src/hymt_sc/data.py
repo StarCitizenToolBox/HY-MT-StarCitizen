@@ -3590,6 +3590,48 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("confirm the ship name before moving the role", "调整岗位前先确认船名"),
         ("leave the final call to the party lead", "最后决定交给队长"),
     ]
+    player_meetup_topics = [
+        ("group meetup", "队伍集合"),
+        ("late player pickup", "接晚到的人"),
+        ("hangar check-in", "机库点名"),
+        ("ship boarding order", "登船顺序"),
+        ("rally point change", "集合点变更"),
+        ("crew ready check", "船员准备确认"),
+        ("party marker cleanup", "队伍标记整理"),
+        ("voice channel check", "语音频道确认"),
+        ("departure countdown", "出发倒计时"),
+        ("backup pickup plan", "备用接人方案"),
+        ("new player regroup", "萌新重新集合"),
+        ("station transfer wait", "空间站转场等人"),
+    ]
+    player_meetup_states = [
+        ("one player loaded into a different shard", "有个队友进到别的分片了"),
+        ("two people are still looking for the hangar", "还有两个人在找机库"),
+        ("party marker points to the elevator instead of the ship", "队伍标记指到电梯那边了"),
+        ("late player has reached the lobby but not the hangar", "晚到的人到大厅了，还没到机库"),
+        ("crew cannot hear the pilot clearly in voice", "语音里听不清驾驶员"),
+        ("ship is spawned but the ramp is still closed", "船已经刷出来了，但舱门还没开"),
+        ("new player followed the wrong marker", "萌新跟错标记了"),
+        ("one seat was reserved for the rescue target", "有个座位要留给救援目标"),
+        ("party lead is restarting the game", "队长在重启游戏"),
+        ("contract marker moved after everyone formed up", "集合完合同标记又跳了"),
+        ("someone is still selling cargo at the terminal", "还有人在终端卖货"),
+        ("escort pilot is waiting outside the armistice zone", "护航驾驶在停火区外面等"),
+    ]
+    player_meetup_actions = [
+        ("wait at the hangar elevator until everyone checks in", "所有人点名后再离开机库电梯"),
+        ("share one marker and remove the old one", "只留一个标记，把旧标记删掉"),
+        ("type ready in party chat before boarding", "登船前在队伍聊天里打一声准备好了"),
+        ("keep the ship on the pad until the late player arrives", "晚到的人到之前先把船停在平台上"),
+        ("move the pickup point outside after takeoff", "起飞后把接人点改到外面"),
+        ("repeat the ship name before opening the ramp", "开舱门前再报一遍船名"),
+        ("let the new player follow the party lead", "让萌新跟着队长走"),
+        ("leave the reserved seat empty until pickup", "接到人之前先空着预留座位"),
+        ("restart the ready check after the party lead returns", "队长回来后重新点名"),
+        ("do not quantum jump until the marker is fixed", "标记修好前先别量子跳"),
+        ("finish selling cargo before calling departure", "卖完货再喊出发"),
+        ("tell escort to hold position until boarding is done", "让护航先原地等到登船结束"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -5567,6 +5609,78 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Party] Lead: {location_zh}这边{ship_zh}的{role_topic_zh}\n"
                             f"[Voice] Crew: {role_state_zh}\n"
                             f"[Team] Lead: {role_action_zh}；出发前先确认岗位"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for meetup_index, (topic_en, topic_zh) in enumerate(player_meetup_topics, start=1):
+                    state_en, state_zh = player_meetup_states[
+                        (repeat_index + location_index + ship_index + meetup_index) % len(player_meetup_states)
+                    ]
+                    action_en, action_zh = player_meetup_actions[
+                        (repeat_index + location_index + meetup_index) % len(player_meetup_actions)
+                    ]
+                    other_ship_en, other_ship_zh = pick_other_ship(ship_index, meetup_index + 13, ship_zh)
+                    channel_en, channel_zh = player_route_channels[
+                        (repeat_index + meetup_index + location_index + ship_index) % len(player_route_channels)
+                    ]
+                    meetup_en = (
+                        f"{channel_en}{topic_en} at {location_en}: meet at the {ship_en}, "
+                        f"not the {other_ship_en}; {state_en}; {action_en}."
+                    )
+                    meetup_zh = (
+                        f"{channel_zh}{location_zh}这边{topic_zh}: 在{ship_zh}集合，"
+                        f"不是{other_ship_zh}；{state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_meetup_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{meetup_index}:standard"
+                            ),
+                            en=meetup_en,
+                            zh=meetup_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_meetup_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{meetup_index}:compact"
+                            ),
+                            en=meetup_en,
+                            zh=compact_chat_text(meetup_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                meetup_topic_en, meetup_topic_zh = player_meetup_topics[
+                    (repeat_index + location_index + ship_index) % len(player_meetup_topics)
+                ]
+                meetup_state_en, meetup_state_zh = player_meetup_states[
+                    (repeat_index + location_index + ship_index + 3) % len(player_meetup_states)
+                ]
+                meetup_action_en, meetup_action_zh = player_meetup_actions[
+                    (repeat_index + location_index + ship_index + 5) % len(player_meetup_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_meetup_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Party] Lead: {meetup_topic_en} at {location_en}; meet at the {ship_en}\n"
+                            f"[Voice] Crew: {meetup_state_en}\n"
+                            f"[Team] Lead: {meetup_action_en}; confirm before departure"
+                        ),
+                        zh=(
+                            f"[Party] Lead: {location_zh}这边{meetup_topic_zh}，在{ship_zh}集合\n"
+                            f"[Voice] Crew: {meetup_state_zh}\n"
+                            f"[Team] Lead: {meetup_action_zh}；出发前再确认一次"
                         ),
                         category="chat",
                         is_priority=True,

@@ -355,6 +355,19 @@ SOURCE_PHRASES = {
         "路线报点",
         "警戒分工",
         "出发前先确认岗位",
+        "队伍集合",
+        "接晚到的人",
+        "机库点名",
+        "登船顺序",
+        "集合点变更",
+        "船员准备确认",
+        "队伍标记整理",
+        "语音频道确认",
+        "出发倒计时",
+        "备用接人方案",
+        "萌新重新集合",
+        "空间站转场等人",
+        "出发前再确认一次",
         "引擎离线",
         "报点和船名",
         "量子矿",
@@ -594,6 +607,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     player_decision_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_decision_log:")]
     player_role_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_role_status:")]
     player_role_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_role_log:")]
+    player_meetup_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_meetup_status:")]
+    player_meetup_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_meetup_log:")]
     target_cjk = [row for row in rows if re.search(r"[\u3400-\u9fff]", row.get("target", ""))]
     unnatural_mixed_rows = find_unnatural_mixed_rows(rows)
     alias_chat_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat:")]
@@ -714,6 +729,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "player_decision_log_rows": len(player_decision_log_rows),
         "player_role_rows": len(player_role_rows),
         "player_role_log_rows": len(player_role_log_rows),
+        "player_meetup_rows": len(player_meetup_rows),
+        "player_meetup_log_rows": len(player_meetup_log_rows),
         "alias_chat_rows": len(alias_chat_rows),
         "alias_slang_rows": len(alias_slang_rows),
         "alias_chat_unique": len(alias_chat_keys - {""}),
@@ -818,6 +835,8 @@ def main() -> int:
     print(f"player_decision_log_rows: {report['player_decision_log_rows']}")
     print(f"player_role_rows: {report['player_role_rows']}")
     print(f"player_role_log_rows: {report['player_role_log_rows']}")
+    print(f"player_meetup_rows: {report['player_meetup_rows']}")
+    print(f"player_meetup_log_rows: {report['player_meetup_log_rows']}")
     print(f"alias_chat_rows: {report['alias_chat_rows']}")
     print(f"alias_slang_rows: {report['alias_slang_rows']}")
     print(f"alias_chat_unique: {report['alias_chat_unique']}")
