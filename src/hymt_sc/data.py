@@ -399,6 +399,7 @@ def build_quant_focus_samples(
         ("Port Tressler", "特雷斯勒港"),
     ]
     alias_chat_templates = [
+        ("There is a {en} at {location_en} firing everywhere.", "{location_zh}有个{zh}到处开火。"),
         ("The {en} at {location_en} is firing everywhere.", "{location_zh}有个{zh}到处开火。"),
         ("The {en} near {location_en} is shooting at players.", "{location_zh}附近有个{zh}在攻击玩家。"),
         ("I am taking the {en} from {location_en} for bounty missions.", "我从{location_zh}开{zh}打赏金。"),
@@ -422,6 +423,32 @@ def build_quant_focus_samples(
         ("Warning, the {en} is camping the hangar at {location_en}.", "注意，{location_zh}有个{zh}在蹲机库。"),
         ("The target is a {en}, not a Hornet Ghost.", "目标是{zh}，不是大黄蜂幽灵。"),
         ("The {en} at {location_en} is firing everywhere. > F7C-S Hornet Ghost", "{location_zh}有个{zh}到处开火。>F7C-S Hornet Ghost"),
+    ]
+    alias_chat_noise_templates = [
+        (
+            "There is a {en} at {location_en} firing everywhere > F7C-S Hornet Ghost",
+            "{location_zh}有个{zh}到处开火>F7C-S Hornet Ghost",
+        ),
+        (
+            "This feels bad; there is a {en} at {location_en} firing everywhere > F7C-S Hornet Ghost",
+            "感觉不太行 {location_zh}有个{zh}到处开火>F7C-S Hornet Ghost",
+        ),
+        (
+            "Global chat says there is a {en} at {location_en} shooting at players @...",
+            "全局说{location_zh}有个{zh}在攻击玩家@...",
+        ),
+        (
+            "Quick callout: {location_en} has a {en} spraying fire everywhere [global]",
+            "报点 {location_zh}有个{zh}到处乱射[全局]",
+        ),
+        (
+            "Warning: the {en} at {location_en} is shooting players > Drake Cutter",
+            "注意 {location_zh}那艘{zh}在攻击玩家>Drake Cutter",
+        ),
+        (
+            "Do not read the trailing tag as the ship; the ship at {location_en} is a {en} > F7C-S Hornet Ghost",
+            "别把后面的标签当船名，{location_zh}那艘是{zh}>F7C-S Hornet Ghost",
+        ),
     ]
     alias_chat_slang_prefixes = [
         ("SC global: ", "sc全局 "),
@@ -540,6 +567,31 @@ def build_quant_focus_samples(
                                 ),
                                 en=f"{slang_prefix_en}{strip_final_punctuation(en_text)}.{slang_suffix_en}",
                                 zh=f"{slang_prefix_zh}{slang_zh}{slang_suffix_zh}",
+                                category=entry.category,
+                                is_priority=True,
+                                source="quant_focus",
+                            )
+                        )
+                for location_index, (location_en, location_zh) in enumerate(alias_chat_locations, start=1):
+                    for template_index, (en_template, zh_template) in enumerate(alias_chat_noise_templates, start=1):
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"quant_focus_alias_noise:{entry.key}:{repeat_index + 1}:"
+                                    f"{location_index}:{template_index}"
+                                ),
+                                en=en_template.format(
+                                    en=entry.en,
+                                    zh=entry.zh,
+                                    location_en=location_en,
+                                    location_zh=location_zh,
+                                ),
+                                zh=zh_template.format(
+                                    en=entry.en,
+                                    zh=entry.zh,
+                                    location_en=location_en,
+                                    location_zh=location_zh,
+                                ),
                                 category=entry.category,
                                 is_priority=True,
                                 source="quant_focus",
@@ -1536,6 +1588,80 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             "{opener_zh}{event_zh}。{secondary_event_zh}；{followup_zh}",
         ),
     ]
+    multi_ship_templates = [
+        (
+            "The target at {location_en} is the {left_en}, not the {right_en}.",
+            "{location_zh}的目标是{left_zh}，不是{right_zh}。",
+        ),
+        (
+            "The {left_en} at {location_en} is friendly; the {right_en} is the one firing.",
+            "{location_zh}那艘{left_zh}是友军，{right_zh}才是在开火的。",
+        ),
+        (
+            "The {left_en} is escorting the {right_en} from {location_en}.",
+            "{left_zh}正在从{location_zh}护航{right_zh}。",
+        ),
+        (
+            "There are two ships at {location_en}: the {left_en} is in soft death, and the {right_en} is locking missiles.",
+            "{location_zh}有两艘船：{left_zh}软死亡了，{right_zh}在锁导弹。",
+        ),
+        (
+            "I said {left_en}, not {right_en}; do not confuse the ship names in global chat.",
+            "我说的是{left_zh}，不是{right_zh}；全局频道里别把船名认错。",
+        ),
+        (
+            "Bring the {left_en} for bounty missions and keep the {right_en} on cargo hauling.",
+            "开{left_zh}打赏金，{right_zh}继续跑货。",
+        ),
+        (
+            "If the {left_en} turns red near {location_en}, the {right_en} should not open fire yet.",
+            "如果{left_zh}在{location_zh}附近红名，{right_zh}先别开火。",
+        ),
+        (
+            "Voice chat: the {left_en} needs a turret seat, but the {right_en} needs quantum fuel.",
+            "语音里说：{left_zh}缺炮塔位，但{right_zh}需要量子燃料。",
+        ),
+    ]
+    multi_ship_slang_templates = [
+        (
+            "Quick callout: {left_en}, not {right_en}. Check marker.",
+            "报点 {left_zh} 不是 {right_zh} 看标记",
+        ),
+        (
+            "Party: the {left_en} is in soft death; the {right_en} is red.",
+            "队伍 {left_zh} soft death了 {right_zh} red了",
+        ),
+        (
+            "SC global: take the {left_en} for bounty missions; keep escort on the {right_en}.",
+            "sc全局 开{left_zh}打bounty {right_zh}继续escort",
+        ),
+    ]
+    ship_noise_templates = [
+        (
+            "There is a {ship_en} at {location_en} firing everywhere > F7C-S Hornet Ghost",
+            "{location_zh}有个{ship_zh}到处开火>F7C-S Hornet Ghost",
+        ),
+        (
+            "This feels bad; there is a {ship_en} at {location_en} firing everywhere > F7C-S Hornet Ghost",
+            "感觉不太行 {location_zh}有个{ship_zh}到处开火>F7C-S Hornet Ghost",
+        ),
+        (
+            "Global chat says there is a {ship_en} at {location_en} shooting at players @...",
+            "全局说{location_zh}有个{ship_zh}在攻击玩家@...",
+        ),
+        (
+            "Quick callout: {location_en} has a {ship_en} spraying fire everywhere [global]",
+            "报点 {location_zh}有个{ship_zh}到处乱射[全局]",
+        ),
+        (
+            "Warning: the {ship_en} at {location_en} is shooting players > Drake Cutter",
+            "注意 {location_zh}那艘{ship_zh}在攻击玩家>Drake Cutter",
+        ),
+        (
+            "Do not read the trailing tag as the ship; the ship at {location_en} is a {ship_en} > F7C-S Hornet Ghost",
+            "别把后面的标签当船名，{location_zh}那艘是{ship_zh}>F7C-S Hornet Ghost",
+        ),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -1965,6 +2091,92 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                                 source="chat_guard",
                             )
                         )
+            for left_index, (left_en, left_zh) in enumerate(ships, start=1):
+                right_index = (left_index + location_index + repeat_index) % len(ships)
+                right_en, right_zh = ships[right_index]
+                if right_en == left_en:
+                    right_en, right_zh = ships[(right_index + 1) % len(ships)]
+                for template_index, (en_template, zh_template) in enumerate(multi_ship_templates, start=1):
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:multi_ship:{location_index}:{left_index}:"
+                                f"{repeat_index + 1}:{template_index}"
+                            ),
+                            en=en_template.format(
+                                location_en=location_en,
+                                location_zh=location_zh,
+                                left_en=left_en,
+                                left_zh=left_zh,
+                                right_en=right_en,
+                                right_zh=right_zh,
+                            ),
+                            zh=zh_template.format(
+                                location_en=location_en,
+                                location_zh=location_zh,
+                                left_en=left_en,
+                                left_zh=left_zh,
+                                right_en=right_en,
+                                right_zh=right_zh,
+                            ),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                for template_index, (en_template, zh_template) in enumerate(multi_ship_slang_templates, start=1):
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:multi_ship_slang:{location_index}:{left_index}:"
+                                f"{repeat_index + 1}:{template_index}"
+                            ),
+                            en=en_template.format(
+                                location_en=location_en,
+                                location_zh=location_zh,
+                                left_en=left_en,
+                                left_zh=left_zh,
+                                right_en=right_en,
+                                right_zh=right_zh,
+                            ),
+                            zh=zh_template.format(
+                                location_en=location_en,
+                                location_zh=location_zh,
+                                left_en=left_en,
+                                left_zh=left_zh,
+                                right_en=right_en,
+                                right_zh=right_zh,
+                            ),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+            for ship_index, (ship_en, ship_zh) in enumerate(ships, start=1):
+                for template_index, (en_template, zh_template) in enumerate(ship_noise_templates, start=1):
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:ship_noise:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{template_index}"
+                            ),
+                            en=en_template.format(
+                                location_en=location_en,
+                                location_zh=location_zh,
+                                ship_en=ship_en,
+                                ship_zh=ship_zh,
+                            ),
+                            zh=zh_template.format(
+                                location_en=location_en,
+                                location_zh=location_zh,
+                                ship_en=ship_en,
+                                ship_zh=ship_zh,
+                            ),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
             for ship_index, (ship_en, ship_zh, literal_en, _literal_zh) in enumerate(ambiguous_ships, start=1):
                 for template_index, (en_template, zh_template) in enumerate(ambiguous_ship_chat_templates, start=1):
                     samples.append(
