@@ -732,6 +732,24 @@ def build_quant_focus_samples(
             "21:04 [Party] Mira: {location_zh}那艘{zh}在喊escort\n21:05 [Party] Sol: 目标还是友军？\n21:05 [Party] Mira: 友军，别开火",
         ),
     ]
+    gameplay_comm_templates = [
+        (
+            "Party chat: this is {en}, not a ship name; keep the {ship_en} at {location_en} until we confirm it.",
+            "队伍说 这是{zh}，不是船名；确认前让{ship_zh}停在{location_zh}。",
+        ),
+        (
+            "[Global] Fox: {en} near {location_en} @...\n[Party] Me: translate that as {en}, not as a random ship\n[Voice] Kai: check marker before firing",
+            "[Global] Fox: {location_zh}附近{zh} @...\n[Party] Me: 这个要翻成{en}，不是随机船名\n[Voice] Kai: 开火前看标记",
+        ),
+        (
+            "Quick callout: {en} on the {ship_en} at {location_en}; do not confuse it with > F7C-S Hornet Ghost.",
+            "报点 {location_zh}那艘{ship_zh}是{zh}，别和>F7C-S Hornet Ghost混了。",
+        ),
+        (
+            "Voice: if players say this term, use {en}; keep the party on voice and wait for escort.",
+            "yy 玩家说{zh}就用{en}，队伍保持语音并等escort。",
+        ),
+    ]
     alias_chat_slang_prefixes = [
         ("SC global: ", "sc全局 "),
         ("Party: ", "队伍 "),
@@ -808,6 +826,7 @@ def build_quant_focus_samples(
     alias_entry_list = list(alias_entries)
     formal_vehicle_entries = [entry for entry in term_entry_list if entry.category == "vehicle"]
     formal_location_entries = [entry for entry in term_entry_list if entry.category == "location"]
+    gameplay_entries = [entry for entry in term_entry_list if entry.category == "gameplay"]
     entries = term_entry_list + alias_entry_list
     seen_entries: set[tuple[str, str, str]] = set()
     for entry_index, entry in enumerate(entries, start=1):
@@ -1174,8 +1193,41 @@ def build_quant_focus_samples(
                                 category=entry.category,
                                 is_priority=True,
                                 source="quant_focus",
-                            )
                         )
+                    )
+            if entry.category == "gameplay":
+                gameplay_index = gameplay_entries.index(entry) if entry in gameplay_entries else entry_index
+                for template_index, (en_template, zh_template) in enumerate(gameplay_comm_templates, start=1):
+                    ship_en, ship_zh = location_comm_ships[
+                        (gameplay_index + template_index + repeat_index) % len(location_comm_ships)
+                    ]
+                    location_en, location_zh = alias_chat_locations[
+                        (gameplay_index + template_index + repeat_index) % len(alias_chat_locations)
+                    ]
+                    samples.append(
+                        PairSample(
+                            key=f"quant_focus_gameplay_comm:{entry.key}:{repeat_index + 1}:{template_index}",
+                            en=en_template.format(
+                                en=entry.en,
+                                zh=entry.zh,
+                                ship_en=ship_en,
+                                ship_zh=ship_zh,
+                                location_en=location_en,
+                                location_zh=location_zh,
+                            ),
+                            zh=zh_template.format(
+                                en=entry.en,
+                                zh=entry.zh,
+                                ship_en=ship_en,
+                                ship_zh=ship_zh,
+                                location_en=location_en,
+                                location_zh=location_zh,
+                            ),
+                            category=entry.category,
+                            is_priority=True,
+                            source="quant_focus",
+                        )
+                    )
         if entry.key.startswith("ship_alias:") and entry.category == "vehicle":
             location_count = len(alias_chat_locations)
             selected_locations = [

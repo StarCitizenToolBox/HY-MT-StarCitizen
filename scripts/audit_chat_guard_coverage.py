@@ -215,6 +215,7 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     alias_pairs = load_alias_pairs(aliases_file)
     vehicle_pairs = load_term_pairs(terms_file, category_filter="vehicle")
     location_pairs = load_term_pairs(terms_file, category_filter="location")
+    gameplay_pairs = load_term_pairs(terms_file, category_filter="gameplay")
     root_counts = Counter(key_root(row.get("key", "")) for row in rows)
     chat_counts = Counter(chat_subkey(row.get("key", "")) for row in rows if row.get("key", "").startswith("chat_guard:"))
     target_cjk = [row for row in rows if re.search(r"[\u3400-\u9fff]", row.get("target", ""))]
@@ -233,6 +234,7 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     ]
     location_chat_log_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_location_chat_log:")]
     alias_chat_log_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat_log:")]
+    gameplay_comm_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_gameplay_comm:")]
     alias_chat_keys = {alias_key(row.get("key", "")) for row in alias_chat_rows}
     alias_slang_keys = {alias_key(row.get("key", "")) for row in alias_slang_rows}
 
@@ -278,6 +280,10 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "location_chat_log_covered_pairs": count_pair_coverage(rows, location_pairs, "quant_focus_location_chat_log:"),
         "alias_chat_log_rows": len(alias_chat_log_rows),
         "alias_chat_log_covered_pairs": count_pair_coverage(rows, alias_pairs, "quant_focus_alias_chat_log:"),
+        "gameplay_term_rows": len(gameplay_pairs),
+        "gameplay_term_unique_pairs": len(set(gameplay_pairs)),
+        "gameplay_comm_rows": len(gameplay_comm_rows),
+        "gameplay_comm_covered_pairs": count_pair_coverage(rows, gameplay_pairs, "quant_focus_gameplay_comm:"),
         "root_counts": dict(sorted(root_counts.items())),
         "chat_subkey_counts": dict(sorted((key, value) for key, value in chat_counts.items() if key)),
         "alias_chat_rows": len(alias_chat_rows),
@@ -334,6 +340,10 @@ def main() -> int:
     print(f"location_chat_log_covered_pairs: {report['location_chat_log_covered_pairs']}")
     print(f"alias_chat_log_rows: {report['alias_chat_log_rows']}")
     print(f"alias_chat_log_covered_pairs: {report['alias_chat_log_covered_pairs']}")
+    print(f"gameplay_term_rows: {report['gameplay_term_rows']}")
+    print(f"gameplay_term_unique_pairs: {report['gameplay_term_unique_pairs']}")
+    print(f"gameplay_comm_rows: {report['gameplay_comm_rows']}")
+    print(f"gameplay_comm_covered_pairs: {report['gameplay_comm_covered_pairs']}")
     print(f"alias_chat_rows: {report['alias_chat_rows']}")
     print(f"alias_slang_rows: {report['alias_slang_rows']}")
     print(f"alias_chat_unique: {report['alias_chat_unique']}")
