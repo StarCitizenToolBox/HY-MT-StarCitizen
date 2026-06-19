@@ -3143,6 +3143,48 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("pin the workaround in party chat", "把绕路办法置顶到队伍聊天"),
         ("attach the crash log after the session", "这局结束后附上crash log"),
     ]
+    player_service_topics = [
+        ("ship loadout check", "船只整备检查"),
+        ("insurance claim", "保险申领"),
+        ("expedite timer", "加急申领计时"),
+        ("repair and rearm", "维修补弹"),
+        ("refuel stop", "补油停靠"),
+        ("component swap", "组件更换"),
+        ("Vehicle Manager save", "Vehicle Manager保存"),
+        ("MobiGlas route check", "MobiGlas路线检查"),
+        ("NikNax item lookup", "NikNax物品查询"),
+        ("ATC hangar request", "ATC机库请求"),
+        ("docking collar alignment", "docking collar对接"),
+        ("paint and livery reset", "涂装重置"),
+    ]
+    player_service_states = [
+        ("ASOP terminal shows the wrong ship", "ASOP终端显示错船"),
+        ("claim timer is longer than expected", "claim timer比预期长"),
+        ("expedite button is greyed out", "expedite按钮灰了"),
+        ("repair kiosk charged twice", "维修终端扣了两次钱"),
+        ("rearm did not refill missiles", "rearm没有补上missile"),
+        ("quantum drive is still stock", "quantum drive还是原厂"),
+        ("shield generator is offline", "shield generator离线"),
+        ("cooler is overheating after the swap", "cooler换完还过热"),
+        ("power plant is missing from inventory", "power plant不在仓库里"),
+        ("MobiGlas route will not save", "MobiGlas路线保存不了"),
+        ("Vehicle Manager did not apply the loadout", "Vehicle Manager没应用配置"),
+        ("ATC assigned the wrong hangar", "ATC分错机库"),
+        ("docking collar will not line up", "docking collar对不上"),
+        ("paint reset after the claim", "申领后paint重置了"),
+    ]
+    player_service_actions = [
+        ("screenshot the ASOP page before claiming", "申领前先截图ASOP页面"),
+        ("do not confuse the component name with the ship name", "别把组件名当船名"),
+        ("wait for the claim timer before expediting", "等claim timer出来再加急"),
+        ("save the loadout in Vehicle Manager again", "再去Vehicle Manager保存一次配置"),
+        ("check NikNax before buying another component", "买新组件前先查NikNax"),
+        ("call ATC only after the party is onboard", "队伍上船后再呼叫ATC"),
+        ("repair before rearming if missiles are missing", "missile没补上就先维修再补弹"),
+        ("keep the docking collar callout separate from the ship name", "把docking collar报点和船名分开"),
+        ("swap the quantum drive after landing", "落地后再换quantum drive"),
+        ("record the paint reset before filing the report", "反馈前先录下paint重置"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -4389,6 +4431,76 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Local] Helper: {location_zh}附近{topic_zh}，{state_zh}\n"
                             f"[Party] Pilot: {ship_zh}暂时继续负责\n"
                             f"[Org] Admin: {action_zh}；支持报点不是船名"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for service_index, (topic_en, topic_zh) in enumerate(player_service_topics, start=1):
+                    state_en, state_zh = player_service_states[
+                        (repeat_index + location_index + ship_index + service_index) % len(player_service_states)
+                    ]
+                    action_en, action_zh = player_service_actions[
+                        (repeat_index + ship_index + service_index) % len(player_service_actions)
+                    ]
+                    channel_en, channel_zh = player_comm_channels[
+                        (repeat_index + service_index + location_index) % len(player_comm_channels)
+                    ]
+                    service_en_text = (
+                        f"{channel_en}{topic_en} at {location_en}: {ship_en} is waiting; {state_en}; "
+                        f"{action_en}."
+                    )
+                    service_zh_text = (
+                        f"{channel_zh}{location_zh}{topic_zh}: {ship_zh}在等；{state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_service_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{service_index}:standard"
+                            ),
+                            en=service_en_text,
+                            zh=service_zh_text,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_service_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{service_index}:compact"
+                            ),
+                            en=service_en_text,
+                            zh=slangify_player_chat(service_zh_text),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                topic_en, topic_zh = player_service_topics[
+                    (repeat_index + location_index + ship_index) % len(player_service_topics)
+                ]
+                state_en, state_zh = player_service_states[
+                    (repeat_index + location_index + ship_index + 7) % len(player_service_states)
+                ]
+                action_en, action_zh = player_service_actions[
+                    (repeat_index + location_index + ship_index + 9) % len(player_service_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_service_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Local] Mechanic: {topic_en} at {location_en}, {state_en}\n"
+                            f"[Party] Pilot: the {ship_en} stays in the hangar\n"
+                            f"[Voice] Crew: {action_en}; service callout is not the ship name"
+                        ),
+                        zh=(
+                            f"[Local] Mechanic: {location_zh}{topic_zh}，{state_zh}\n"
+                            f"[Party] Pilot: {ship_zh}留在机库\n"
+                            f"[Voice] Crew: {action_zh}；整备报点不是船名"
                         ),
                         category="chat",
                         is_priority=True,

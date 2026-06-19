@@ -134,6 +134,18 @@ SOURCE_PHRASES = {
         "PTU",
         "crash log",
         "IC report",
+        "Vehicle Manager",
+        "MobiGlas",
+        "NikNax",
+        "ATC",
+        "docking collar",
+        "quantum drive",
+        "shield generator",
+        "power plant",
+        "expedite",
+        "cooler",
+        "paint",
+        "rearm",
     ],
     "chat_style": [
         "sc全局",
@@ -200,6 +212,14 @@ SOURCE_PHRASES = {
         "复现步骤",
         "重登",
         "支持报点",
+        "船只整备",
+        "保险申领",
+        "加急申领",
+        "维修补弹",
+        "组件",
+        "配置",
+        "整备报点",
+        "涂装",
         "引擎离线",
         "报点和船名",
         "量子矿",
@@ -369,6 +389,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     player_ops_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_ops_log:")]
     player_meta_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_meta_status:")]
     player_meta_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_meta_log:")]
+    player_service_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_service_status:")]
+    player_service_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_service_log:")]
     target_cjk = [row for row in rows if re.search(r"[\u3400-\u9fff]", row.get("target", ""))]
     alias_chat_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat:")]
     alias_slang_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_slang:")]
@@ -466,6 +488,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "player_ops_log_rows": len(player_ops_log_rows),
         "player_meta_rows": len(player_meta_rows),
         "player_meta_log_rows": len(player_meta_log_rows),
+        "player_service_rows": len(player_service_rows),
+        "player_service_log_rows": len(player_service_log_rows),
         "alias_chat_rows": len(alias_chat_rows),
         "alias_slang_rows": len(alias_slang_rows),
         "alias_chat_unique": len(alias_chat_keys - {""}),
@@ -549,6 +573,8 @@ def main() -> int:
     print(f"player_ops_log_rows: {report['player_ops_log_rows']}")
     print(f"player_meta_rows: {report['player_meta_rows']}")
     print(f"player_meta_log_rows: {report['player_meta_log_rows']}")
+    print(f"player_service_rows: {report['player_service_rows']}")
+    print(f"player_service_log_rows: {report['player_service_log_rows']}")
     print(f"alias_chat_rows: {report['alias_chat_rows']}")
     print(f"alias_slang_rows: {report['alias_slang_rows']}")
     print(f"alias_chat_unique: {report['alias_chat_unique']}")
