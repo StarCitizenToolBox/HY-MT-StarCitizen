@@ -3462,6 +3462,22 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             "[Voice] Pilot: 我在{ship_zh}里，ping我一下，我等你。",
         ),
     ]
+    player_fragment_templates = [
+        ("Wait, that is the {ship_en}.", "等下，那是{ship_zh}。"),
+        ("Do not shoot the {ship_en}; it is friendly.", "别打{ship_zh}，友军。"),
+        ("I am beside the {ship_en} at {location_en}.", "我在{location_zh}的{ship_zh}旁边。"),
+        ("Not the {other_ship_en}; I said the {ship_en}.", "不是{other_ship_zh}，我说的是{ship_zh}。"),
+        ("I am boarding the {ship_en}; wait a second.", "我在上{ship_zh}，等一下。"),
+        ("Marker is wrong; the {ship_en} is over here.", "标记错了，{ship_zh}在这边。"),
+        ("The {ship_en} is full; take the next ship.", "{ship_zh}满员了，坐下一艘。"),
+        ("I am in the {ship_en}; invite me to party.", "我在{ship_zh}里，拉我进队。"),
+        ("That {other_ship_en} is not ours; follow the {ship_en}.", "那艘{other_ship_zh}不是我们的，跟{ship_zh}。"),
+        ("Open the ramp on the {ship_en}.", "把{ship_zh}舱门开一下。"),
+        ("Hold the {ship_en}; I am still at {location_en}.", "{ship_zh}先别走，我还在{location_zh}。"),
+        ("The {ship_en} is the pickup ship, not the target.", "{ship_zh}是接人的船，不是目标。"),
+        ("The target is near {location_en}, not inside the {ship_en}.", "目标在{location_zh}附近，不在{ship_zh}里面。"),
+        ("Ping the {ship_en} again; I lost the marker.", "再ping一下{ship_zh}，我看不到标记了。"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -3547,6 +3563,13 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         slang_text = slang_text.replace("hangar外", "机库外")
         slang_text = slang_text.replace("hangar门", "机库门")
         return slang_text
+
+    def pick_other_ship(ship_index: int, salt: int, current_zh: str) -> tuple[str, str]:
+        for offset in range(len(ships)):
+            candidate_en, candidate_zh = ships[(ship_index + salt + offset) % len(ships)]
+            if candidate_zh != current_zh:
+                return candidate_en, candidate_zh
+        return ships[(ship_index + salt) % len(ships)]
 
     samples: list[PairSample] = []
     for repeat_index in range(max(1, repeat)):
@@ -5133,7 +5156,7 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                     )
                 )
                 for dialogue_index, (en_template, zh_template) in enumerate(player_dialogue_templates, start=1):
-                    other_ship_en, other_ship_zh = ships[(ship_index + dialogue_index) % len(ships)]
+                    other_ship_en, other_ship_zh = pick_other_ship(ship_index, dialogue_index, ship_zh)
                     dialogue_en = en_template.format(
                         location_en=location_en,
                         location_zh=location_zh,
@@ -5171,6 +5194,50 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             ),
                             en=dialogue_en,
                             zh=compact_chat_text(dialogue_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                for fragment_index, (en_template, zh_template) in enumerate(player_fragment_templates, start=1):
+                    other_ship_en, other_ship_zh = pick_other_ship(ship_index, fragment_index + 3, ship_zh)
+                    fragment_en = en_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                        other_ship_en=other_ship_en,
+                        other_ship_zh=other_ship_zh,
+                    )
+                    fragment_zh = zh_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                        other_ship_en=other_ship_en,
+                        other_ship_zh=other_ship_zh,
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_fragment:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{fragment_index}:standard"
+                            ),
+                            en=fragment_en,
+                            zh=fragment_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_fragment:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{fragment_index}:plain"
+                            ),
+                            en=fragment_en,
+                            zh=compact_chat_text(fragment_zh),
                             category="chat",
                             is_priority=True,
                             source="chat_guard",
