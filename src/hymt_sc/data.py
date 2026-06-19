@@ -2987,6 +2987,44 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("keep the turret on the red target", "炮塔盯红名目标"),
         ("do not confuse the damage callout with a ship name", "别把伤害报点当船名"),
     ]
+    player_industrial_jobs = [
+        ("quantanium mining", "quantanium采矿"),
+        ("ROC mining", "ROC采矿"),
+        ("salvage scraping", "刮船打捞"),
+        ("RMC hauling", "RMC跑货"),
+        ("CM sorting", "CM整理"),
+        ("refinery pickup", "精炼提货"),
+        ("ore selling", "卖矿"),
+        ("cargo grid stacking", "货物网格堆箱"),
+        ("wreck stripping", "拆残骸"),
+        ("tractor beam loading", "牵引光束装货"),
+    ]
+    player_industrial_states = [
+        ("quantanium timer is running", "quantanium计时开始"),
+        ("rock instability is high", "矿石不稳定很高"),
+        ("fracture window is tiny", "破裂窗口很窄"),
+        ("refinery order is ready", "精炼订单好了"),
+        ("cargo grid is full", "货物网格满了"),
+        ("RMC boxes are loose", "RMC箱子散了"),
+        ("CM crates need sorting", "CM箱子要整理"),
+        ("tractor beam is desynced", "tractor beam同步异常"),
+        ("sell terminal is bugged", "卖货终端出问题"),
+        ("pirates are camping the sale route", "卖货路线上有海盗蹲点"),
+        ("scan says the rock is inert", "扫描说矿石惰性"),
+        ("refinery job has a long timer", "精炼任务计时很长"),
+    ]
+    player_industrial_actions = [
+        ("mark the rock before anyone starts the laser", "开激光前先标记矿石"),
+        ("stop the laser if instability spikes", "不稳定飙升就停激光"),
+        ("move boxes before the grid snaps them wrong", "货物网格吸错前先挪箱子"),
+        ("keep escort until the cargo reaches the station", "货到空间站前继续护航"),
+        ("split the cargo profit after selling", "卖完货后分货款"),
+        ("do not translate RMC or CM as ship names", "别把RMC或CM翻成船名"),
+        ("bring a tractor beam and clear the ramp", "带牵引光束并清跳板"),
+        ("wait for the refinery timer before calling pickup", "等精炼计时结束再叫接送"),
+        ("check the sale route before loading the ship", "装船前先看卖货路线"),
+        ("keep the ship name separate from the cargo callout", "把船名和货物报点分开"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -3062,6 +3100,8 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             reverse=True,
         ):
             slang_text = slang_text.replace(source_phrase, replacement)
+        slang_text = slang_text.replace("quantaniummining", "quantanium mining")
+        slang_text = slang_text.replace("ROCmining", "ROC mining")
         return slang_text
 
     samples: list[PairSample] = []
@@ -3949,6 +3989,75 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Voice] Gunner: {location_zh}那艘{ship_zh}，{combat_zh}\n"
                             f"[Party] Pilot: {system_zh}\n"
                             f"[Team] Lead: {action_zh}；把报点和船名分开"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for industrial_index, (job_en, job_zh) in enumerate(player_industrial_jobs, start=1):
+                    state_en, state_zh = player_industrial_states[
+                        (repeat_index + location_index + ship_index + industrial_index) % len(player_industrial_states)
+                    ]
+                    action_en, action_zh = player_industrial_actions[
+                        (repeat_index + ship_index + industrial_index) % len(player_industrial_actions)
+                    ]
+                    channel_en, channel_zh = player_comm_channels[
+                        (repeat_index + industrial_index + location_index) % len(player_comm_channels)
+                    ]
+                    industrial_en_text = (
+                        f"{channel_en}{ship_en} at {location_en} for {job_en}: {state_en}; {action_en}."
+                    )
+                    industrial_zh_text = (
+                        f"{channel_zh}{location_zh}那艘{ship_zh}在做{job_zh}: {state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_industrial_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{industrial_index}:standard"
+                            ),
+                            en=industrial_en_text,
+                            zh=industrial_zh_text,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_industrial_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{industrial_index}:compact"
+                            ),
+                            en=industrial_en_text,
+                            zh=slangify_player_chat(industrial_zh_text),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                job_en, job_zh = player_industrial_jobs[
+                    (repeat_index + location_index + ship_index) % len(player_industrial_jobs)
+                ]
+                state_en, state_zh = player_industrial_states[
+                    (repeat_index + location_index + ship_index + 4) % len(player_industrial_states)
+                ]
+                action_en, action_zh = player_industrial_actions[
+                    (repeat_index + location_index + ship_index + 6) % len(player_industrial_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_industrial_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Trade] Miner: {job_en} near {location_en}, {state_en}\n"
+                            f"[Party] Pilot: the {ship_en} is loaded and waiting\n"
+                            f"[Voice] Lead: {action_en}; cargo callout is not the ship name"
+                        ),
+                        zh=(
+                            f"[Trade] Miner: {location_zh}附近{job_zh}，{state_zh}\n"
+                            f"[Party] Pilot: {ship_zh}已经装货在等\n"
+                            f"[Voice] Lead: {action_zh}；货物报点不是船名"
                         ),
                         category="chat",
                         is_priority=True,

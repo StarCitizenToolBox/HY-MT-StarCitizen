@@ -111,6 +111,12 @@ SOURCE_PHRASES = {
         "capacitor",
         "missile lock",
         "friendly fire",
+        "quantanium",
+        "ROC",
+        "RMC",
+        "CM",
+        "refinery",
+        "tractor beam",
     ],
     "chat_style": [
         "sc全局",
@@ -151,6 +157,15 @@ SOURCE_PHRASES = {
         "武器离线",
         "引擎离线",
         "报点和船名",
+        "量子矿",
+        "矿石不稳定",
+        "破裂窗口",
+        "精炼订单",
+        "货物报点",
+        "货物网格",
+        "卖货路线",
+        "卖货终端",
+        "拆残骸",
     ],
 }
 
@@ -297,6 +312,12 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     player_nav_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_nav_log:")]
     player_combat_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_combat_status:")]
     player_combat_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_combat_log:")]
+    player_industrial_rows = [
+        row for row in rows if row.get("key", "").startswith("chat_guard:player_industrial_status:")
+    ]
+    player_industrial_log_rows = [
+        row for row in rows if row.get("key", "").startswith("chat_guard:player_industrial_log:")
+    ]
     target_cjk = [row for row in rows if re.search(r"[\u3400-\u9fff]", row.get("target", ""))]
     alias_chat_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat:")]
     alias_slang_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_slang:")]
@@ -386,6 +407,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "player_nav_log_rows": len(player_nav_log_rows),
         "player_combat_rows": len(player_combat_rows),
         "player_combat_log_rows": len(player_combat_log_rows),
+        "player_industrial_rows": len(player_industrial_rows),
+        "player_industrial_log_rows": len(player_industrial_log_rows),
         "alias_chat_rows": len(alias_chat_rows),
         "alias_slang_rows": len(alias_slang_rows),
         "alias_chat_unique": len(alias_chat_keys - {""}),
@@ -461,6 +484,8 @@ def main() -> int:
     print(f"player_nav_log_rows: {report['player_nav_log_rows']}")
     print(f"player_combat_rows: {report['player_combat_rows']}")
     print(f"player_combat_log_rows: {report['player_combat_log_rows']}")
+    print(f"player_industrial_rows: {report['player_industrial_rows']}")
+    print(f"player_industrial_log_rows: {report['player_industrial_log_rows']}")
     print(f"alias_chat_rows: {report['alias_chat_rows']}")
     print(f"alias_slang_rows: {report['alias_slang_rows']}")
     print(f"alias_chat_unique: {report['alias_chat_unique']}")
