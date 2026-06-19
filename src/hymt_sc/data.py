@@ -3800,6 +3800,48 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("move reserve pilot only after the current ship lands", "当前船落地后再调备用驾驶"),
         ("confirm the time window before accepting a long contract", "接长合同前先确认大家时间"),
     ]
+    player_landing_topics = [
+        ("arrival and departure coordination", "进出港协调"),
+        ("ATC and hangar check", "ATC和机库确认"),
+        ("approach route coordination", "进场路线协调"),
+        ("traffic sequencing", "交通顺序协调"),
+        ("pad and docking coordination", "停机坪和对接协调"),
+        ("station airspace coordination", "空间站空域协调"),
+        ("cargo arrival coordination", "带货进场协调"),
+        ("pickup arrival coordination", "接人进场协调"),
+        ("fleet movement coordination", "舰队移动协调"),
+        ("final approach check", "最后进场确认"),
+        ("missed approach reset", "复飞后重新进场"),
+        ("hangar number confirmation", "机库号确认"),
+    ]
+    player_landing_states = [
+        ("ATC has not assigned a hangar yet", "ATC还没分配机库"),
+        ("hangar marker points to a different door", "机库标记指到另一扇门"),
+        ("pad traffic is blocking the approach", "停机坪交通挡住进场路线"),
+        ("cargo ship needs a slow approach", "带货的船需要慢一点进场"),
+        ("escort is circling outside armistice", "护航在停火区外面盘旋"),
+        ("pickup target is waiting near the landing pad", "要接的人在停机坪附近等"),
+        ("docking collar is still occupied", "对接口还被占着"),
+        ("fleet ships are leaving in different directions", "舰队的船在往不同方向离港"),
+        ("new pilot overshot the hangar entrance", "新驾驶飞过机库入口了"),
+        ("ship marker disappeared during final approach", "最后进场时船标消失了"),
+        ("landing gear was not lowered before the pad", "到停机坪前还没放起落架"),
+        ("another crew is using the same hangar number", "另一队也在用同一个机库号"),
+    ]
+    player_landing_actions = [
+        ("wait for ATC before descending", "收到ATC后再下降"),
+        ("read the hangar number in party chat", "在队伍聊天里报一下机库号"),
+        ("hold outside until pad traffic clears", "停机坪空出来前先在外面等"),
+        ("keep escort above the station until cargo lands", "货船落地前护航先在空间站上方等"),
+        ("call the pickup point before opening the ramp", "开舱门前先报接人点"),
+        ("wait for the docking collar before moving in", "等对接口空出来再靠过去"),
+        ("depart one ship at a time", "一艘一艘离港"),
+        ("reset approach and line up with the hangar again", "复飞后重新对准机库"),
+        ("keep destination and ship name separate in the callout", "报点时把目的地和船名分开说"),
+        ("lower landing gear before crossing the pad marker", "过停机坪标记前先放起落架"),
+        ("confirm the hangar number before entering", "进门前再确认一次机库号"),
+        ("move the pickup ship only after the crew boards", "接人的船等船员上来后再动"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -6138,6 +6180,78 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Party] Lead: {location_zh}这边{schedule_topic_zh}，围绕{ship_zh}安排\n"
                             f"[Voice] Crew: {schedule_state_zh}\n"
                             f"[Team] Lead: {schedule_action_zh}；出发前确认时间"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for landing_index, (topic_en, topic_zh) in enumerate(player_landing_topics, start=1):
+                    state_en, state_zh = player_landing_states[
+                        (repeat_index + location_index + ship_index + landing_index) % len(player_landing_states)
+                    ]
+                    action_en, action_zh = player_landing_actions[
+                        (repeat_index + ship_index + landing_index) % len(player_landing_actions)
+                    ]
+                    other_ship_en, other_ship_zh = pick_other_ship(ship_index, landing_index + 31, ship_zh)
+                    channel_en, channel_zh = player_route_channels[
+                        (repeat_index + landing_index + location_index + ship_index) % len(player_route_channels)
+                    ]
+                    landing_en = (
+                        f"{channel_en}{topic_en} at {location_en}: bring in the {ship_en}, "
+                        f"not the {other_ship_en}; {state_en}; {action_en}."
+                    )
+                    landing_zh = (
+                        f"{channel_zh}{location_zh}这边{topic_zh}: 让{ship_zh}进场，不是{other_ship_zh}；"
+                        f"{state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_landing_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{landing_index}:standard"
+                            ),
+                            en=landing_en,
+                            zh=landing_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_landing_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{landing_index}:compact"
+                            ),
+                            en=landing_en,
+                            zh=compact_chat_text(landing_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                landing_topic_en, landing_topic_zh = player_landing_topics[
+                    (repeat_index + location_index + ship_index) % len(player_landing_topics)
+                ]
+                landing_state_en, landing_state_zh = player_landing_states[
+                    (repeat_index + location_index + ship_index + 8) % len(player_landing_states)
+                ]
+                landing_action_en, landing_action_zh = player_landing_actions[
+                    (repeat_index + location_index + ship_index + 10) % len(player_landing_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_landing_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Party] Pilot: {landing_topic_en} at {location_en}; bring in the {ship_en}\n"
+                            f"[Voice] Crew: {landing_state_en}\n"
+                            f"[Team] Lead: {landing_action_en}; confirm before final approach"
+                        ),
+                        zh=(
+                            f"[Party] Pilot: {location_zh}这边{landing_topic_zh}，让{ship_zh}进场\n"
+                            f"[Voice] Crew: {landing_state_zh}\n"
+                            f"[Team] Lead: {landing_action_zh}；最后进场前确认"
                         ),
                         category="chat",
                         is_priority=True,
