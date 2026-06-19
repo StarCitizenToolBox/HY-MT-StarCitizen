@@ -68,7 +68,17 @@ SOURCE_PHRASES = {
         "hangar",
         "elevator",
     ],
-    "chat_noise": [">F7C-S Hornet Ghost", "@...", "[全局]", "[语音]"],
+    "chat_noise": [
+        ">F7C-S Hornet Ghost",
+        "@...",
+        "[全局]",
+        "[语音]",
+        "@队友",
+        ">>>",
+        "pad 03",
+        "OM-1",
+        "marker 2",
+    ],
     "chat_style": ["sc全局", "队伍", "yy里", "来人", "萌新注意", "报点", "感觉不太行"],
 }
 
@@ -208,8 +218,14 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     alias_slang_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_slang:")]
     vehicle_comm_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_vehicle_comm:")]
     vehicle_contrast_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_vehicle_contrast:")]
+    vehicle_mixed_format_rows = [
+        row for row in rows if row.get("key", "").startswith("quant_focus_vehicle_mixed_format:")
+    ]
     location_comm_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_location_comm:")]
     location_route_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_location_route:")]
+    location_mixed_format_rows = [
+        row for row in rows if row.get("key", "").startswith("quant_focus_location_mixed_format:")
+    ]
     alias_chat_keys = {alias_key(row.get("key", "")) for row in alias_chat_rows}
     alias_slang_keys = {alias_key(row.get("key", "")) for row in alias_slang_rows}
 
@@ -231,12 +247,24 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "vehicle_comm_covered_pairs": count_pair_coverage(rows, vehicle_pairs, "quant_focus_vehicle_comm:"),
         "vehicle_contrast_rows": len(vehicle_contrast_rows),
         "vehicle_contrast_covered_pairs": count_pair_coverage(rows, vehicle_pairs, "quant_focus_vehicle_contrast:"),
+        "vehicle_mixed_format_rows": len(vehicle_mixed_format_rows),
+        "vehicle_mixed_format_covered_pairs": count_pair_coverage(
+            rows,
+            vehicle_pairs,
+            "quant_focus_vehicle_mixed_format:",
+        ),
         "location_term_rows": len(location_pairs),
         "location_term_unique_pairs": len(set(location_pairs)),
         "location_comm_rows": len(location_comm_rows),
         "location_comm_covered_pairs": count_pair_coverage(rows, location_pairs, "quant_focus_location_comm:"),
         "location_route_rows": len(location_route_rows),
         "location_route_covered_pairs": count_pair_coverage(rows, location_pairs, "quant_focus_location_route:"),
+        "location_mixed_format_rows": len(location_mixed_format_rows),
+        "location_mixed_format_covered_pairs": count_pair_coverage(
+            rows,
+            location_pairs,
+            "quant_focus_location_mixed_format:",
+        ),
         "root_counts": dict(sorted(root_counts.items())),
         "chat_subkey_counts": dict(sorted((key, value) for key, value in chat_counts.items() if key)),
         "alias_chat_rows": len(alias_chat_rows),
@@ -277,12 +305,16 @@ def main() -> int:
     print(f"vehicle_comm_covered_pairs: {report['vehicle_comm_covered_pairs']}")
     print(f"vehicle_contrast_rows: {report['vehicle_contrast_rows']}")
     print(f"vehicle_contrast_covered_pairs: {report['vehicle_contrast_covered_pairs']}")
+    print(f"vehicle_mixed_format_rows: {report['vehicle_mixed_format_rows']}")
+    print(f"vehicle_mixed_format_covered_pairs: {report['vehicle_mixed_format_covered_pairs']}")
     print(f"location_term_rows: {report['location_term_rows']}")
     print(f"location_term_unique_pairs: {report['location_term_unique_pairs']}")
     print(f"location_comm_rows: {report['location_comm_rows']}")
     print(f"location_comm_covered_pairs: {report['location_comm_covered_pairs']}")
     print(f"location_route_rows: {report['location_route_rows']}")
     print(f"location_route_covered_pairs: {report['location_route_covered_pairs']}")
+    print(f"location_mixed_format_rows: {report['location_mixed_format_rows']}")
+    print(f"location_mixed_format_covered_pairs: {report['location_mixed_format_covered_pairs']}")
     print(f"alias_chat_rows: {report['alias_chat_rows']}")
     print(f"alias_slang_rows: {report['alias_slang_rows']}")
     print(f"alias_chat_unique: {report['alias_chat_unique']}")

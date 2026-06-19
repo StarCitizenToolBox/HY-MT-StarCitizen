@@ -658,6 +658,42 @@ def build_quant_focus_samples(
             "报点 {left_zh}是我们的船，{right_zh}只是消息后面的噪声>F7C-S Hornet Ghost",
         ),
     ]
+    vehicle_mixed_format_templates = [
+        (
+            "[party] @teammate The {en} at pad 03 in {location_en} is in soft death >>> hold fire.",
+            "[队伍] @队友 {location_zh} pad 03 有{zh} soft death了 >>> 别开火",
+        ),
+        (
+            "SC global: {en} from {location_en} to {destination_en} is hauling cargo; need escort?",
+            "sc全局: {zh}@{location_zh}->{destination_zh} 跑cargo，需要escort？",
+        ),
+        (
+            "Near OM-1, the {en} is locking missiles @... check marker.",
+            "OM-1附近 {zh}锁missile @... 看标记",
+        ),
+        (
+            "Voice: {en} needs refuel and repair at {location_en}; do not read > F7C-S Hornet Ghost as the ship.",
+            "yy {zh}在{location_zh}要refuel and repair，别把>F7C-S Hornet Ghost当船名",
+        ),
+    ]
+    location_mixed_format_templates = [
+        (
+            "[global] @teammate A {ship_en} is blocking pad 03 at {en} >>> switch route.",
+            "[全局] @队友 {zh} pad 03 有{ship_zh}堵门 >>> 换route",
+        ),
+        (
+            "{en} to OM-1 has a medical beacon; can the {ship_en} take it?",
+            "{zh}->OM-1 有med beacon，{ship_zh}接吗？",
+        ),
+        (
+            "Voice: elevator bug at {en}; do not land the {ship_en}.",
+            "yy {zh} elevator bug，{ship_zh}别landing",
+        ),
+        (
+            "Quick callout: marker 2 is at {en}, not the tag after @...",
+            "报点 marker 2在{zh}，不是@...后面的标签",
+        ),
+    ]
     alias_chat_slang_prefixes = [
         ("SC global: ", "sc全局 "),
         ("Party: ", "队伍 "),
@@ -880,9 +916,48 @@ def build_quant_focus_samples(
                                     source="quant_focus",
                                 )
                             )
+                current_vehicle_index = formal_vehicle_entries.index(entry) if entry in formal_vehicle_entries else entry_index
+                for template_index, (en_template, zh_template) in enumerate(vehicle_mixed_format_templates, start=1):
+                    location_en, location_zh = alias_chat_locations[
+                        (current_vehicle_index + template_index + repeat_index) % len(alias_chat_locations)
+                    ]
+                    destination_en, destination_zh = alias_chat_locations[
+                        (current_vehicle_index + template_index + repeat_index + 3) % len(alias_chat_locations)
+                    ]
+                    if destination_en == location_en:
+                        destination_en, destination_zh = alias_chat_locations[
+                            (current_vehicle_index + template_index + repeat_index + 4) % len(alias_chat_locations)
+                        ]
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"quant_focus_vehicle_mixed_format:{entry.key}:{repeat_index + 1}:"
+                                f"{template_index}"
+                            ),
+                            en=en_template.format(
+                                en=entry.en,
+                                zh=entry.zh,
+                                location_en=location_en,
+                                location_zh=location_zh,
+                                destination_en=destination_en,
+                                destination_zh=destination_zh,
+                            ),
+                            zh=zh_template.format(
+                                en=entry.en,
+                                zh=entry.zh,
+                                location_en=location_en,
+                                location_zh=location_zh,
+                                destination_en=destination_en,
+                                destination_zh=destination_zh,
+                            ),
+                            category=entry.category,
+                            is_priority=True,
+                            source="quant_focus",
+                        )
+                    )
             if entry.category == "location":
+                current_location_index = formal_location_entries.index(entry) if entry in formal_location_entries else entry_index
                 if formal_location_entries:
-                    current_location_index = formal_location_entries.index(entry)
                     route_offsets = (1, 9, 31)
                     for route_index, offset in enumerate(route_offsets, start=1):
                         destination_index = (current_location_index + offset) % len(formal_location_entries)
@@ -954,6 +1029,23 @@ def build_quant_focus_samples(
                                     source="quant_focus",
                                 )
                             )
+                for template_index, (en_template, zh_template) in enumerate(location_mixed_format_templates, start=1):
+                    ship_en, ship_zh = location_comm_ships[
+                        (current_location_index + template_index + repeat_index) % len(location_comm_ships)
+                    ]
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"quant_focus_location_mixed_format:{entry.key}:{repeat_index + 1}:"
+                                f"{template_index}"
+                            ),
+                            en=en_template.format(en=entry.en, zh=entry.zh, ship_en=ship_en, ship_zh=ship_zh),
+                            zh=zh_template.format(en=entry.en, zh=entry.zh, ship_en=ship_en, ship_zh=ship_zh),
+                            category=entry.category,
+                            is_priority=True,
+                            source="quant_focus",
+                        )
+                    )
                 for ship_index, (ship_en, ship_zh) in enumerate(location_comm_ships, start=1):
                     for template_index, (en_template, zh_template) in enumerate(location_comm_templates, start=1):
                         en_text = en_template.format(en=entry.en, zh=entry.zh, ship_en=ship_en, ship_zh=ship_zh)
