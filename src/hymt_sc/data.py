@@ -430,6 +430,33 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("Scorpius", "天蝎座"),
         ("Vulcan", "火神"),
     ]
+    ambiguous_ships = [
+        ("Corsair", "海盗船", "pirate ship", "海盗船"),
+        ("Cutter", "小刀", "knife", "小刀"),
+        ("Glaive", "长刀", "long blade", "长刀"),
+        ("Polaris", "北极星", "north star", "北极星"),
+        ("Perseus", "英仙座", "Perseus constellation", "英仙座"),
+        ("Scorpius", "天蝎座", "Scorpius constellation", "天蝎座"),
+        ("Vulcan", "火神", "fire god", "火神"),
+    ]
+    locations = [
+        ("Seraphim", "炽天使"),
+        ("Seraphim Station", "炽天使空间站"),
+        ("Lorville", "洛维尔"),
+        ("Area18", "18区"),
+        ("Orison", "奥里森"),
+        ("New Babbage", "新巴贝奇"),
+        ("Everus Harbor", "埃弗勒斯港"),
+        ("Port Tressler", "特雷斯勒港"),
+    ]
+    location_spots = [
+        ("outside {location_en}", "{location_zh}外面"),
+        ("near {location_en}", "{location_zh}附近"),
+        ("at the hangar in {location_en}", "{location_zh}机库"),
+        ("on the pad at {location_en}", "{location_zh}停机坪"),
+        ("by the station entrance at {location_en}", "{location_zh}入口"),
+        ("above {location_en}", "{location_zh}上空"),
+    ]
     server_templates = [
         ("I am on the {server_en}.", "我在{server_zh}。"),
         ("I switched to the {server_en}.", "我换到{server_zh}了。"),
@@ -488,9 +515,296 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             "{ship_zh}在{server_zh}被炸了，但先被打死的是我。",
         ),
     ]
+    location_ship_templates = [
+        (
+            "There is a {ship_en} at {location_en} firing everywhere.",
+            "{location_zh}有个{ship_zh}到处开火。",
+        ),
+        (
+            "There is a {ship_en} at {location_en} shooting everywhere.",
+            "{location_zh}有个{ship_zh}到处乱射。",
+        ),
+        (
+            "A {ship_en} at {location_en} is firing at everyone.",
+            "{location_zh}有个{ship_zh}在打所有人。",
+        ),
+        (
+            "A {ship_en} near {location_en} is shooting at players.",
+            "{location_zh}附近有个{ship_zh}在攻击玩家。",
+        ),
+        (
+            "Someone is flying a {ship_en} at {location_en} and opening fire everywhere.",
+            "有人在{location_zh}开{ship_zh}到处开火。",
+        ),
+        (
+            "Watch out, a {ship_en} is shooting around {location_en}.",
+            "小心，{location_zh}有个{ship_zh}在乱开火。",
+        ),
+        (
+            "The {ship_en} at {location_en} is not a Hornet; it is a {ship_en}.",
+            "{location_zh}那个{ship_zh}不是大黄蜂，就是{ship_zh}。",
+        ),
+        (
+            "Do not collapse {location_en} and {ship_en} into a different ship name.",
+            "不要把{location_zh}和{ship_zh}合并成另一个船名。",
+        ),
+        (
+            "The {ship_en} at {location_en} is about to explode. Run!",
+            "{location_zh}的{ship_zh}要爆炸了，快跑啊。",
+        ),
+        (
+            "A {ship_en} at {location_en} is asking for help.",
+            "{location_zh}那艘{ship_zh}在求救。",
+        ),
+    ]
+    player_chat_templates = [
+        (
+            "There is a {ship_en} {spot_en} firing everywhere.",
+            "{spot_zh}有个{ship_zh}到处开火。",
+        ),
+        (
+            "A {ship_en} {spot_en} is shooting at everyone.",
+            "{spot_zh}有个{ship_zh}在打所有人。",
+        ),
+        (
+            "A {ship_en} {spot_en} is shooting at players.",
+            "{spot_zh}有个{ship_zh}在攻击玩家。",
+        ),
+        (
+            "Watch out, someone is flying a {ship_en} {spot_en} and spraying fire everywhere.",
+            "小心，有人在{spot_zh}开{ship_zh}到处乱射。",
+        ),
+        (
+            "Someone in a {ship_en} is camping {spot_en}.",
+            "有人开{ship_zh}在{spot_zh}蹲人。",
+        ),
+        (
+            "A {ship_en} is blocking the hangar {spot_en}.",
+            "{spot_zh}有个{ship_zh}堵机库。",
+        ),
+        (
+            "A {ship_en} just rammed someone {spot_en}.",
+            "{spot_zh}有个{ship_zh}刚撞人。",
+        ),
+        (
+            "A {ship_en} is griefing players {spot_en}.",
+            "{spot_zh}有个{ship_zh}在恶意打人。",
+        ),
+        (
+            "The {ship_en} {spot_en} is red; keep away.",
+            "{spot_zh}那个{ship_zh}红名了，离远点。",
+        ),
+        (
+            "The {ship_en} {spot_en} is not friendly.",
+            "{spot_zh}那个{ship_zh}不是友军。",
+        ),
+        (
+            "Can anyone help kill the {ship_en} {spot_en}?",
+            "有没有人来帮忙打掉{spot_zh}那个{ship_zh}？",
+        ),
+        (
+            "Do not leave the hangar; a {ship_en} is shooting outside {location_en}.",
+            "先别出机库，{location_zh}外面有个{ship_zh}在开火。",
+        ),
+        (
+            "I saw a {ship_en} {spot_en}, but I do not know if it is friendly.",
+            "我在{spot_zh}看到一个{ship_zh}，不知道是不是友军。",
+        ),
+        (
+            "The {ship_en} {spot_en} destroyed my ship.",
+            "{spot_zh}那个{ship_zh}把我的船打爆了。",
+        ),
+        (
+            "The {ship_en} {spot_en} killed me before I could take off.",
+            "{spot_zh}那个{ship_zh}在我起飞前把我打死了。",
+        ),
+        (
+            "I was about to land at {location_en}, but a {ship_en} started firing at me.",
+            "我准备降落{location_zh}，结果有个{ship_zh}开始打我。",
+        ),
+        (
+            "I was leaving {location_en} when a {ship_en} interdicted me.",
+            "我刚离开{location_zh}就被一个{ship_zh}拦截了。",
+        ),
+        (
+            "I am hauling cargo in the {ship_en} near {location_en}.",
+            "我在{location_zh}附近开{ship_zh}跑货。",
+        ),
+        (
+            "The {ship_en} is full of cargo and waiting at {location_en}.",
+            "{ship_zh}装满货了，在{location_zh}等人。",
+        ),
+        (
+            "Meet at {location_en}; I will bring the {ship_en}.",
+            "{location_zh}集合，我开{ship_zh}过去。",
+        ),
+        (
+            "Need one gunner for the {ship_en} at {location_en}.",
+            "{location_zh}的{ship_zh}缺一个炮手。",
+        ),
+        (
+            "Need escort for a {ship_en} cargo run from {location_en}.",
+            "需要护航，从{location_zh}开{ship_zh}跑货。",
+        ),
+        (
+            "I am repairing the {ship_en} at {location_en}.",
+            "我在{location_zh}修{ship_zh}。",
+        ),
+        (
+            "I am refueling the {ship_en} at {location_en}.",
+            "我在{location_zh}给{ship_zh}补油。",
+        ),
+        (
+            "The {ship_en} needs ammunition at {location_en}.",
+            "{ship_zh}在{location_zh}需要补弹药。",
+        ),
+        (
+            "I accepted a bounty near {location_en} and will bring the {ship_en}.",
+            "我接了{location_zh}附近的赏金，会开{ship_zh}过去。",
+        ),
+        (
+            "Anyone want to run bounty missions from {location_en} in a {ship_en}?",
+            "有人从{location_zh}开{ship_zh}一起打赏金吗？",
+        ),
+        (
+            "The {ship_en} at {location_en} is damaged; wait for repairs.",
+            "{location_zh}那艘{ship_zh}受损了，等修好。",
+        ),
+        (
+            "The {ship_en} at {location_en} is about to explode; move away.",
+            "{location_zh}那艘{ship_zh}快炸了，离远点。",
+        ),
+        (
+            "I crashed the {ship_en} near {location_en}; can someone pick me up?",
+            "我把{ship_zh}坠在{location_zh}附近了，有人能接我吗？",
+        ),
+    ]
+    server_location_templates = [
+        (
+            "On the {server_en}, there is a {ship_en} at {location_en} firing everywhere.",
+            "{server_zh}{location_zh}有个{ship_zh}到处开火。",
+        ),
+        (
+            "On the {server_en}, a {ship_en} is camping the hangar at {location_en}.",
+            "{server_zh}{location_zh}有个{ship_zh}堵机库。",
+        ),
+        (
+            "On the {server_en}, I got killed by a {ship_en} near {location_en}.",
+            "我在{server_zh}{location_zh}附近被一个{ship_zh}打死了。",
+        ),
+        (
+            "On the {server_en}, we are meeting at {location_en} and taking the {ship_en}.",
+            "我们在{server_zh}{location_zh}集合，开{ship_zh}出发。",
+        ),
+        (
+            "On the {server_en}, I am hauling cargo in the {ship_en} from {location_en}.",
+            "我在{server_zh}从{location_zh}开{ship_zh}跑货。",
+        ),
+        (
+            "On the {server_en}, the {ship_en} at {location_en} is asking for escort.",
+            "{server_zh}{location_zh}那艘{ship_zh}在喊护航。",
+        ),
+    ]
+    ship_identity_templates = [
+        (
+            "In Star Citizen chat, this term means the ship {ship_en}, not {literal_en}.",
+            "在星际公民聊天里，{ship_zh}是{ship_en}这艘船，不是普通说法里的{literal_zh}。",
+        ),
+        (
+            "Here this is the ship name {ship_en}.",
+            "这里的{ship_zh}是船名：{ship_en}。",
+        ),
+        (
+            "When players use this term, translate it as {ship_en}.",
+            "玩家说{ship_zh}的时候，要翻成{ship_en}。",
+        ),
+        (
+            "Do not translate the term literally in this game context; use {ship_en}.",
+            "这个游戏语境里不要把{ship_zh}直译，应该用{ship_en}。",
+        ),
+    ]
+    ambiguous_ship_chat_templates = [
+        (
+            "There is a {ship_en} at {location_en} firing everywhere. Come destroy it.",
+            "{location_zh}有个{ship_zh}到处开火，快来打掉。",
+        ),
+        (
+            "A {ship_en} is shooting around {location_en}; do not leave the hangar.",
+            "{location_zh}有个{ship_zh}到处乱射，先别出机库。",
+        ),
+        (
+            "The {ship_en} at {location_en} is about to explode. Run!",
+            "{location_zh}的{ship_zh}要爆炸了，快跑啊。",
+        ),
+        (
+            "The {ship_en} at {location_en} is red and firing on everyone.",
+            "{location_zh}的{ship_zh}红名了，在打所有人。",
+        ),
+        (
+            "Someone is flying a {ship_en} near {location_en} and killing players.",
+            "有人在{location_zh}附近开{ship_zh}杀玩家。",
+        ),
+        (
+            "Watch out for the {ship_en} above {location_en}; it is not friendly.",
+            "小心{location_zh}上空那艘{ship_zh}，不是友军。",
+        ),
+        (
+            "Need help at {location_en}; a {ship_en} is camping the station.",
+            "{location_zh}需要支援，有个{ship_zh}在蹲空间站。",
+        ),
+        (
+            "The {ship_en} near {location_en} destroyed my ship.",
+            "{location_zh}附近那艘{ship_zh}把我的船打爆了。",
+        ),
+        (
+            "I accepted a bounty near {location_en} and will bring the {ship_en}.",
+            "我接了{location_zh}附近的赏金，开{ship_zh}过去。",
+        ),
+        (
+            "Anyone want to run bounty missions with my {ship_en} from {location_en}?",
+            "我开{ship_zh}从{location_zh}打赏金，有没有一起的？",
+        ),
+        (
+            "I am hauling cargo in the {ship_en} from {location_en}; need escort.",
+            "我从{location_zh}开{ship_zh}跑货，需要护航。",
+        ),
+        (
+            "The {ship_en} is full of cargo at {location_en}; do not shoot it.",
+            "{ship_zh}在{location_zh}满载货物，别打它。",
+        ),
+        (
+            "I crashed the {ship_en} near {location_en}; can anyone pick me up?",
+            "我把{ship_zh}坠在{location_zh}附近了，有人能接我吗？",
+        ),
+        (
+            "The target is a {ship_en}, not a Hornet Ghost.",
+            "目标是{ship_zh}，不是大黄蜂幽灵。",
+        ),
+        (
+            "I said {ship_en}, not Hornet Ghost.",
+            "我说的是{ship_zh}，不是大黄蜂幽灵。",
+        ),
+    ]
 
     samples: list[PairSample] = []
     for repeat_index in range(max(1, repeat)):
+        for ship_index, (ship_en, ship_zh, literal_en, literal_zh) in enumerate(ambiguous_ships, start=1):
+            for template_index, (en_template, zh_template) in enumerate(ship_identity_templates, start=1):
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:ship_identity:{ship_index}:{repeat_index + 1}:{template_index}",
+                        en=en_template.format(
+                            ship_en=ship_en,
+                            ship_zh=ship_zh,
+                            literal_en=literal_en,
+                            literal_zh=literal_zh,
+                        ),
+                        zh=zh_template.format(ship_en=ship_en, ship_zh=ship_zh, literal_en=literal_en, literal_zh=literal_zh),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
         for server_index, (server_en, server_zh) in enumerate(servers, start=1):
             for template_index, (en_template, zh_template) in enumerate(server_templates, start=1):
                 samples.append(
@@ -528,6 +842,121 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             source="chat_guard",
                         )
                     )
+        for location_index, (location_en, location_zh) in enumerate(locations, start=1):
+            for ship_index, (ship_en, ship_zh) in enumerate(ships, start=1):
+                for template_index, (en_template, zh_template) in enumerate(location_ship_templates, start=1):
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:location_fire:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{template_index}"
+                            ),
+                            en=en_template.format(
+                                location_en=location_en,
+                                location_zh=location_zh,
+                                ship_en=ship_en,
+                                ship_zh=ship_zh,
+                            ),
+                            zh=zh_template.format(
+                                location_en=location_en,
+                                location_zh=location_zh,
+                                ship_en=ship_en,
+                                ship_zh=ship_zh,
+                            ),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                for spot_index, (spot_en_template, spot_zh_template) in enumerate(location_spots, start=1):
+                    spot_en = spot_en_template.format(location_en=location_en, location_zh=location_zh)
+                    spot_zh = spot_zh_template.format(location_en=location_en, location_zh=location_zh)
+                    for template_index, (en_template, zh_template) in enumerate(player_chat_templates, start=1):
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"chat_guard:player:{location_index}:{spot_index}:{ship_index}:"
+                                    f"{repeat_index + 1}:{template_index}"
+                                ),
+                                en=en_template.format(
+                                    location_en=location_en,
+                                    location_zh=location_zh,
+                                    spot_en=spot_en,
+                                    spot_zh=spot_zh,
+                                    ship_en=ship_en,
+                                    ship_zh=ship_zh,
+                                ),
+                                zh=zh_template.format(
+                                    location_en=location_en,
+                                    location_zh=location_zh,
+                                    spot_en=spot_en,
+                                    spot_zh=spot_zh,
+                                    ship_en=ship_en,
+                                    ship_zh=ship_zh,
+                                ),
+                                category="chat",
+                                is_priority=True,
+                                source="chat_guard",
+                            )
+                        )
+            for ship_index, (ship_en, ship_zh, literal_en, _literal_zh) in enumerate(ambiguous_ships, start=1):
+                for template_index, (en_template, zh_template) in enumerate(ambiguous_ship_chat_templates, start=1):
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:ambiguous_ship:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{template_index}"
+                            ),
+                            en=en_template.format(
+                                location_en=location_en,
+                                location_zh=location_zh,
+                                ship_en=ship_en,
+                                ship_zh=ship_zh,
+                                literal_en=literal_en,
+                            ),
+                            zh=zh_template.format(
+                                location_en=location_en,
+                                location_zh=location_zh,
+                                ship_en=ship_en,
+                                ship_zh=ship_zh,
+                                literal_en=literal_en,
+                            ),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+        for server_index, (server_en, server_zh) in enumerate(servers, start=1):
+            for location_index, (location_en, location_zh) in enumerate(locations, start=1):
+                for ship_index, (ship_en, ship_zh) in enumerate(ships, start=1):
+                    for template_index, (en_template, zh_template) in enumerate(server_location_templates, start=1):
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"chat_guard:server_location:{server_index}:{location_index}:"
+                                    f"{ship_index}:{repeat_index + 1}:{template_index}"
+                                ),
+                                en=en_template.format(
+                                    server_en=server_en,
+                                    server_zh=server_zh,
+                                    location_en=location_en,
+                                    location_zh=location_zh,
+                                    ship_en=ship_en,
+                                    ship_zh=ship_zh,
+                                ),
+                                zh=zh_template.format(
+                                    server_en=server_en,
+                                    server_zh=server_zh,
+                                    location_en=location_en,
+                                    location_zh=location_zh,
+                                    ship_en=ship_en,
+                                    ship_zh=ship_zh,
+                                ),
+                                category="chat",
+                                is_priority=True,
+                                source="chat_guard",
+                            )
+                        )
     return samples, {"chat_guard.samples": len(samples)}
 
 

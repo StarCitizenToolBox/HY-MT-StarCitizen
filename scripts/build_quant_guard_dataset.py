@@ -26,7 +26,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--seed", type=int, default=49)
     parser.add_argument("--term-repeat", type=int, default=2)
     parser.add_argument("--alias-repeat", type=int, default=3)
-    parser.add_argument("--chat-repeat", type=int, default=24)
+    parser.add_argument("--chat-repeat", type=int, default=4)
     return parser.parse_args()
 
 
