@@ -3388,6 +3388,80 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("show the difference between retrieve and claim", "给他看取船和申领的区别"),
         ("explain the crime stat before anyone shoots", "开火前先讲清楚犯罪等级"),
     ]
+    player_dialogue_templates = [
+        (
+            "[Party] Ari: are you still at {location_en}?\n"
+            "[Party] Ren: yes, I am beside the {ship_en}; wait for me before launch.",
+            "[Party] Ari: 你还在{location_zh}吗？\n"
+            "[Party] Ren: 在，我就在{ship_zh}旁边；出发前等我一下。",
+        ),
+        (
+            "[Voice] Lead: is the {ship_en} ours or a random ship?\n"
+            "[Party] Pilot: it is ours; I marked it again.",
+            "[Voice] Lead: 这艘{ship_zh}是我们的还是路人的船？\n"
+            "[Party] Pilot: 是我们的，我重新标了一下。",
+        ),
+        (
+            "[Global] Newbie: can I join the run at {location_en}?\n"
+            "[Party] Lead: yes, board the {ship_en} and stay on voice.",
+            "[Global] Newbie: {location_zh}这边能带我一个吗？\n"
+            "[Party] Lead: 可以，上{ship_zh}，顺便进语音。",
+        ),
+        (
+            "[Party] Gunner: I see the {other_ship_en}, should I shoot?\n"
+            "[Voice] Pilot: no, our target is the {ship_en}; check the marker first.",
+            "[Party] Gunner: 我看到{other_ship_zh}了，要开火吗？\n"
+            "[Voice] Pilot: 先别，我们目标是{ship_zh}；先看标记。",
+        ),
+        (
+            "[Party] Me: the marker moved at {location_en}; are you still in the {ship_en}?\n"
+            "[Party] You: still here, the marker is on the wrong player.",
+            "[Party] Me: {location_zh}这边标记跳了，你还在{ship_zh}里吗？\n"
+            "[Party] You: 还在，标记挂到错人身上了。",
+        ),
+        (
+            "[Voice] Pilot: who is flying the {ship_en} after refuel?\n"
+            "[Party] Crew: you fly, I will take the turret seat.",
+            "[Voice] Pilot: {ship_zh}补完油以后谁来开？\n"
+            "[Party] Crew: 你开，我去坐炮塔位。",
+        ),
+        (
+            "[Party] Scout: bounty target is leaving {location_en}.\n"
+            "[Voice] Lead: pull the {ship_en} out first, then share the contract again.",
+            "[Party] Scout: 赏金目标离开{location_zh}了。\n"
+            "[Voice] Lead: 先把{ship_zh}开出去，再重新共享合同。",
+        ),
+        (
+            "[Trade] Broker: cargo is ready at {location_en}; is the {ship_en} loaded?\n"
+            "[Party] Loader: almost, wait until the cargo grid is clear.",
+            "[Trade] Broker: {location_zh}的货准备好了，{ship_zh}装完了吗？\n"
+            "[Party] Loader: 快了，等货物网格清好再走。",
+        ),
+        (
+            "[Global] Rescue: who needs pickup near {location_en}?\n"
+            "[Party] Medic: the {ship_en} is parked outside; send the beacon.",
+            "[Global] Rescue: {location_zh}附近是谁要接人？\n"
+            "[Party] Medic: {ship_zh}停在外面，先发信标。",
+        ),
+        (
+            "[Party] Newbie: I clicked claim on the {ship_en}; did I mess up?\n"
+            "[Voice] Mentor: it is fine, next time use retrieve if the ship is stored.",
+            "[Party] Newbie: 我把{ship_zh}点成申领了，是不是弄错了？\n"
+            "[Voice] Mentor: 没事，下次船在仓库里就点取出。",
+        ),
+        (
+            "[Voice] Lead: do not translate {location_en} as the ship name.\n"
+            "[Party] Helper: right, {location_en} is the place; the ship is the {ship_en}.",
+            "[Voice] Lead: 别把{location_zh}当成船名。\n"
+            "[Party] Helper: 对，{location_zh}是地点；船是{ship_zh}。",
+        ),
+        (
+            "[Party] Crew: I lost the party marker near {location_en}.\n"
+            "[Voice] Pilot: I am in the {ship_en}; ping me and I will wait.",
+            "[Party] Crew: 我在{location_zh}附近看不到队伍标记了。\n"
+            "[Voice] Pilot: 我在{ship_zh}里，ping我一下，我等你。",
+        ),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -5058,6 +5132,50 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                         source="chat_guard",
                     )
                 )
+                for dialogue_index, (en_template, zh_template) in enumerate(player_dialogue_templates, start=1):
+                    other_ship_en, other_ship_zh = ships[(ship_index + dialogue_index) % len(ships)]
+                    dialogue_en = en_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                        other_ship_en=other_ship_en,
+                        other_ship_zh=other_ship_zh,
+                    )
+                    dialogue_zh = zh_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                        other_ship_en=other_ship_en,
+                        other_ship_zh=other_ship_zh,
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_dialogue_thread:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{dialogue_index}:standard"
+                            ),
+                            en=dialogue_en,
+                            zh=dialogue_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_dialogue_thread:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{dialogue_index}:compact"
+                            ),
+                            en=dialogue_en,
+                            zh=compact_chat_text(dialogue_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
             for ship_index, (ship_en, ship_zh, literal_en, _literal_zh) in enumerate(ambiguous_ships, start=1):
                 for template_index, (en_template, zh_template) in enumerate(ambiguous_ship_chat_templates, start=1):
                     samples.append(

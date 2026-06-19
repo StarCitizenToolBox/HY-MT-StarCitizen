@@ -292,6 +292,16 @@ SOURCE_PHRASES = {
         "装货练习",
         "申领取船教学",
         "教学聊天",
+        "能带我一个吗",
+        "我们的船",
+        "路人的船",
+        "先别",
+        "目标是",
+        "重新共享合同",
+        "装完了吗",
+        "先发信标",
+        "看不到队伍标记",
+        "地点",
         "引擎离线",
         "报点和船名",
         "量子矿",
@@ -473,6 +483,7 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     player_session_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_session_log:")]
     player_newbie_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_newbie_status:")]
     player_newbie_log_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_newbie_log:")]
+    player_dialogue_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_dialogue_thread:")]
     target_cjk = [row for row in rows if re.search(r"[\u3400-\u9fff]", row.get("target", ""))]
     alias_chat_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat:")]
     alias_slang_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_slang:")]
@@ -582,6 +593,7 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "player_session_log_rows": len(player_session_log_rows),
         "player_newbie_rows": len(player_newbie_rows),
         "player_newbie_log_rows": len(player_newbie_log_rows),
+        "player_dialogue_rows": len(player_dialogue_rows),
         "alias_chat_rows": len(alias_chat_rows),
         "alias_slang_rows": len(alias_slang_rows),
         "alias_chat_unique": len(alias_chat_keys - {""}),
@@ -677,6 +689,7 @@ def main() -> int:
     print(f"player_session_log_rows: {report['player_session_log_rows']}")
     print(f"player_newbie_rows: {report['player_newbie_rows']}")
     print(f"player_newbie_log_rows: {report['player_newbie_log_rows']}")
+    print(f"player_dialogue_rows: {report['player_dialogue_rows']}")
     print(f"alias_chat_rows: {report['alias_chat_rows']}")
     print(f"alias_slang_rows: {report['alias_slang_rows']}")
     print(f"alias_chat_unique: {report['alias_chat_unique']}")
