@@ -288,6 +288,10 @@ SOURCE_PHRASES = {
         "申领取船教学",
         "教学聊天",
         "能带我一个吗",
+        "给我留个",
+        "还有一个人要来",
+        "萌新也能来",
+        "第二队先",
         "我们的船",
         "路人的船",
         "先别",
@@ -690,6 +694,7 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     root_counts = Counter(key_root(row.get("key", "")) for row in rows)
     chat_counts = Counter(chat_subkey(row.get("key", "")) for row in rows if row.get("key", "").startswith("chat_guard:"))
     player_lfg_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_lfg_matrix:")]
+    player_join_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_join_thread:")]
     player_trade_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_trade_matrix:")]
     player_recovery_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_recovery_log:")]
     player_correction_rows = [
@@ -852,6 +857,7 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "root_counts": dict(sorted(root_counts.items())),
         "chat_subkey_counts": dict(sorted((key, value) for key, value in chat_counts.items() if key)),
         "player_lfg_rows": len(player_lfg_rows),
+        "player_join_rows": len(player_join_rows),
         "player_trade_rows": len(player_trade_rows),
         "player_recovery_rows": len(player_recovery_rows),
         "player_correction_rows": len(player_correction_rows),
@@ -976,6 +982,7 @@ def main() -> int:
     print(f"gameplay_social_rows: {report['gameplay_social_rows']}")
     print(f"gameplay_social_covered_pairs: {report['gameplay_social_covered_pairs']}")
     print(f"player_lfg_rows: {report['player_lfg_rows']}")
+    print(f"player_join_rows: {report['player_join_rows']}")
     print(f"player_trade_rows: {report['player_trade_rows']}")
     print(f"player_recovery_rows: {report['player_recovery_rows']}")
     print(f"player_correction_rows: {report['player_correction_rows']}")

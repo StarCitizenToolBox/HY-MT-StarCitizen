@@ -2765,6 +2765,73 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("after claim timer", "申领计时结束后"),
         ("after selling cargo", "卖完货以后"),
     ]
+    player_join_eta_terms = [
+        ("in 2 min", "两分钟后"),
+        ("in 5 min", "五分钟后"),
+        ("right now", "现在"),
+        ("after the claim timer ends", "申领计时结束后"),
+        ("after I sell this cargo", "卖完这批货以后"),
+    ]
+    player_join_roles = [
+        ("gunner", "炮手"),
+        ("turret seat", "炮塔位"),
+        ("copilot", "副驾驶"),
+        ("escort slot", "护航位"),
+        ("medic", "医疗位"),
+        ("scanner", "扫描位"),
+        ("support seat", "支援位"),
+        ("navigator", "领航位"),
+    ]
+    player_join_thread_templates = [
+        (
+            "[Global] Pilot: taking the {ship_en} from {location_en} for {task_en}; anyone want to join?\n"
+            "[Party] Crew: I can join {eta_en}; save me the {role_en} slot.",
+            "[Global] Pilot: 我从{location_zh}开{ship_zh}去{task_zh}，有没有一起的？\n"
+            "[Party] Crew: 我{eta_zh}能来，给我留个{role_zh}。",
+        ),
+        (
+            "[Party] Lead: forming for {task_en} at {location_en}; the ship is the {ship_en}.\n"
+            "[Party] Crew: I am on the way; wait for me before launch.",
+            "[Party] Lead: {location_zh}这边组队去{task_zh}，船是{ship_zh}。\n"
+            "[Party] Crew: 我在路上，起飞前等我一下。",
+        ),
+        (
+            "[Voice] Pilot: we are using the {ship_en}, not a random ship; meet at {location_en}.\n"
+            "[Party] Crew: understood, I will join for {task_en} and stay on voice.",
+            "[Voice] Pilot: 这趟用{ship_zh}，不是随便找一艘船；在{location_zh}集合。\n"
+            "[Party] Crew: 明白，我来一起{task_zh}，也会进语音。",
+        ),
+        (
+            "[Global] Recruit: need one {role_en} for {task_en}; leaving {location_en} {eta_en}.\n"
+            "[Party] Reply: I can fill that slot if the {ship_en} still has room.",
+            "[Global] Recruit: 缺一个{role_zh}去{task_zh}，{eta_zh}从{location_zh}出发。\n"
+            "[Party] Reply: 如果{ship_zh}还有位置，我可以补这个位。",
+        ),
+        (
+            "[Party] Friend: are you still doing {task_en} near {location_en}?\n"
+            "[Party] Pilot: yes, board the {ship_en}; we will leave after everyone confirms.",
+            "[Party] Friend: 你们还在{location_zh}附近{task_zh}吗？\n"
+            "[Party] Pilot: 还在，上{ship_zh}；大家确认完就走。",
+        ),
+        (
+            "[Team] Lead: do not launch the {ship_en} yet; one more person is joining for {task_en}.\n"
+            "[Voice] Pilot: holding at {location_en} until they arrive.",
+            "[Team] Lead: {ship_zh}先别起飞，还有一个人要来一起{task_zh}。\n"
+            "[Voice] Pilot: 我在{location_zh}等他到。",
+        ),
+        (
+            "[Global] Pilot: casual run from {location_en} in the {ship_en}; new players can join.\n"
+            "[Party] Helper: I can guide the new player while we do {task_en}.",
+            "[Global] Pilot: 从{location_zh}开{ship_zh}随便跑一趟，萌新也能来。\n"
+            "[Party] Helper: 我可以带萌新，一边做{task_zh}一边讲。",
+        ),
+        (
+            "[Party] Lead: if the {ship_en} is full, second crew waits at {location_en}.\n"
+            "[Party] Crew: fine, I will wait there and join the next {task_en} run.",
+            "[Party] Lead: 如果{ship_zh}满员了，第二队先在{location_zh}等。\n"
+            "[Party] Crew: 可以，我在那里等下一趟{task_zh}。",
+        ),
+    ]
     player_crew_roles = [
         ("gunner", "炮手"),
         ("turret gunner", "炮塔手"),
@@ -4715,6 +4782,64 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             source="chat_guard",
                         )
                     )
+                    for join_index, (en_template, zh_template) in enumerate(player_join_thread_templates, start=1):
+                        join_role_en, join_role_zh = player_join_roles[
+                            (repeat_index + location_index + ship_index + task_index + join_index)
+                            % len(player_join_roles)
+                        ]
+                        join_eta_en, join_eta_zh = player_join_eta_terms[
+                            (repeat_index + task_index + join_index) % len(player_join_eta_terms)
+                        ]
+                        join_en = en_template.format(
+                            location_en=location_en,
+                            location_zh=location_zh,
+                            ship_en=ship_en,
+                            ship_zh=ship_zh,
+                            task_en=task_en,
+                            task_zh=task_zh,
+                            role_en=join_role_en,
+                            role_zh=join_role_zh,
+                            eta_en=join_eta_en,
+                            eta_zh=join_eta_zh,
+                        )
+                        join_zh = zh_template.format(
+                            location_en=location_en,
+                            location_zh=location_zh,
+                            ship_en=ship_en,
+                            ship_zh=ship_zh,
+                            task_en=task_en,
+                            task_zh=task_zh,
+                            role_en=join_role_en,
+                            role_zh=join_role_zh,
+                            eta_en=join_eta_en,
+                            eta_zh=join_eta_zh,
+                        )
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"chat_guard:player_join_thread:{location_index}:{ship_index}:"
+                                    f"{repeat_index + 1}:{task_index}:{join_index}:standard"
+                                ),
+                                en=join_en,
+                                zh=join_zh,
+                                category="chat",
+                                is_priority=True,
+                                source="chat_guard",
+                            )
+                        )
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"chat_guard:player_join_thread:{location_index}:{ship_index}:"
+                                    f"{repeat_index + 1}:{task_index}:{join_index}:compact"
+                                ),
+                                en=join_en,
+                                zh=compact_chat_text(join_zh),
+                                category="chat",
+                                is_priority=True,
+                                source="chat_guard",
+                            )
+                        )
                 for trade_index, (item_en, item_zh) in enumerate(player_trade_items, start=1):
                     mode_en, mode_zh = player_trade_modes[
                         (repeat_index + location_index + ship_index + trade_index) % len(player_trade_modes)
