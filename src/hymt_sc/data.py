@@ -546,6 +546,56 @@ def build_quant_focus_samples(
             "报点 {location_zh}那艘{zh}是我们的船，不是后面标签里的目标>F7C-S Hornet Ghost",
         ),
     ]
+    vehicle_social_templates = [
+        (
+            "LFG bounty run in the {en} from {location_en}; anyone want to join?",
+            "LFG 从{location_zh}开{zh}打赏金，有没有一起的？",
+        ),
+        (
+            "I am running bounty missions in the {en} near {location_en}; need one gunner and one escort.",
+            "我在{location_zh}附近开{zh}打赏金，缺一个炮手和一个护航。",
+        ),
+        (
+            "Anyone up for a quick contract share? I can bring the {en} from {location_en}.",
+            "有无一起共享个快速合同？我可以从{location_zh}开{zh}过去。",
+        ),
+        (
+            "WTB cargo escort from {location_en}; the {en} is loaded and payment is on success.",
+            "WTB 从{location_zh}出发的跑货护航，{zh}已经装货，成功后给报酬。",
+        ),
+        (
+            "WTS salvage boxes at {location_en}; meet the {en} and bring a tractor beam.",
+            "WTS {location_zh}的打捞箱子，到{zh}旁边集合，带牵引光束。",
+        ),
+        (
+            "Need med rescue at {location_en}; the {en} is in soft death and pirates are boarding.",
+            "{location_zh}需要医疗救援，{zh}软死亡了，海盗正在登船。",
+        ),
+        (
+            "Party invite open for the {en} crew at {location_en}; plz join voice before launch.",
+            "{location_zh}的{zh}船员队伍开放邀请，出发前plz进语音。",
+        ),
+        (
+            "ASAP pickup near {location_en}; my {en} exploded and I still have the contract.",
+            "{location_zh}附近ASAP来接，我的{zh}炸了，但合同还在。",
+        ),
+        (
+            "o7, the {en} at {location_en} needs a turret player for high-risk bounty work.",
+            "o7，{location_zh}那艘{zh}高风险赏金缺一个炮塔玩家。",
+        ),
+        (
+            "Can someone cover the {en} from {location_en} to the station? I will split the beacon payment.",
+            "有人能护送{zh}从{location_zh}去空间站吗？信标报酬我分。",
+        ),
+        (
+            "New player in a {en} at {location_en}; looking for a group to learn cargo and bounty routes.",
+            "萌新在{location_zh}开{zh}，找队伍学跑货和赏金路线。",
+        ),
+        (
+            "[Party] LFG: {en} from {location_en}, bounty first then cargo if the server holds.",
+            "[Party] LFG: 从{location_zh}开{zh}，先打赏金，服务器稳就跑货。",
+        ),
+    ]
     location_comm_ships = [
         ("Cutter", "小刀"),
         ("Razor", "剃刀"),
@@ -604,6 +654,40 @@ def build_quant_focus_samples(
         (
             "Bring a tractor beam to {en}; the {ship_en} has loose cargo boxes on the grid.",
             "带牵引光束来{zh}，{ship_zh}货物网格上有散货箱。",
+        ),
+    ]
+    location_social_templates = [
+        (
+            "LFG at {en}; bringing a {ship_en} for bounty missions, anyone want to join?",
+            "LFG {zh}集合，我开{ship_zh}打赏金，有没有一起的？",
+        ),
+        (
+            "WTB escort from {en}; my {ship_en} has cargo and I can pay after delivery.",
+            "WTB 从{zh}出发的护航，我的{ship_zh}有货，到货后给报酬。",
+        ),
+        (
+            "WTS RMC near {en}; meet my {ship_en} and bring a tractor beam.",
+            "WTS {zh}附近的RMC，到我的{ship_zh}旁边集合，带牵引光束。",
+        ),
+        (
+            "Need med rescue near {en}; the {ship_en} is down and the beacon payment is shared.",
+            "{zh}附近需要医疗救援，{ship_zh}倒了，信标报酬共享。",
+        ),
+        (
+            "Party invite for {en}; plz join voice before we launch the {ship_en}.",
+            "{zh}队伍邀请开放，开{ship_zh}出发前plz进语音。",
+        ),
+        (
+            "ASAP pickup at {en}; contract is shared and the {ship_en} is waiting outside.",
+            "{zh}ASAP来接，合同已共享，{ship_zh}在外面等。",
+        ),
+        (
+            "o7, anyone at {en} want to run cargo, bunkers, or bounty contracts with a {ship_en}?",
+            "o7，{zh}有人想一起开{ship_zh}跑货、清地堡或者打赏金吗？",
+        ),
+        (
+            "[Global] LFG near {en}: need gunner, escort, and someone who can take a rescue beacon.",
+            "[Global] {zh}附近LFG：缺炮手、护航，以及能接救援信标的人。",
         ),
     ]
     location_route_templates = [
@@ -750,6 +834,32 @@ def build_quant_focus_samples(
             "yy 玩家说{zh}就用{en}，队伍保持语音并等escort。",
         ),
     ]
+    gameplay_social_templates = [
+        (
+            "LFG: this is about {en}; share the contract and wait for everyone to accept.",
+            "LFG: 这里说的是{zh}；共享合同并等所有人接了再走。",
+        ),
+        (
+            "WTB help with {en} near {location_en}; payment after the beacon completes.",
+            "WTB {location_zh}附近{zh}帮忙，信标完成后给报酬。",
+        ),
+        (
+            "Need someone on voice for {en}; plz do not translate it as a ship.",
+            "{zh}需要有人上语音，plz别把它翻成船名。",
+        ),
+        (
+            "ASAP party invite for {en}; the {ship_en} is waiting at {location_en}.",
+            "{zh}ASAP进队，{ship_zh}在{location_zh}等。",
+        ),
+        (
+            "o7, if global chat says {en}, keep that gameplay term and do not replace it with a vehicle.",
+            "o7，如果全局说{zh}，保留这个玩法术语，别替换成载具。",
+        ),
+        (
+            "[Party] LFG for {en}: need escort, rescue, and someone to watch the marker.",
+            "[Party] {zh} LFG：缺护航、救援，以及盯标记的人。",
+        ),
+    ]
     alias_chat_slang_prefixes = [
         ("SC global: ", "sc全局 "),
         ("Party: ", "队伍 "),
@@ -821,6 +931,16 @@ def build_quant_focus_samples(
 
     def strip_final_punctuation(text: str) -> str:
         return text.rstrip().rstrip(".?!")
+
+    def slangify_chat(text: str) -> str:
+        slang_text = compact_alias_chat(text)
+        for source_phrase, replacement in sorted(
+            alias_chat_slang_replacements,
+            key=lambda item: len(item[0]),
+            reverse=True,
+        ):
+            slang_text = slang_text.replace(source_phrase, replacement)
+        return slang_text
 
     term_entry_list = list(term_entries)
     alias_entry_list = list(alias_entries)
@@ -895,6 +1015,37 @@ def build_quant_focus_samples(
                                 ),
                                 en=en_text,
                                 zh=slang_zh,
+                                category=entry.category,
+                                is_priority=True,
+                                source="quant_focus",
+                            )
+                        )
+                current_vehicle_index = formal_vehicle_entries.index(entry) if entry in formal_vehicle_entries else entry_index
+                for template_index, (en_template, zh_template) in enumerate(vehicle_social_templates, start=1):
+                    location_en, location_zh = alias_chat_locations[
+                        (current_vehicle_index + template_index + repeat_index) % len(alias_chat_locations)
+                    ]
+                    en_text = en_template.format(
+                        en=entry.en,
+                        zh=entry.zh,
+                        location_en=location_en,
+                        location_zh=location_zh,
+                    )
+                    zh_text = zh_template.format(
+                        en=entry.en,
+                        zh=entry.zh,
+                        location_en=location_en,
+                        location_zh=location_zh,
+                    )
+                    for style, source_text in (("standard", zh_text), ("slang", slangify_chat(zh_text))):
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"quant_focus_vehicle_social:{entry.key}:{repeat_index + 1}:"
+                                    f"{template_index}:{style}"
+                                ),
+                                en=en_text,
+                                zh=source_text,
                                 category=entry.category,
                                 is_priority=True,
                                 source="quant_focus",
@@ -1158,6 +1309,26 @@ def build_quant_focus_samples(
                             source="quant_focus",
                         )
                     )
+                for template_index, (en_template, zh_template) in enumerate(location_social_templates, start=1):
+                    ship_en, ship_zh = location_comm_ships[
+                        (current_location_index + template_index + repeat_index + 4) % len(location_comm_ships)
+                    ]
+                    en_text = en_template.format(en=entry.en, zh=entry.zh, ship_en=ship_en, ship_zh=ship_zh)
+                    zh_text = zh_template.format(en=entry.en, zh=entry.zh, ship_en=ship_en, ship_zh=ship_zh)
+                    for style, source_text in (("standard", zh_text), ("slang", slangify_chat(zh_text))):
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"quant_focus_location_social:{entry.key}:{repeat_index + 1}:"
+                                    f"{template_index}:{style}"
+                                ),
+                                en=en_text,
+                                zh=source_text,
+                                category=entry.category,
+                                is_priority=True,
+                                source="quant_focus",
+                            )
+                        )
                 for ship_index, (ship_en, ship_zh) in enumerate(location_comm_ships, start=1):
                     for template_index, (en_template, zh_template) in enumerate(location_comm_templates, start=1):
                         en_text = en_template.format(en=entry.en, zh=entry.zh, ship_en=ship_en, ship_zh=ship_zh)
@@ -1228,6 +1399,40 @@ def build_quant_focus_samples(
                             source="quant_focus",
                         )
                     )
+                for template_index, (en_template, zh_template) in enumerate(gameplay_social_templates, start=1):
+                    ship_en, ship_zh = location_comm_ships[
+                        (gameplay_index + template_index + repeat_index + 3) % len(location_comm_ships)
+                    ]
+                    location_en, location_zh = alias_chat_locations[
+                        (gameplay_index + template_index + repeat_index + 3) % len(alias_chat_locations)
+                    ]
+                    en_text = en_template.format(
+                        en=entry.en,
+                        zh=entry.zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                        location_en=location_en,
+                        location_zh=location_zh,
+                    )
+                    zh_text = zh_template.format(
+                        en=entry.en,
+                        zh=entry.zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                        location_en=location_en,
+                        location_zh=location_zh,
+                    )
+                    for style, source_text in (("standard", zh_text), ("slang", slangify_chat(zh_text))):
+                        samples.append(
+                            PairSample(
+                                key=f"quant_focus_gameplay_social:{entry.key}:{repeat_index + 1}:{template_index}:{style}",
+                                en=en_text,
+                                zh=source_text,
+                                category=entry.category,
+                                is_priority=True,
+                                source="quant_focus",
+                            )
+                        )
         if entry.key.startswith("ship_alias:") and entry.category == "vehicle":
             location_count = len(alias_chat_locations)
             selected_locations = [
@@ -1278,6 +1483,34 @@ def build_quant_focus_samples(
                                 source="quant_focus",
                             )
                         )
+                for location_index, (location_en, location_zh) in enumerate(selected_locations, start=1):
+                    for template_index, (en_template, zh_template) in enumerate(vehicle_social_templates, start=1):
+                        en_text = en_template.format(
+                            en=entry.en,
+                            zh=entry.zh,
+                            location_en=location_en,
+                            location_zh=location_zh,
+                        )
+                        zh_text = zh_template.format(
+                            en=entry.en,
+                            zh=entry.zh,
+                            location_en=location_en,
+                            location_zh=location_zh,
+                        )
+                        for style, source_text in (("standard", zh_text), ("slang", slangify_chat(zh_text))):
+                            samples.append(
+                                PairSample(
+                                    key=(
+                                        f"quant_focus_alias_social:{entry.key}:{repeat_index + 1}:"
+                                        f"{location_index}:{template_index}:{style}"
+                                    ),
+                                    en=en_text,
+                                    zh=source_text,
+                                    category=entry.category,
+                                    is_priority=True,
+                                    source="quant_focus",
+                                )
+                            )
                 for location_index, (location_en, location_zh) in enumerate(alias_chat_locations, start=1):
                     for template_index, (en_template, zh_template) in enumerate(alias_chat_noise_templates, start=1):
                         samples.append(

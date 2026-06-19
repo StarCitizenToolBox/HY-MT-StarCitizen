@@ -67,6 +67,7 @@ SOURCE_PHRASES = {
         "tractor beam",
         "hangar",
         "elevator",
+        "RMC",
     ],
     "chat_noise": [
         ">F7C-S Hornet Ghost",
@@ -82,6 +83,14 @@ SOURCE_PHRASES = {
         "[Party]",
         "[Voice]",
         "[Local]",
+        "LFG",
+        "WTB",
+        "WTS",
+        "ASAP",
+        "plz",
+        "o7",
+        "有无",
+        "有没有一起的",
     ],
     "chat_style": ["sc全局", "队伍", "yy里", "来人", "萌新注意", "报点", "感觉不太行"],
 }
@@ -221,20 +230,24 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     target_cjk = [row for row in rows if re.search(r"[\u3400-\u9fff]", row.get("target", ""))]
     alias_chat_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat:")]
     alias_slang_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_slang:")]
+    alias_social_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_social:")]
     vehicle_comm_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_vehicle_comm:")]
     vehicle_contrast_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_vehicle_contrast:")]
     vehicle_mixed_format_rows = [
         row for row in rows if row.get("key", "").startswith("quant_focus_vehicle_mixed_format:")
     ]
     vehicle_chat_log_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_vehicle_chat_log:")]
+    vehicle_social_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_vehicle_social:")]
     location_comm_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_location_comm:")]
     location_route_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_location_route:")]
     location_mixed_format_rows = [
         row for row in rows if row.get("key", "").startswith("quant_focus_location_mixed_format:")
     ]
     location_chat_log_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_location_chat_log:")]
+    location_social_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_location_social:")]
     alias_chat_log_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_alias_chat_log:")]
     gameplay_comm_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_gameplay_comm:")]
+    gameplay_social_rows = [row for row in rows if row.get("key", "").startswith("quant_focus_gameplay_social:")]
     alias_chat_keys = {alias_key(row.get("key", "")) for row in alias_chat_rows}
     alias_slang_keys = {alias_key(row.get("key", "")) for row in alias_slang_rows}
 
@@ -264,6 +277,8 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         ),
         "vehicle_chat_log_rows": len(vehicle_chat_log_rows),
         "vehicle_chat_log_covered_pairs": count_pair_coverage(rows, vehicle_pairs, "quant_focus_vehicle_chat_log:"),
+        "vehicle_social_rows": len(vehicle_social_rows),
+        "vehicle_social_covered_pairs": count_pair_coverage(rows, vehicle_pairs, "quant_focus_vehicle_social:"),
         "location_term_rows": len(location_pairs),
         "location_term_unique_pairs": len(set(location_pairs)),
         "location_comm_rows": len(location_comm_rows),
@@ -278,12 +293,18 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         ),
         "location_chat_log_rows": len(location_chat_log_rows),
         "location_chat_log_covered_pairs": count_pair_coverage(rows, location_pairs, "quant_focus_location_chat_log:"),
+        "location_social_rows": len(location_social_rows),
+        "location_social_covered_pairs": count_pair_coverage(rows, location_pairs, "quant_focus_location_social:"),
         "alias_chat_log_rows": len(alias_chat_log_rows),
         "alias_chat_log_covered_pairs": count_pair_coverage(rows, alias_pairs, "quant_focus_alias_chat_log:"),
+        "alias_social_rows": len(alias_social_rows),
+        "alias_social_covered_pairs": count_pair_coverage(rows, alias_pairs, "quant_focus_alias_social:"),
         "gameplay_term_rows": len(gameplay_pairs),
         "gameplay_term_unique_pairs": len(set(gameplay_pairs)),
         "gameplay_comm_rows": len(gameplay_comm_rows),
         "gameplay_comm_covered_pairs": count_pair_coverage(rows, gameplay_pairs, "quant_focus_gameplay_comm:"),
+        "gameplay_social_rows": len(gameplay_social_rows),
+        "gameplay_social_covered_pairs": count_pair_coverage(rows, gameplay_pairs, "quant_focus_gameplay_social:"),
         "root_counts": dict(sorted(root_counts.items())),
         "chat_subkey_counts": dict(sorted((key, value) for key, value in chat_counts.items() if key)),
         "alias_chat_rows": len(alias_chat_rows),
@@ -328,6 +349,8 @@ def main() -> int:
     print(f"vehicle_mixed_format_covered_pairs: {report['vehicle_mixed_format_covered_pairs']}")
     print(f"vehicle_chat_log_rows: {report['vehicle_chat_log_rows']}")
     print(f"vehicle_chat_log_covered_pairs: {report['vehicle_chat_log_covered_pairs']}")
+    print(f"vehicle_social_rows: {report['vehicle_social_rows']}")
+    print(f"vehicle_social_covered_pairs: {report['vehicle_social_covered_pairs']}")
     print(f"location_term_rows: {report['location_term_rows']}")
     print(f"location_term_unique_pairs: {report['location_term_unique_pairs']}")
     print(f"location_comm_rows: {report['location_comm_rows']}")
@@ -338,12 +361,18 @@ def main() -> int:
     print(f"location_mixed_format_covered_pairs: {report['location_mixed_format_covered_pairs']}")
     print(f"location_chat_log_rows: {report['location_chat_log_rows']}")
     print(f"location_chat_log_covered_pairs: {report['location_chat_log_covered_pairs']}")
+    print(f"location_social_rows: {report['location_social_rows']}")
+    print(f"location_social_covered_pairs: {report['location_social_covered_pairs']}")
     print(f"alias_chat_log_rows: {report['alias_chat_log_rows']}")
     print(f"alias_chat_log_covered_pairs: {report['alias_chat_log_covered_pairs']}")
+    print(f"alias_social_rows: {report['alias_social_rows']}")
+    print(f"alias_social_covered_pairs: {report['alias_social_covered_pairs']}")
     print(f"gameplay_term_rows: {report['gameplay_term_rows']}")
     print(f"gameplay_term_unique_pairs: {report['gameplay_term_unique_pairs']}")
     print(f"gameplay_comm_rows: {report['gameplay_comm_rows']}")
     print(f"gameplay_comm_covered_pairs: {report['gameplay_comm_covered_pairs']}")
+    print(f"gameplay_social_rows: {report['gameplay_social_rows']}")
+    print(f"gameplay_social_covered_pairs: {report['gameplay_social_covered_pairs']}")
     print(f"alias_chat_rows: {report['alias_chat_rows']}")
     print(f"alias_slang_rows: {report['alias_slang_rows']}")
     print(f"alias_chat_unique: {report['alias_chat_unique']}")
