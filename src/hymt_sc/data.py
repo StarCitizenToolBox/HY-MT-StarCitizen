@@ -1386,6 +1386,26 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             "the {ship_en} at {location_en} is not a Hornet Ghost",
             "{location_zh}那艘{ship_zh}不是大黄蜂幽灵",
         ),
+        (
+            "I dropped a medical beacon near {location_en}; the {ship_en} can land there",
+            "我在{location_zh}附近发了医疗信标，{ship_zh}能在那里降落",
+        ),
+        (
+            "medical rescue is needed near {location_en}; bring the {ship_en}",
+            "{location_zh}附近需要医疗救援，把{ship_zh}开过来",
+        ),
+        (
+            "we are doing a bunker mission near {location_en}; leave the {ship_en} outside",
+            "我们在{location_zh}附近做地堡任务，{ship_zh}停外面",
+        ),
+        (
+            "the {ship_en} claim timer at {location_en} is almost done",
+            "{ship_zh}在{location_zh}的申领时间快好了",
+        ),
+        (
+            "{location_en} has heavy desync; the {ship_en} may rubber-band",
+            "{location_zh}同步很差，{ship_zh}可能会来回瞬移",
+        ),
     ]
     structured_server_events = [
         (
@@ -1434,6 +1454,51 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
+
+    def compact_chat_text(text: str) -> str:
+        return (
+            text.replace("。", " ")
+            .replace("？", " ")
+            .replace("！", " ")
+            .replace("，", " ")
+            .replace("；", " ")
+            .replace("：", " ")
+            .replace("  ", " ")
+            .strip()
+        )
+
+    slang_prefixes = [
+        ("SC global: ", "sc全局 "),
+        ("Party: ", "队伍 "),
+        ("Voice: ", "yy里 "),
+        ("Need help: ", "来人 "),
+        ("Newbie warning: ", "萌新注意 "),
+        ("Quick callout: ", "报点 "),
+    ]
+    slang_suffixes = [
+        (" ASAP.", " 速来"),
+        (" Anyone up?", " 有人吗"),
+        (" Do not rush.", " 别急着上"),
+        (" Check marker.", " 看标记"),
+        (" Stay on voice.", " 进语音"),
+        (" I need backup.", " 缺支援"),
+    ]
+    slang_replacements = [
+        ("打赏金", "打bounty"),
+        ("跑货", "跑cargo"),
+        ("护航", "escort"),
+        ("软死亡", "soft death"),
+        ("锁导弹", "锁missile"),
+        ("量子燃料", "q油"),
+        ("犯罪等级", "cs等级"),
+        ("炮塔位", "turret位"),
+        ("医疗信标", "med beacon"),
+        ("赏金目标", "bounty目标"),
+        ("医疗救援", "med rescue"),
+        ("地堡任务", "bunker"),
+        ("申领时间", "claim timer"),
+        ("同步很差", "desync"),
+    ]
 
     samples: list[PairSample] = []
     for repeat_index in range(max(1, repeat)):
@@ -1722,6 +1787,30 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                                 followup_zh=followup_zh,
                             )
                             + noise_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    slang_prefix_en, slang_prefix_zh = slang_prefixes[
+                        (repeat_index + event_index + ship_index) % len(slang_prefixes)
+                    ]
+                    slang_suffix_en, slang_suffix_zh = slang_suffixes[
+                        (location_index + event_index + ship_index) % len(slang_suffixes)
+                    ]
+                    slang_event_zh = compact_chat_text(event_zh)
+                    slang_action_zh = compact_chat_text(action_zh)
+                    for source_phrase, replacement in slang_replacements:
+                        slang_event_zh = slang_event_zh.replace(source_phrase, replacement)
+                        slang_action_zh = slang_action_zh.replace(source_phrase, replacement)
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:structured_slang:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{event_index}"
+                            ),
+                            en=f"{slang_prefix_en}{event_sentence_en}; {action_en}.{slang_suffix_en}",
+                            zh=f"{slang_prefix_zh}{slang_event_zh} {slang_action_zh}{slang_suffix_zh}",
                             category="chat",
                             is_priority=True,
                             source="chat_guard",
