@@ -3758,6 +3758,48 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("send a party invite instead of only a friend invite", "不要只发好友邀请，要拉进队伍"),
         ("ask an org officer to update the permission", "找组织管理员改一下权限"),
     ]
+    player_schedule_topics = [
+        ("session timing coordination", "活动时间协调"),
+        ("crew availability check", "船员在线确认"),
+        ("late join handoff", "晚到接手安排"),
+        ("early logout handoff", "提前下线交接"),
+        ("replacement crew plan", "替补船员安排"),
+        ("short run planning", "短时间活动安排"),
+        ("long route commitment", "长线任务时间确认"),
+        ("break timing check", "中途休息确认"),
+        ("server restart timing", "重启前时间确认"),
+        ("post-mission handoff", "任务后交接"),
+        ("timezone meetup check", "集合时间确认"),
+        ("reserve pilot timing", "备用驾驶时间确认"),
+    ]
+    player_schedule_states = [
+        ("one crew member only has twenty minutes", "有个船员只剩二十分钟"),
+        ("replacement pilot will be online after this contract", "替补驾驶打完这个合同后上线"),
+        ("gunner needs to leave before the next jump", "炮手下一跳前要下线"),
+        ("cargo crew can stay until the sale is finished", "搬货的人能待到卖完货"),
+        ("new player can join after reaching the station", "萌新到空间站后才能进队"),
+        ("party lead is away for five minutes", "队长要暂离五分钟"),
+        ("escort team can only cover the first leg", "护航队只能护第一段"),
+        ("medic will return after storing gear", "医疗位存完装备后回来"),
+        ("server restart notice may cut the route short", "服务器重启提示可能会截断路线"),
+        ("two people are in different time zones", "有两个人时区不一样"),
+        ("reserve pilot is already on another ship", "备用驾驶已经在另一艘船上"),
+        ("the planned run is longer than the crew expected", "这趟比大家预期的时间长"),
+    ]
+    player_schedule_actions = [
+        ("finish the current contract before changing crew", "打完当前合同再换人"),
+        ("hand the ship over before the next quantum jump", "下一次量子跳跃前先交接船"),
+        ("keep the late player on standby until landing", "晚到的人落地前先待命"),
+        ("split cargo sale from the next mission", "把卖货和下一趟任务分开安排"),
+        ("move the new player into party after they reach the station", "萌新到空间站后再拉进队伍"),
+        ("wait five minutes before calling departure", "喊出发前再等五分钟"),
+        ("use a shorter route if escort time is limited", "护航时间不够就改短路线"),
+        ("pause at the next station for a gear break", "到下一个空间站停一下整理装备"),
+        ("return to station before the restart timer", "重启倒计时前先回空间站"),
+        ("post the meetup time in party chat", "把集合时间发到队伍聊天"),
+        ("move reserve pilot only after the current ship lands", "当前船落地后再调备用驾驶"),
+        ("confirm the time window before accepting a long contract", "接长合同前先确认大家时间"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -6024,6 +6066,78 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Party] Lead: {location_zh}这边{access_topic_zh}，用{ship_zh}\n"
                             f"[Voice] Crew: {access_state_zh}\n"
                             f"[Team] Lead: {access_action_zh}；起飞前确认权限"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for schedule_index, (topic_en, topic_zh) in enumerate(player_schedule_topics, start=1):
+                    state_en, state_zh = player_schedule_states[
+                        (repeat_index + location_index + ship_index + schedule_index) % len(player_schedule_states)
+                    ]
+                    action_en, action_zh = player_schedule_actions[
+                        (repeat_index + location_index + schedule_index) % len(player_schedule_actions)
+                    ]
+                    other_ship_en, other_ship_zh = pick_other_ship(ship_index, schedule_index + 29, ship_zh)
+                    channel_en, channel_zh = player_route_channels[
+                        (repeat_index + schedule_index + location_index + ship_index) % len(player_route_channels)
+                    ]
+                    schedule_en = (
+                        f"{channel_en}{topic_en} at {location_en}: plan around the {ship_en}, "
+                        f"not the {other_ship_en}; {state_en}; {action_en}."
+                    )
+                    schedule_zh = (
+                        f"{channel_zh}{location_zh}这边{topic_zh}: 围绕{ship_zh}安排，不是{other_ship_zh}；"
+                        f"{state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_schedule_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{schedule_index}:standard"
+                            ),
+                            en=schedule_en,
+                            zh=schedule_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_schedule_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{schedule_index}:compact"
+                            ),
+                            en=schedule_en,
+                            zh=compact_chat_text(schedule_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                schedule_topic_en, schedule_topic_zh = player_schedule_topics[
+                    (repeat_index + location_index + ship_index) % len(player_schedule_topics)
+                ]
+                schedule_state_en, schedule_state_zh = player_schedule_states[
+                    (repeat_index + location_index + ship_index + 7) % len(player_schedule_states)
+                ]
+                schedule_action_en, schedule_action_zh = player_schedule_actions[
+                    (repeat_index + location_index + ship_index + 9) % len(player_schedule_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_schedule_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Party] Lead: {schedule_topic_en} at {location_en}; plan around the {ship_en}\n"
+                            f"[Voice] Crew: {schedule_state_en}\n"
+                            f"[Team] Lead: {schedule_action_en}; confirm timing before departure"
+                        ),
+                        zh=(
+                            f"[Party] Lead: {location_zh}这边{schedule_topic_zh}，围绕{ship_zh}安排\n"
+                            f"[Voice] Crew: {schedule_state_zh}\n"
+                            f"[Team] Lead: {schedule_action_zh}；出发前确认时间"
                         ),
                         category="chat",
                         is_priority=True,
