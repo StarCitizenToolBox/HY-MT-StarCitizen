@@ -3884,6 +3884,48 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
         ("send one scout instead of the full crew", "先派一个人侦察，不要全队过去"),
         ("clear the route before bringing the new player in", "路线确认安全后再带萌新过来"),
     ]
+    player_advice_topics = [
+        ("new player ship advice", "新手选船建议"),
+        ("mission ship choice", "任务配船建议"),
+        ("cargo risk advice", "跑货风险建议"),
+        ("bounty difficulty advice", "赏金难度建议"),
+        ("crew size advice", "船员人数建议"),
+        ("crew role advice", "队伍岗位建议"),
+        ("repair or continue advice", "维修还是继续建议"),
+        ("event preparation advice", "活动准备建议"),
+        ("practice route advice", "练习路线建议"),
+        ("solo crew advice", "单人行动建议"),
+        ("route planning advice", "路线规划建议"),
+        ("upgrade purchase advice", "升级购买建议"),
+    ]
+    player_advice_states = [
+        ("new pilot only knows basic takeoff and landing", "新驾驶只会基本起降"),
+        ("contract is simple but the route passes a busy station", "合同不难，但路线会经过繁忙空间站"),
+        ("cargo value is high and escort is not ready", "货值很高，护航还没准备好"),
+        ("bounty level is higher than the crew expected", "赏金等级比队伍预期高"),
+        ("ship has enough seats but the cargo space is tight", "船座位够，但货舱空间偏紧"),
+        ("one gunner is missing and voice is quiet", "少一个炮手，语音里也没人说话"),
+        ("fuel is enough for one jump but not for the return", "燃料够跳过去，但不够返程"),
+        ("server has been unstable since the last mission", "从上一单开始服务器就不稳定"),
+        ("new player wants to learn the route instead of chasing profit", "萌新想学路线，不是只追收益"),
+        ("two ships are available but only one pilot is confident", "有两艘船能用，但只有一个驾驶有把握"),
+        ("landing zone is safe but the approach path is crowded", "降落区安全，但进场路线很挤"),
+        ("pilot is considering an upgrade but has not tried the current ship", "驾驶想升级买船，但还没试熟现在这艘"),
+    ]
+    player_advice_actions = [
+        ("choose the safer ship for the first run", "第一趟建议选更稳的船"),
+        ("use the shorter route until everyone is comfortable", "大家熟悉前先走短路线"),
+        ("wait for escort before loading expensive cargo", "装贵货前先等护航到位"),
+        ("lower the bounty tier until the crew is ready", "队伍准备好前先降一档赏金"),
+        ("keep the group small and skip extra cargo", "队伍先精简一点，别额外带货"),
+        ("fill the gunner seat before accepting the next contract", "接下一单前先补上炮手"),
+        ("repair and refuel before committing to the route", "决定跑这条路线前先维修补油"),
+        ("avoid long contracts until the server feels stable", "服务器稳定前先别接长合同"),
+        ("treat this as a practice run and skip risky cargo", "这趟当练习路线，先别带高风险货"),
+        ("pick the ship the confident pilot can handle", "选那个驾驶最有把握的船"),
+        ("hold outside the station until traffic clears", "空间站外先等交通散开"),
+        ("test the current ship before buying the upgrade", "先把现在这艘试熟，再决定要不要升级"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -6366,6 +6408,74 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             f"[Party] Scout: {location_zh}这边{scouting_topic_zh}，盯{ship_zh}\n"
                             f"[Voice] Crew: {scouting_state_zh}\n"
                             f"[Team] Lead: {scouting_action_zh}；交火前确认"
+                        ),
+                        category="chat",
+                        is_priority=True,
+                        source="chat_guard",
+                    )
+                )
+                for advice_index, (topic_en, topic_zh) in enumerate(player_advice_topics, start=1):
+                    state_en, state_zh = player_advice_states[(advice_index - 1) % len(player_advice_states)]
+                    action_en, action_zh = player_advice_actions[(advice_index - 1) % len(player_advice_actions)]
+                    other_ship_en, other_ship_zh = pick_other_ship(ship_index, advice_index + 41, ship_zh)
+                    channel_en, channel_zh = player_route_channels[
+                        (repeat_index + advice_index + location_index + ship_index) % len(player_route_channels)
+                    ]
+                    advice_en = (
+                        f"{channel_en}{topic_en} at {location_en}: recommend the {ship_en} "
+                        f"over the {other_ship_en} for this plan; {state_en}; {action_en}."
+                    )
+                    advice_zh = (
+                        f"{channel_zh}{location_zh}这边{topic_zh}: 建议用{ship_zh}，先别用{other_ship_zh}；"
+                        f"{state_zh}；{action_zh}。"
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_advice_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{advice_index}:standard"
+                            ),
+                            en=advice_en,
+                            zh=advice_zh,
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_advice_status:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{advice_index}:compact"
+                            ),
+                            en=advice_en,
+                            zh=compact_chat_text(advice_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                advice_topic_en, advice_topic_zh = player_advice_topics[
+                    (repeat_index + location_index + ship_index) % len(player_advice_topics)
+                ]
+                advice_state_en, advice_state_zh = player_advice_states[
+                    (repeat_index + location_index + ship_index) % len(player_advice_states)
+                ]
+                advice_action_en, advice_action_zh = player_advice_actions[
+                    (repeat_index + location_index + ship_index) % len(player_advice_actions)
+                ]
+                samples.append(
+                    PairSample(
+                        key=f"chat_guard:player_advice_log:{location_index}:{ship_index}:{repeat_index + 1}",
+                        en=(
+                            f"[Party] Mentor: {advice_topic_en} at {location_en}; recommend the {ship_en}\n"
+                            f"[Voice] Crew: {advice_state_en}\n"
+                            f"[Team] Lead: {advice_action_en}; explain the reason before launch"
+                        ),
+                        zh=(
+                            f"[Party] Mentor: {location_zh}这边{advice_topic_zh}，建议用{ship_zh}\n"
+                            f"[Voice] Crew: {advice_state_zh}\n"
+                            f"[Team] Lead: {advice_action_zh}；出发前说清楚原因"
                         ),
                         category="chat",
                         is_priority=True,
