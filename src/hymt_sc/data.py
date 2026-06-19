@@ -4605,6 +4605,88 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             "[Party] Crew: 那就{next_zh}。",
         ),
     ]
+    player_plain_chat_scenarios = [
+        (
+            "tonight I can only run one contract from {location_en}; if the {ship_en} is full, leave without me and I will join the next stop",
+            "今晚我只能从{location_zh}跑一单；如果{ship_zh}满员了就不用等我，我下一站再进队",
+        ),
+        (
+            "hold the {ship_en} outside {location_en} for a minute, I am selling the last boxes and then I can board",
+            "{ship_zh}在{location_zh}外面等我一分钟，我卖完最后几箱就能上船",
+        ),
+        (
+            "do not start the bounty chain yet, I want to check ammo and medpens before the {ship_en} leaves {location_en}",
+            "赏金链先别开，我想在{ship_zh}离开{location_zh}前检查弹药和医疗笔",
+        ),
+        (
+            "if the marker jumps again, use {location_en} as the meetup point and keep the {ship_en} powered",
+            "如果标记又跳，就把{location_zh}当集合点，{ship_zh}先保持通电",
+        ),
+        (
+            "the new player is nervous about landing, so let them watch from the copilot seat while the {ship_en} approaches {location_en}",
+            "萌新对降落有点紧张，{ship_zh}接近{location_zh}时先让他坐副驾驶看一遍",
+        ),
+        (
+            "I can escort the {ship_en} out of {location_en}, but I need to refuel before the second jump",
+            "我可以护送{ship_zh}离开{location_zh}，但第二跳前我要先补油",
+        ),
+        (
+            "after we unload at {location_en}, split the payout before anyone changes seats on the {ship_en}",
+            "我们在{location_zh}卸完货以后，大家换{ship_zh}座位前先分账",
+        ),
+        (
+            "the {ship_en} can still fly, but if we take another fight near {location_en}, we are probably losing an engine",
+            "{ship_zh}还能飞，但如果在{location_zh}附近再打一场，估计要掉一个引擎",
+        ),
+        (
+            "I lost voice for a bit; type the route from {location_en} and I will follow the {ship_en} marker",
+            "我语音暂时断了，把从{location_zh}出发的路线打字发一下，我跟着{ship_zh}标记走",
+        ),
+        (
+            "before opening the ramp on the {ship_en}, check whether anyone outside {location_en} is still red",
+            "打开{ship_zh}舱门前，先看一下{location_zh}外面还有没有红名",
+        ),
+        (
+            "if the buyer wants to inspect cargo, keep the {ship_en} parked at {location_en} and do not move boxes alone",
+            "如果买家要验货，就让{ship_zh}停在{location_zh}，不要一个人先搬箱子",
+        ),
+        (
+            "I can take over pilot after {location_en}, but tell me first whether the {ship_en} has any damaged components",
+            "过了{location_zh}以后我可以接手驾驶，但先告诉我{ship_zh}有没有组件受损",
+        ),
+        (
+            "someone should stay with the {ship_en} while the rest of us check the terminal at {location_en}",
+            "我们去{location_zh}终端确认时，最好留一个人在{ship_zh}上看船",
+        ),
+        (
+            "if we server hop, store the {ship_en} at {location_en} first so cargo does not vanish",
+            "如果要换服，先把{ship_zh}存到{location_zh}，免得货消失",
+        ),
+        (
+            "tell the late crew member that the {ship_en} is not leaving {location_en} until everyone says ready",
+            "跟晚到的队友说，所有人都说准备好之前，{ship_zh}不会离开{location_zh}",
+        ),
+        (
+            "the route is quiet now, but keep the {ship_en} above {location_en} until escort confirms the next leg",
+            "现在路线安静，但护航确认下一段之前，{ship_zh}先留在{location_zh}上空",
+        ),
+        (
+            "I only need a pickup, not a full rescue; bring the {ship_en} near {location_en} and I will run to the ramp",
+            "我只需要接一下，不用完整救援；把{ship_zh}开到{location_zh}附近，我自己跑上舱门",
+        ),
+        (
+            "after the mission recap, write down who keeps flying the {ship_en} and who logs off at {location_en}",
+            "复盘完以后记一下谁继续开{ship_zh}，谁在{location_zh}下线",
+        ),
+    ]
+    player_plain_chat_templates = [
+        ("{line_en}.", "{line_zh}。"),
+        ("quick note: {line_en}.", "简单说一下：{line_zh}。"),
+        ("before we move: {line_en}.", "动之前先说一下：{line_zh}。"),
+        ("for the next run, {line_en}.", "下一趟的话，{line_zh}。"),
+        ("one more note: {line_en}.", "补充一句：{line_zh}。"),
+        ("long version: {line_en}; after that we regroup.", "详细说就是：{line_zh}；然后再重新集合。"),
+    ]
 
     def sentence_start(text: str) -> str:
         return text[:1].upper() + text[1:] if text else text
@@ -7644,6 +7726,41 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                             ),
                             en=micro_en,
                             zh=compact_chat_text(micro_zh),
+                            category="chat",
+                            is_priority=True,
+                            source="chat_guard",
+                        )
+                    )
+                for plain_index, (line_en_template, line_zh_template) in enumerate(
+                    player_plain_chat_scenarios,
+                    start=1,
+                ):
+                    if (repeat_index + location_index + ship_index + plain_index) % 3 == 0:
+                        continue
+                    plain_template_index = (
+                        repeat_index + location_index + ship_index + plain_index
+                    ) % len(player_plain_chat_templates)
+                    en_template, zh_template = player_plain_chat_templates[plain_template_index]
+                    line_en = line_en_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                    )
+                    line_zh = line_zh_template.format(
+                        location_en=location_en,
+                        location_zh=location_zh,
+                        ship_en=ship_en,
+                        ship_zh=ship_zh,
+                    )
+                    samples.append(
+                        PairSample(
+                            key=(
+                                f"chat_guard:player_plain_chat:{location_index}:{ship_index}:"
+                                f"{repeat_index + 1}:{plain_index}:standard"
+                            ),
+                            en=en_template.format(line_en=line_en, line_zh=line_zh),
+                            zh=zh_template.format(line_en=line_en, line_zh=line_zh),
                             category="chat",
                             is_priority=True,
                             source="chat_guard",
