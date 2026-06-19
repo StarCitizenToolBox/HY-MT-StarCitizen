@@ -416,6 +416,11 @@ SOURCE_PHRASES = {
         "中途休息确认",
         "重启前时间确认",
         "任务后交接",
+        "任务后检查",
+        "简短复盘",
+        "大家离队前先复盘",
+        "下一单先别急着接",
+        "返航了",
         "集合时间确认",
         "备用驾驶时间确认",
         "出发前确认时间",
@@ -695,6 +700,9 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
     chat_counts = Counter(chat_subkey(row.get("key", "")) for row in rows if row.get("key", "").startswith("chat_guard:"))
     player_lfg_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_lfg_matrix:")]
     player_join_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_join_thread:")]
+    player_after_action_rows = [
+        row for row in rows if row.get("key", "").startswith("chat_guard:player_after_action_thread:")
+    ]
     player_trade_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_trade_matrix:")]
     player_recovery_rows = [row for row in rows if row.get("key", "").startswith("chat_guard:player_recovery_log:")]
     player_correction_rows = [
@@ -858,6 +866,7 @@ def build_report(rows: list[dict[str, Any]], aliases_file: Path, terms_file: Pat
         "chat_subkey_counts": dict(sorted((key, value) for key, value in chat_counts.items() if key)),
         "player_lfg_rows": len(player_lfg_rows),
         "player_join_rows": len(player_join_rows),
+        "player_after_action_rows": len(player_after_action_rows),
         "player_trade_rows": len(player_trade_rows),
         "player_recovery_rows": len(player_recovery_rows),
         "player_correction_rows": len(player_correction_rows),
@@ -983,6 +992,7 @@ def main() -> int:
     print(f"gameplay_social_covered_pairs: {report['gameplay_social_covered_pairs']}")
     print(f"player_lfg_rows: {report['player_lfg_rows']}")
     print(f"player_join_rows: {report['player_join_rows']}")
+    print(f"player_after_action_rows: {report['player_after_action_rows']}")
     print(f"player_trade_rows: {report['player_trade_rows']}")
     print(f"player_recovery_rows: {report['player_recovery_rows']}")
     print(f"player_correction_rows: {report['player_correction_rows']}")

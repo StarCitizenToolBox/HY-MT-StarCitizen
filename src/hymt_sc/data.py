@@ -2832,6 +2832,76 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
             "[Party] Crew: 可以，我在那里等下一趟{task_zh}。",
         ),
     ]
+    player_after_action_outcomes = [
+        ("the contract is complete and everyone made it back", "合同做完了，大家都回来了"),
+        ("we finished the run but the ship needs repairs", "这一趟做完了，但船需要维修"),
+        ("cargo is safe and the route is clear for now", "货物安全了，路线暂时也干净"),
+        ("the target is down but local traffic is still messy", "目标解决了，但本地交通还是有点乱"),
+        ("everyone is together and nobody needs pickup", "队伍都在一起了，没有人还要接"),
+        ("the payout is visible but we should confirm the split", "报酬已经显示了，但分账还要确认"),
+        ("the marker is correct again after the last update", "最后一次更新后，标记又对了"),
+        ("we lost time to bugs but the crew stayed together", "这趟被问题拖了时间，但队伍没散"),
+    ]
+    player_after_action_steps = [
+        ("repair and refuel before another run", "下一趟前先维修补油"),
+        ("split the payout after we land", "落地以后再分账"),
+        ("drop extra cargo before taking another contract", "接下一单前先把多余货物放下"),
+        ("post the short recap in party chat", "把简短复盘发到队伍聊天里"),
+        ("check injuries and reload before leaving", "离开前先检查伤势并补弹"),
+        ("wait until everyone stores gear", "等大家把装备存好"),
+        ("move to a quieter station for the next run", "下一趟换到安静一点的空间站"),
+        ("confirm who is staying for the next run", "先确认谁还继续下一趟"),
+    ]
+    player_after_action_templates = [
+        (
+            "[Party] Lead: {task_en} near {location_en} is done; bring the {ship_en} back.\n"
+            "[Voice] Crew: {outcome_en}; {step_en}.",
+            "[Party] Lead: {location_zh}附近这趟{task_zh}结束了，先把{ship_zh}开回来。\n"
+            "[Voice] Crew: {outcome_zh}；{step_zh}。",
+        ),
+        (
+            "[Team] Lead: before anyone leaves, recap the {task_en} run and mark the {ship_en}.\n"
+            "[Party] Crew: {outcome_en}; {payment_en}.",
+            "[Team] Lead: 大家离队前先复盘这趟{task_zh}，也把{ship_zh}标一下。\n"
+            "[Party] Crew: {outcome_zh}；{payment_zh}。",
+        ),
+        (
+            "[Party] Pilot: the {ship_en} survived the {task_en} run at {location_en}.\n"
+            "[Voice] Lead: good, {step_en}; do not start the next one yet.",
+            "[Party] Pilot: {ship_zh}撑过了{location_zh}这趟{task_zh}。\n"
+            "[Voice] Lead: 好，{step_zh}；下一单先别急着接。",
+        ),
+        (
+            "[Party] Crew: should we keep going after {task_en}?\n"
+            "[Voice] Lead: not yet; {outcome_en}, so {step_en}.",
+            "[Party] Crew: {task_zh}做完以后还继续吗？\n"
+            "[Voice] Lead: 先不急；{outcome_zh}，所以{step_zh}。",
+        ),
+        (
+            "[Global] Pilot: thanks for the help near {location_en}; the {ship_en} is heading back.\n"
+            "[Party] Lead: {outcome_en}; {payment_en}.",
+            "[Global] Pilot: {location_zh}附近刚才多谢帮忙，{ship_zh}返航了。\n"
+            "[Party] Lead: {outcome_zh}；{payment_zh}。",
+        ),
+        (
+            "[Party] Lead: if anyone is logging off after {task_en}, say it now.\n"
+            "[Team] Crew: I can stay; first step is: {step_en}.",
+            "[Party] Lead: 做完{task_zh}以后要下线的现在说。\n"
+            "[Team] Crew: 我还能继续，先按这个来：{step_zh}。",
+        ),
+        (
+            "[Voice] Pilot: keep the {ship_en} powered until the post-run check is done.\n"
+            "[Party] Crew: {outcome_en}; I will wait at {location_en}.",
+            "[Voice] Pilot: 任务后检查做完前，{ship_zh}先别关机。\n"
+            "[Party] Crew: {outcome_zh}；我在{location_zh}等。",
+        ),
+        (
+            "[Party] Lead: record what happened in the {task_en} run before we switch ships.\n"
+            "[Voice] Crew: understood; {step_en}.",
+            "[Party] Lead: 换船前先把这趟{task_zh}发生的事记一下。\n"
+            "[Voice] Crew: 明白，{step_zh}。",
+        ),
+    ]
     player_crew_roles = [
         ("gunner", "炮手"),
         ("turret gunner", "炮塔手"),
@@ -4835,6 +4905,72 @@ def build_chat_guard_samples(repeat: int = 1) -> tuple[list[PairSample], dict[st
                                 ),
                                 en=join_en,
                                 zh=compact_chat_text(join_zh),
+                                category="chat",
+                                is_priority=True,
+                                source="chat_guard",
+                            )
+                        )
+                    for after_index, (en_template, zh_template) in enumerate(player_after_action_templates, start=1):
+                        outcome_en, outcome_zh = player_after_action_outcomes[
+                            (repeat_index + location_index + ship_index + task_index + after_index)
+                            % len(player_after_action_outcomes)
+                        ]
+                        step_en, step_zh = player_after_action_steps[
+                            (repeat_index + ship_index + task_index + after_index) % len(player_after_action_steps)
+                        ]
+                        after_payment_en, after_payment_zh = player_payment_terms[
+                            (repeat_index + location_index + ship_index + task_index + after_index)
+                            % len(player_payment_terms)
+                        ]
+                        after_en = en_template.format(
+                            location_en=location_en,
+                            location_zh=location_zh,
+                            ship_en=ship_en,
+                            ship_zh=ship_zh,
+                            task_en=task_en,
+                            task_zh=task_zh,
+                            outcome_en=outcome_en,
+                            outcome_zh=outcome_zh,
+                            step_en=step_en,
+                            step_zh=step_zh,
+                            payment_en=after_payment_en,
+                            payment_zh=after_payment_zh,
+                        )
+                        after_zh = zh_template.format(
+                            location_en=location_en,
+                            location_zh=location_zh,
+                            ship_en=ship_en,
+                            ship_zh=ship_zh,
+                            task_en=task_en,
+                            task_zh=task_zh,
+                            outcome_en=outcome_en,
+                            outcome_zh=outcome_zh,
+                            step_en=step_en,
+                            step_zh=step_zh,
+                            payment_en=after_payment_en,
+                            payment_zh=after_payment_zh,
+                        )
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"chat_guard:player_after_action_thread:{location_index}:{ship_index}:"
+                                    f"{repeat_index + 1}:{task_index}:{after_index}:standard"
+                                ),
+                                en=after_en,
+                                zh=after_zh,
+                                category="chat",
+                                is_priority=True,
+                                source="chat_guard",
+                            )
+                        )
+                        samples.append(
+                            PairSample(
+                                key=(
+                                    f"chat_guard:player_after_action_thread:{location_index}:{ship_index}:"
+                                    f"{repeat_index + 1}:{task_index}:{after_index}:compact"
+                                ),
+                                en=after_en,
+                                zh=compact_chat_text(after_zh),
                                 category="chat",
                                 is_priority=True,
                                 source="chat_guard",
